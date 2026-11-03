@@ -38,7 +38,7 @@ if(uid == 0):
     exit()
 # if not os.path.exists("/tmp/x509up_u" + str(uid)):
 #     os.system('voms-proxy-init --rfc --voms cms -valid 192:00')
-os.popen("cp "+ proxy + " /afs/cern.ch/user/" + inituser + "/" + username + "/private/x509up")
+os.popen("cp "+ proxy + " /afs/cern.ch/user/" + inituser + "/" + username + "/private/x509up") #Il VOMS proxy è un “pass temporaneo” che dimostra chi sei e che sei autorizzato a usare le risorse della Grid CMS, senza esporre il tuo certificato personale.
 
 # insert here the name of output folder
 running_folder                      = os.environ.get('PWD') + "/tmp/"
@@ -48,17 +48,17 @@ remote_folder_name                  = "Run3Analysis_Tprime"
     
 def get_files_on_tier(folder, cert_path, ca_path):
     try:
-        command = "davix-ls -E "+cert_path+" --capath "+ca_path+" "+folder
+        command = "davix-ls -E "+cert_path+" --capath "+ca_path+" "+folder #sta solo creando la stringa, davix-ls è come un ls per lo storage remoto:
         print(command)
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         
         output, error = process.communicate()
         output = output.decode('utf-8')
 
-        files = []
+        files = [] #mette in questa lista il risultato di "ls" di sopra. Quindi ad esempio [file1.root, file2.root,..]
         for line in output.splitlines():
             # Ignora le righe non relative ai file (come intestazioni o directory)
-            if line.endswith('.root') and line:
+            if line.endswith('.root') and line: #non è vuota e finisce con .root
                 file_name = line
                 files.append(file_name)
         
@@ -87,12 +87,12 @@ elif dataset in sample_dict.keys():
         print("---------- Running sample: ", dataset)
         samples = [sample_dict[dataset]]
 
-out_dict = {}
-if hasattr(sample_dict[dataset], "process"):
-    out_dict[sample_dict[dataset].process] = {}
+out_dict = {} #sta creando la struttura del dizionario
+if hasattr(sample_dict[dataset], "process"): #ad esempio TT_semilep ha .process, mentre TT non ha .process, perché appunto TT_semilep è una component di TT
+    out_dict[sample_dict[dataset].process] = {} #quindi dovrebbe creare una struttura annidata tipo TT{TT_semilep, TT_hadr} ecc, ma lo scrive 2 volte (??)
 else:
     out_dict[dataset] = {}
-out_dict[dataset] = {}
+out_dict[dataset] = {} 
 
 outjson = opt.output
 
@@ -100,9 +100,9 @@ if os.path.exists('../python/postprocessing/samples/'+outjson):
     with open('../python/postprocessing/samples/'+outjson, 'r') as json_input:
         json_out = json.load(json_input)
         if hasattr(sample_dict[dataset], "process"):
-            if json_out.get(sample_dict[dataset].process) is None:
-                json_out[sample_dict[dataset].process] = {}
-        elif json_out.get(dataset) is None and not hasattr(sample_dict[dataset], "process"):
+            if json_out.get(sample_dict[dataset].process) is None: #il sample ha quella component ma non c'è nel json
+                json_out[sample_dict[dataset].process] = {} #se quella component non è nel dizionario, la scrive
+        elif json_out.get(dataset) is None and not hasattr(sample_dict[dataset], "process"): #se ho il process e non una component e questo process non è nel dizionario lo inserisce
             json_out[dataset] = {}
 else:
     json_out = {}
@@ -111,37 +111,37 @@ else:
     else:
         json_out[dataset] = {}
 
-for sample in samples:
-    print("---------- Running dataset: ", dataset)
+for sample in samples: #qui sta predisponendo due posti in cui salvare le informazioni dello stesso sample. Uno sotto il processo complessivo, quindi ad esempio TT_semilep dentro TT e e uno sotto una chiave dedicata al singolo sample, quindi ti trovi due volte TT_semilep annidato
+    print("---------- Running dataset: ", dataset) #Quindi le stesse informazioni diventano accessibili in due modi: se vuoi tutto il processo TT trovi tutti e tre i componenti; se invece vuoi direttamente il semileptonico trovi solo quello
     out_dict[sample.process][sample.label] = {}
     if dataset!=sample.label: 
         out_dict[sample.label] = {}
         out_dict[sample.label][sample.label] = {}
     print("---------- Running sample: ", sample.label)
-    folder = find_folder(redirector, username, remote_folder_name, sample.label,proxy, "/cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/")
+    folder = find_folder(redirector, username, remote_folder_name, sample.label,proxy, "/cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/") #getoutputs.py comincia effettivamente a cercare sul Tier ciò che era stato prodotto da postproc_submitter.py
     print("Folder: ", folder)
     
-    files_strings   = get_files_on_tier(folder, proxy, "/cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/")
-    file_sizes      = get_file_sizes(folder, proxy, "/cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/")
+    files_strings   = get_files_on_tier(folder, proxy, "/cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/") #non viene effettivamente usato perché subito dopo fa files_strings   = []
+    file_sizes      = get_file_sizes(folder, proxy, "/cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/") #recupera anche la dimensione dei file. Ci interessa sapere anche che ha dimensione 0, perché potrebbe essere il risultato di un job fallito
     files_strings   = []
 
-    jobs_total, total_on_tier, to_resubmit, not_found, empty, jobs_toResubmit_notFoundOnTier, jobs_toResubmit_emptyFile = checkSubmitStatus(redirector, username, uid, sample, running_folder, remote_folder_name, proxy)
+    jobs_total, total_on_tier, to_resubmit, not_found, empty, jobs_toResubmit_notFoundOnTier, jobs_toResubmit_emptyFile = checkSubmitStatus(redirector, username, uid, sample, running_folder, remote_folder_name, proxy) #Confrontando i job che avrei dovuto produrre con quello che effettivamente trovo sul Tier, quali job sono a posto e quali hanno problemi? getoutputs.py non vuole inserire ROOT vuoti o problematici nel JSON.
     for file_name, file_size in file_sizes.items():
-        jobNumber        = int(file_name.split("_")[-1].split(".")[0])
-        if jobNumber in jobs_toResubmit_emptyFile:
-            job_logFile      = "/afs/cern.ch/user/" + inituser + "/" + username + "/TprimeAnalysis/NanoAODTools/condor/tmp/" + sample.label + "/condor/log/" + sample.label + "_file" + str(jobNumber) + ".log"
-            job_errFile      = "/afs/cern.ch/user/" + inituser + "/" + username + "/TprimeAnalysis/NanoAODTools/condor/tmp/" + sample.label + "/condor/error/" + sample.label + "_file" + str(jobNumber) + ".err"
+        jobNumber        = int(file_name.split("_")[-1].split(".")[0]) 
+        if jobNumber in jobs_toResubmit_emptyFile: #trova il job number dei file da vuoti o problematici
+            job_logFile      = "/afs/cern.ch/user/" + inituser + "/" + username + "/tDM/NanoAODTools/condor/tmp/" + sample.label + "/condor/log/" + sample.label + "_file" + str(jobNumber) + ".log"
+            job_errFile      = "/afs/cern.ch/user/" + inituser + "/" + username + "/tDM/NanoAODTools/condor/tmp/" + sample.label + "/condor/error/" + sample.label + "_file" + str(jobNumber) + ".err"
             print(f"Excluding File: {file_name}, Size: {file_size} bytes")
             print(f"\t\tcheck the log file: {job_logFile}")
             print(f"\t\tcheck the err file: {job_errFile}")
             continue
         else:
-            files_strings.append(file_name)
+            files_strings.append(file_name) # non inserisce i file problematici
             
     path_file = folder.replace(redirector, "root://xrootd-cms.infn.it/")
     ntot = []
     out_strings = []
-    for f in tqdm(files_strings): 
+    for f in tqdm(files_strings): #barra di avanzamento
         f = path_file+"/"+f
         if not "Data" in sample.label:
             try:
@@ -152,8 +152,8 @@ for sample in samples:
                 geneventSumw = runstree.genEventSumw
                 tree = rootfile.Get("Events")
                 tree.GetEntry(0)
-                eventweight = abs(tree.Generator_weight)
-                n = round(abs(geneventSumw/eventweight))
+                eventweight = abs(tree.Generator_weight) #ogni evento del tree ha un peso. Gli eventi dello stesso file hanno lo stesso peso in valore assoluto, ma possono cambiare di segno. Per file diversi questo valore assoluto può essere diverso, dipende dalla sezione d'urto
+                n = round(abs(geneventSumw/eventweight)) #questo mi dà un numero 'effettivo' di eventi generati
                 ntot.append(n)
             except:
                 print("Could not open file: ", f)

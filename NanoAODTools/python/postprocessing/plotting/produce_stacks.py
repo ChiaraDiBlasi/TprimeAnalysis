@@ -43,9 +43,9 @@ scale_signals                       = config["plotting"]["scale_signals"]       
 year_tag                            = opt.year_tag
 
 lumi_dict                           = config["plotting"]["lumi_dict"]
-lumi_dict["Full2022"]               = lumi_dict["2022"] + lumi_dict["2022EE"]
-lumi_dict["Full2023"]               = lumi_dict["2023"] + lumi_dict["2023postBPix"]
-lumi_dict["Full2022_Full2023"]      = lumi_dict["Full2022"] + lumi_dict["Full2023"]
+#lumi_dict["Full2022"]               = lumi_dict["2022"] + lumi_dict["2022EE"]
+#lumi_dict["Full2023"]               = lumi_dict["2023"] + lumi_dict["2023postBPix"]
+#lumi_dict["Full2022_Full2023"]      = lumi_dict["Full2022"] + lumi_dict["Full2023"]
 
 
 folder_dict                         = config["plotting"]["folder_dict"]
@@ -53,43 +53,101 @@ folder_www_dict                     = config["plotting"]["folder_www_dict"]
 
 
 datasets_dict                       = config["plotting"]["datasets_to_plot"]
-datasets_dict["Full2022"]           = datasets_dict["2022"] + datasets_dict["2022EE"]
-datasets_dict["Full2023"]           = datasets_dict["2023"] + datasets_dict["2023postBPix"]
-datasets_dict["Full2022_Full2023"]  = datasets_dict["Full2022"] + datasets_dict["Full2023"]
+#datasets_dict["Full2022"]           = datasets_dict["2022"] + datasets_dict["2022EE"]
+#datasets_dict["Full2023"]           = datasets_dict["2023"] + datasets_dict["2023postBPix"]
+#datasets_dict["Full2022_Full2023"]  = datasets_dict["Full2022"] + datasets_dict["Full2023"]
 
 json_file_dict                      = config["dict_samples"]
-json_file_dict["2022EE"]            = json_file_dict["2022"]
-json_file_dict["2023postBPix"]      = json_file_dict["2023"]
+#json_file_dict["2022EE"]            = json_file_dict["2022"]
+#json_file_dict["2023postBPix"]      = json_file_dict["2023"]
 
-colors_bkg                          = ["#e42536", "#ffcc00", "#bebdb8", "#86c8dd", "#caeba5"]
-style_signals_dict                  = {
-                                        "T (0.7TeV) #rightarrow tZ":  {"style": "hist",   "msize": 0,    "lcolor": ROOT.kGreen,      "lwidth": 2, "fstyle": 0, "lstyle": ROOT.kSolid},
-                                        "T (1.0TeV) #rightarrow tZ":  {"style": "hist",   "msize": 0,    "lcolor": ROOT.kGreen+1,    "lwidth": 2, "fstyle": 0, "lstyle": ROOT.kDashed},
-                                        "T (1.8TeV) #rightarrow tZ":  {"style": "hist",   "msize": 0,    "lcolor": ROOT.kGreen+2,    "lwidth": 2, "fstyle": 0, "lstyle": ROOT.kDotted},
-                                        "tDM (m_{#phi}=50 GeV, m_{#chi}=1 GeV)":    {"style": "hist",   "msize": 0,    "lcolor": ROOT.kMagenta,    "lwidth": 2, "fstyle": 0, "lstyle": ROOT.kSolid},
-                                        "tDM (m_{#phi}=200 GeV, m_{#chi}=1 GeV)":   {"style": "hist",   "msize": 0,    "lcolor": ROOT.kMagenta+1,  "lwidth": 2, "fstyle": 0, "lstyle": ROOT.kDashed},
-                                        "tDM (m_{#phi}=500 GeV, m_{#chi}=1 GeV)":   {"style": "hist",   "msize": 0,    "lcolor": ROOT.kMagenta+2,  "lwidth": 2, "fstyle": 0, "lstyle": ROOT.kDotted},
-                                        "tDM (m_{#phi}=1000 GeV, m_{#chi}=1 GeV)":  {"style": "hist",   "msize": 0,    "lcolor": ROOT.kMagenta+3,  "lwidth": 2, "fstyle": 0, "lstyle": ROOT.kDashDotted},
-                                    }
+#colors_bkg                          = ["#e42536", "#ffcc00", "#bebdb8", "#86c8dd", "#caeba5"]
+colors_bkg                          = ["#ffcc00", "#bebdb8", "#e42536", "#86c8dd", "#caeba5"]
+
+#MODIFICA EFFETTUATA QUI
+#masses = [10, 50, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 1000]
+masses = [10, 200, 300, 500, 1000]
+
+skip_missing_regions = True #AGGIUNTO
+signal_types = ["TBDM_s", "TBDM_ps", "TTDM_ps",  "TTDM_s", "TTto2LDM_s", "TTto2LDM_ps", "TWto2LDM_s", "TWto2LDM_ps", "TWDM_s", "TWDM_ps"] 
+'''
+signal_colour = [
+    "#BFFF00",  # 10 GeV
+    "#FF00FF",  # 200 GeV
+    "#1878B4",  # 300 GeV
+    "#FF7F00",  # 1000 GeV
+]
+'''
+
+signal_colour = [
+    "#004D40",  # 10 GeV
+    "#FF00FF",  # 200 GeV
+    "#0080FF",  # 300 GeV
+    "#BFFF00",  # 500 GeV
+    "#FF6600",  # 1000 GeV
+]
+
+'''
+signal_colour = [
+    "#542788",  # 10 GeV
+    "#7B3294",  # 50 GeV
+    "#A34AA2",  # 100 GeV
+    "#C65A8E",  # 150 GeV
+    "#3546A6",  # 200 GeV
+    "#235AB8",  # 250 GeV
+    "#1878B4",  # 300 GeV
+    "#087E8B",  # 350 GeV
+    "#006D77",  # 400 GeV
+    "#19764B",  # 500 GeV
+    "#477A26",  # 600 GeV
+    "#786A19",  # 700 GeV
+    "#99551E",  # 800 GeV
+    "#643C35",  # 1000 GeV
+]
+'''
+
+style_signals_dict = {}
+for sig in signal_types:
+    for mphi, colour in zip(masses, signal_colour):
+        style_signals_dict[
+            f"{sig} (m_{{#phi}}= {mphi} GeV, m_{{#chi}}=1 GeV)"
+        ] = {
+            "style": "hist",
+            "msize": 0,
+            "lcolor": ROOT.TColor.GetColor(colour),
+            "lwidth": 2,
+            "fstyle": 0,
+            "lstyle": ROOT.kSolid
+        }
+                                   
+
+
 labels_dict                         = {
                                         "TT":               "t#bar{t}",
                                         "TW":               "tW",
                                         "QCD":              "QCD",
                                         "ZJetsToNuNu":      "Z (#nu#nu) + Jets",
                                         "WJets":            "W (#it{l}#nu) + Jets",
-                                        "TprimeToTZ_700":   "T (0.7TeV) #rightarrow tZ",
-                                        "TprimeToTZ_1000":  "T (1.0TeV) #rightarrow tZ",
-                                        "TprimeToTZ_1800":  "T (1.8TeV) #rightarrow tZ",
-                                        "tDM_mPhi50":       "tDM (m_{#phi}=50 GeV, m_{#chi}=1 GeV)",
-                                        "tDM_mPhi200":      "tDM (m_{#phi}=200 GeV, m_{#chi}=1 GeV)",
-                                        "tDM_mPhi500":      "tDM (m_{#phi}=500 GeV, m_{#chi}=1 GeV)",
-                                        "tDM_mPhi1000":     "tDM (m_{#phi}=1000 GeV, m_{#chi}=1 GeV)",
                                     }
 
+
+labels_dict_signal = {}
+
+for sig in signal_types:
+    for mphi in masses:
+        labels_dict_signal[f"{sig}_mPhi{mphi}"] = (
+            f"{sig} (m_{{#phi}}= {mphi} GeV, m_{{#chi}}=1 GeV)"
+        )
+
+
+labels_dict.update(labels_dict_signal)
+
+
+
 systematics_dict                        = config["plotting"]["systematics"]
-systematics_dict["Full2022"]            = list(set(systematics_dict["2022"]) & set(systematics_dict["2022EE"]))
-systematics_dict["Full2023"]            = list(set(systematics_dict["2023"]) & set(systematics_dict["2023postBPix"]))
-systematics_dict["Full2022_Full2023"]   = list(set(systematics_dict["Full2022"]) & set(systematics_dict["Full2023"]))
+#systematics_dict["Full2022"]            = list(set(systematics_dict["2022"]) & set(systematics_dict["2022EE"]))
+#systematics_dict["Full2023"]            = list(set(systematics_dict["2023"]) & set(systematics_dict["2023postBPix"]))
+#systematics_dict["Full2022_Full2023"]   = list(set(systematics_dict["Full2022"]) & set(systematics_dict["Full2023"]))
 systematics                             = [f"{syst}_{variation}" for syst in systematics_dict[year_tag] for variation in ["up", "down"]]
 if len(systematics) == 0:
     systErr     = False
@@ -126,11 +184,12 @@ if not os.path.exists(folder_www):
 if not os.path.exists(repostack_www):
     os.makedirs(repostack_www, exist_ok=True)
     print("Created folder 'stacks' at ", folder_www)
+'''
 if not os.path.exists(folder_www+"index.php"):
     shutil.copy("/eos/user/l/lfavilla/www/index.php", folder_www)
 if not os.path.exists(repostack_www+"index.php"):
     shutil.copy("/eos/user/l/lfavilla/www/index.php", repostack_www)
-
+'''
 
 
 
@@ -167,6 +226,7 @@ def cut_string(cut):
 inFilePath          = {"Data": [], "signal": [], "bkg": []}
 inFile              = {"Data": [], "signal": [], "bkg": []}
 inSample            = {"Data": [], "signal": [], "bkg": []}
+
 cut_tag             = cut_string(cut)
 
 for dat in datasets:
@@ -174,7 +234,7 @@ for dat in datasets:
     #     continue
     year_tag        = dat.split("_")[-1]
     folder_tmp      = folder_dict[year_tag]
-    repohisto_tmp   = folder_tmp + "plots/"
+    repohisto_tmp   = folder_tmp + "plots/" + "plots/"
     # repohisto_tmp   = folder_tmp + "plots_rescaled_to_lumi/"
     d               = sample_dict[dat]
     if hasattr(d, "components"):
@@ -186,7 +246,12 @@ for dat in datasets:
             inFilePath["Data"].append(repohisto_tmp + s.label + ".root")
             inFile["Data"].append(ROOT.TFile.Open(repohisto_tmp + s.label + ".root"))
             inSample["Data"].append(s)
-        elif "tDM" in s.label or "Tprime" in s.label:
+        #MODIFICA EFFETTUATA QUI
+        elif any(sig in s.label for sig in signal_types):
+            signal_key = "_".join(s.label.split("_")[:3])
+            if signal_key not in labels_dict_signal:
+                continue
+            print("signals:", s.label)
             inFilePath["signal"].append(repohisto_tmp + s.label + ".root")
             inFile["signal"].append(ROOT.TFile.Open(repohisto_tmp + s.label + ".root"))
             inSample["signal"].append(s)
@@ -200,13 +265,24 @@ for dat in datasets:
 MT_T_xbins          = array.array('d', [500, 600, 700, 800, 1000, 1400, 2000])
 PuppiMET_pt_xbins   = array.array('d', [250, 300, 350, 400, 450, 500, 600, 850])
 
-
-for v in vars:
+for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_nominal"]]:
+#for v in vars:
 # for v in [var for var in vars if var._name == "MT_T"]:
 # for v in [var for var in vars if var._name == "PuppiMET_T1_pt_nominal"]:
 # for v in [var for var in vars if var._name in ["LeadingFatJetPt_msoftdrop", "FatJet_msoftdrop_nominal"]]:
 # for v in [var for var in vars if var._name in ["MT_T", "PuppiMET_T1_pt_nominal"]]:
     for r in regions.keys():
+        if skip_missing_regions: #AGGIUNTO
+            missing = False #AGGIUNTO
+            for f in inFile["signal"] + inFile["bkg"]: #AGGIUNTO
+                if not f.Get(f"{v._name}_{r}"): #AGGIUNTO
+                    missing = True #AGGIUNTO
+                    break #AGGIUNTO
+
+            if missing:
+                print(f"Salto {v._name}, regione {r}: istogramma assente")
+                continue
+        
     # for r in ["SRTop"]:
     # for r in ["AH"]:
     # for r in ["SL"]:
@@ -217,24 +293,30 @@ for v in vars:
         ###############################################
         ROOT.TH1.SetDefaultSumw2()
         histo_bkg_dict                  = {}
+        #ho provato a cambiare qui l'ordine degli stack
         histo_bkg_dict["nominal"]       = {
-                                            "t#bar{t}":                 None,
                                             "tW":                       None,
                                             "QCD":                      None,
+                                            "t#bar{t}":                 None,
                                             "Z (#nu#nu) + Jets":        None,
                                             "W (#it{l}#nu) + Jets":     None
                                             }
         histo_bkg_dict["err_syst"]      = None
         histo_data                      = None
-        histo_signals_dict              = {}
+        #MODIFICA EFFETTUATA QUI
+        #histo_signals_dict              = {}
+
+        histo_signals_dict = {sig: {} for sig in signal_types}
 
         # print(f"Processing variable {v._name} in region {r}")
 
         ##### Normalize Signals (Lumi) ######
         # print("Processing Signals")
         for i, (f,s) in enumerate(zip(inFile["signal"], inSample["signal"])):
-            histo_name                          = v._name+"_"+r+"_"+"nominal"
+            #histo_name                          = v._name+"_"+r+"_"+"nominal"
+            histo_name                          = v._name+"_"+r
             tmp                                 = None
+            print(f"File: {f.GetName()} | Istogramma: {histo_name}", flush=True)
             tmp                                 = copy.deepcopy(ROOT.TH1D(f.Get(histo_name)))
             year_tag                            = s.label.split("_")[-1]
             lumi                                = lumi_dict[year_tag]
@@ -251,13 +333,18 @@ for v in vars:
                 tmp                             = copy.deepcopy(tmp)
             else:
                 continue
-            leg_label                           = labels_dict["_".join(s.label.split("_")[:2])]
+            #MODIFICA EFFETTUATA QUI
+            sig_sample = "_".join(s.label.split("_")[:2]) #questo prende ad esempio solo TT_s
+            leg_label = labels_dict["_".join(s.label.split("_")[:3])] # così la label contiene anche la massa. NB il nome deve essere lo stesso che sta in labels_dict. Questo ad esempio prende TT_s_mPhi200
+            #leg_label                           = labels_dict["_".join(s.label.split("_")[:2])]
             if scale_signals != 1:
                 tmp.Scale(scale_signals)                                        # scale signals for better visibility in the stack plots
-            if leg_label not in histo_signals_dict:
-                histo_signals_dict[leg_label]   = copy.deepcopy(tmp)
-            else:
-                histo_signals_dict[leg_label].Add(copy.deepcopy(tmp))
+
+            if leg_label not in histo_signals_dict[sig_sample]:
+                histo_signals_dict[sig_sample][leg_label]   = copy.deepcopy(tmp)
+            #MODIFICA EFFETTUATA QUI: questo else non dovrebbe servirci, perché somma il contenuto di isotgrammi con lo stesso nome
+            #else:
+                #histo_signals_dict[leg_label].Add(copy.deepcopy(tmp))
         # print("Finished Processing Signals\n")
 
         ##### Normalize Backgrounds (Lumi) ######
@@ -265,7 +352,8 @@ for v in vars:
         # NOMINAL #
         err_dict_SystSampleBin              = {syst: {} for syst in systematics}
         for i, (f,s) in enumerate(zip(inFile["bkg"], inSample["bkg"])):
-            histo_name                      = v._name+"_"+r+"_"+"nominal"
+            #histo_name                      = v._name+"_"+r+"_"+"nominal"
+            histo_name                      = v._name+"_"+r
             tmp                             = copy.deepcopy(ROOT.TH1D(f.Get(histo_name)))
             year_tag                        = s.label.split("_")[-1]
             lumi                            = lumi_dict[year_tag]
@@ -356,7 +444,9 @@ for v in vars:
 
         ##### Data #####
         # print("Processing Data")
-        if (not blind) and ((not ("SR" in r) or ("Loose" in r)) or (("SR" in r) and not ("SRTop" in r))):
+        #if (not blind) and ((not ("SR" in r) or ("Loose" in r)) or (("SR" in r) and not ("SRTop" in r))):
+        #if not blind:
+        if (not blind) and (not r.startswith("SRTop")):
             if not v._MConly:
                 histo_name                          = v._name+"_"+r
                 for f, s in zip(inFile["Data"], inSample["Data"]):
@@ -399,9 +489,37 @@ for v in vars:
             xMax            = 108
 
         ##### Y-axis ######
+
+        yMin_dict ={}
+
+        for sig in signal_types:
+            yMin_dict[sig] = min(
+                (h.GetMinimum() for h in histo_signals_dict[sig].values()),
+                default=0.1 if logy else 0,
+                )
+
+
         yTitle              = "Events"
         # if (not blind) and not ("SR" in r) and (not v._MConly):
-        if (not blind) and ((not ("SR" in r) or ("SRTopLoose" in r)) or (("SR" in r) and not ("SRTop" in r))) and (not v._MConly):
+        #if (not blind) and ((not ("SR" in r) or ("SRTopLoose" in r)) or (("SR" in r) and not ("SRTop" in r))) and (not v._MConly):
+
+        if (not blind) and (not v._MConly):
+            if histo_data is not None:
+                yMax = max(
+                    sum(h.GetMaximum() for h in histo_bkg_dict["nominal"].values()),
+                    histo_data.GetMaximum()
+                )
+            else:
+                yMax = sum(
+                    h.GetMaximum() for h in histo_bkg_dict["nominal"].values()
+                )
+        else:
+            yMax = sum(
+                h.GetMaximum() for h in histo_bkg_dict["nominal"].values()
+            )
+        
+        '''
+        if (not blind) and (not v._MConly):
             if histo_data is not None:
                 yMax            = max(sum([histo_bkg_dict["nominal"][process].GetMaximum() for process in histo_bkg_dict["nominal"]]), histo_data.GetMaximum())
             else:
@@ -423,13 +541,14 @@ for v in vars:
                     yMin    = 1e-1
                 else:
                     yMin    = 0
+        '''
 
         if logy:
             yMax            = yMax*100
-            yMin            = yMin
+            #yMin            = yMin
         else:
             yMax            = yMax*1.6
-            yMin            = yMin*0.5
+            #yMin            = yMin*0.5
         
         if v._name in ["LeadingFatJetPt_msoftdrop", "FatJet_msoftdrop_nominal"]:
             if r=="AH":
@@ -452,33 +571,42 @@ for v in vars:
 
 
         ##### Drawing Stacks ######
-        canv_name       = "canvas_"+v._name+"_"+r+"_"+"nominal"
-        dicanv          = make_stack_with_ratio(
-                                                canv_name           = canv_name,
-                                                histo_bkg_dict      = histo_bkg_dict,
-                                                histo_data          = histo_data,
-                                                histo_signals_dict  = histo_signals_dict,
-                                                region              = r,
-                                                xMin                = xMin,
-                                                xMax                = xMax,
-                                                yMin                = yMin,
-                                                yMax                = yMax,
-                                                rMin                = rMin,
-                                                rMax                = rMax,
-                                                xTitle              = xTitle,
-                                                yTitle              = yTitle,
-                                                rTitle              = rTitle,
-                                                extraText           = extraText,
-                                                lumi                = tot_lumi,
-                                                extraSpace          = extraSpace,
-                                                iPos                = iPos,
-                                                logy                = logy,
-                                                repo                = repostack_www,
-                                                colors_bkg          = colors_bkg,
-                                                style_signals_dict  = style_signals_dict,
-                                                signals_factor      = scale_signals,
-                                                systErr             = systErr
-                                                )
+
+        for sig in signal_types:
+            if not histo_signals_dict[sig]:
+                continue
+
+
+            repostack_www = f"{folder_www}stacks/{r}/{sig}/"
+            os.makedirs(repostack_www, exist_ok=True)
+            
+            canv_name       = "canvas_"+sig+"_"+v._name+"_"+r+"_"+"nominal"
+            dicanv          = make_stack_with_ratio(
+                                                    canv_name           = canv_name,
+                                                    histo_bkg_dict      = histo_bkg_dict,
+                                                    histo_data          = histo_data,
+                                                    histo_signals_dict  = histo_signals_dict[sig],
+                                                    region              = r,
+                                                    xMin                = xMin,
+                                                    xMax                = xMax,
+                                                    yMin                = yMin_dict[sig],
+                                                    yMax                = yMax,
+                                                    rMin                = rMin,
+                                                    rMax                = rMax,
+                                                    xTitle              = xTitle,
+                                                    yTitle              = yTitle,
+                                                    rTitle              = rTitle,
+                                                    extraText           = extraText,
+                                                    lumi                = tot_lumi,
+                                                    extraSpace          = extraSpace,
+                                                    iPos                = iPos,
+                                                    logy                = logy,
+                                                    repo                = repostack_www,
+                                                    colors_bkg          = colors_bkg,
+                                                    style_signals_dict  = style_signals_dict,
+                                                    signals_factor      = scale_signals,
+                                                    systErr             = systErr
+                                                    )
 
 
 print(histo_bkg_dict.keys())

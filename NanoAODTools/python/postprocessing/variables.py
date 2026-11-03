@@ -1,6 +1,6 @@
 import math
 import numpy as np
-class variable(object):
+class variable(object): #La classe variable descrive cosa vuoi istogrammare, RDataFrame deve avere davvero una colonna con quel nome
     def __init__(self, name, title, taglio=None, nbins=None, xmin=None, xmax=None, xarray=None, MConly = False, noUnOvFlowbin = False):
         self._name = name
         self._title = title
@@ -38,6 +38,11 @@ class variable2D(object):
 ### Definition of requeriments for plots (cut), variables and regions
 
 requirements = ""#"leptonveto" #"leptonveto && MET_pt>150 && MinDelta_phi>0.6"
+
+#Sia requirements sia le condizioni associate alle signal/control regions sono stringhe Python, che poi ROOT interpreta come espressioni C++ quando vengono passate a RDataFrame.Filter()
+#A quel punto RDataFrame interpreta la stringa come una condizione di selezione evento per evento.
+#stringa Python → regions["SR"] → df.Filter(stringa) → ROOT interpreta la stringa → selezione degli eventi → istogramma della regione
+#le variabili che compaiono come stringhe sono definite sotto 
 
 ######## 1D variables for histos
 
@@ -97,6 +102,14 @@ vars.append(variable(name = "MT_T", title= "M_{T} [GeV]", nbins = 30, xmin = 500
 vars.append(variable(name = "FatJet_particleNetWithMass_TvsQCD", title= "Top Score", nbins = 40, xmin = 0, xmax=1, noUnOvFlowbin = True))
 vars.append(variable(name = "FatJet_msoftdrop_nominal", title= "FatJet m_{SD} [GeV]", nbins = 20, xmin = 70, xmax=110))
 
+#confrontiamo la nostra selezione dei leptoni con quella degli spagnoli
+#vars.append(variable(name="nVetoMuon_loose", title="Loose muon number", nbins=10, xmin=-0.5, xmax=9.5))
+#vars.append(variable(name="nVetoMuon_tight", title="Tight muon number", nbins=10, xmin=-0.5, xmax=9.5))
+#vars.append(variable(name="nVetoMuon_looseORtight", title="Loose or tight muon number", nbins=10, xmin=-0.5, xmax=9.5))
+
+#vars.append(variable(name="nVetoElectron_loose", title="Loose electron number", nbins=10, xmin=-0.5, xmax=9.5))
+#vars.append(variable(name="nVetoElectron_tight", title="Tight electron number", nbins=10, xmin=-0.5, xmax=9.5))
+#vars.append(variable(name="nVetoElectron_looseORtight", title="Loose or tight electron number", nbins=10, xmin=-0.5, xmax=9.5))
 
 # vars.append(variable(name = "Top_isolationPtJetsdR04", title= "Top Iso p_{T} (#Delta R=0.4)", nbins = 20, xmin = 0, xmax=2, noUnOvFlowbin = True))
 # vars.append(variable(name = "Top_isolationPtJetsdR06", title= "Top Iso p_{T} (#Delta R=0.6)", nbins = 20, xmin = 0, xmax=2, noUnOvFlowbin = True))
@@ -134,10 +147,103 @@ singleMu    = "(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && 
 singleE     = "(nTightElectron == 1 && nVetoElectron == 1 && nTightMuon == 0 && nVetoMuon == 0)"
 SRPresel    = "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0"
 
+lepVetos = {
+    "NO": "1",
+    "loose": "(nVetoElectron_loose + nVetoMuon_loose == 0)",
+    "tight": "(nVetoElectron_tight + nVetoMuon_tight == 0)",
+    "looseORtight": "(nVetoElectron_looseORtight + nVetoMuon_looseORtight == 0)"
+}
+
+
+SRBase = "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && nJetBtagLoose>0"
+
+SRregions = {
+    "SR":                    SRBase,
+    "SR0fjets":              SRBase + " && nForwardJet==0",
+    "SRatleast1fjets":       SRBase + " && nForwardJet>0",
+
+    "SRTopRes":              SRBase + " && EventTopCategory==1",
+    "SRTopRes0fjets":        SRBase + " && EventTopCategory==1 && nForwardJet==0",
+    "SRTopResatleast1fjets": SRBase + " && EventTopCategory==1 && nForwardJet>0",
+
+    "SRTopMix":              SRBase + " && EventTopCategory==2",
+    "SRTopMix0fjets":        SRBase + " && EventTopCategory==2 && nForwardJet==0",
+    "SRTopMixatleast1fjets": SRBase + " && EventTopCategory==2 && nForwardJet>0",
+
+    "SRTopMer":              SRBase + " && EventTopCategory==3",
+    "SRTopMer0fjets":        SRBase + " && EventTopCategory==3 && nForwardJet==0",
+    "SRTopMeratleast1fjets": SRBase + " && EventTopCategory==3 && nForwardJet>0",
+
+    "SRTop":                 SRBase + " && EventTopCategory>=1 && EventTopCategory<=3",
+    "SRTop0fjets":           SRBase + " && EventTopCategory>=1 && EventTopCategory<=3 && nForwardJet==0",
+    "SRTopatleast1fjets":    SRBase + " && EventTopCategory>=1 && EventTopCategory<=3 && nForwardJet>0",
+
+    "SRTopLoose":            SRBase + " && EventTopCategory>=4 && EventTopCategory<=6",
+    "SRTop0fjetsLoose":      SRBase + " && EventTopCategory>=4 && EventTopCategory<=6 && nForwardJet==0",
+    "SRTopatleast1fjetsLoose": SRBase + " && EventTopCategory>=4 && EventTopCategory<=6 && nForwardJet>0",
+
+    "SRTopResLoose":         SRBase + " && EventTopCategory==4",
+    "SRTop0fjetsResLoose":   SRBase + " && EventTopCategory==4 && nForwardJet==0",
+    "SRTopatleast1fjetsResLoose": SRBase + " && EventTopCategory==4 && nForwardJet>0",
+
+    "SRTopMixLoose":         SRBase + " && EventTopCategory==5",
+    "SRTop0fjetsMixLoose":   SRBase + " && EventTopCategory==5 && nForwardJet==0",
+    "SRTopatleast1fjetsMixLoose": SRBase + " && EventTopCategory==5 && nForwardJet>0",
+
+    "SRTopMerLoose":         SRBase + " && EventTopCategory==6",
+    "SRTop0fjetsMerLoose":   SRBase + " && EventTopCategory==6 && nForwardJet==0",
+    "SRTopatleast1fjetsMerLoose": SRBase + " && EventTopCategory==6 && nForwardJet>0",
+
+
+    "AH"                   : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi<0.6 && nJetBtagLoose > 0",
+    "AHTight"              : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi<0.6 && nJetBtagMedium > 0 && EventTopCategory>=1 && EventTopCategory<=3",
+    "AHLoose"              : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi<0.6 && nJetBtagMedium > 0 && EventTopCategory>=4 && EventTopCategory<=6",
+
+    "SL"                   : singleLep + " && nJetBtagLoose > 0 && PuppiMET_T1_pt_nominal>250",
+    "SLTight"              : singleLep + " && nJetBtagMedium > 0 && EventTopCategory>=1 && EventTopCategory<=3",
+    "SLLoose"              : singleLep + " && nJetBtagMedium > 0 && EventTopCategory>=4 && EventTopCategory<=6",
+
+    "AH1lWR"               : singleLep + " && nGoodJet>=3 && MT<=140 && nJetBtagLoose == 0 && PuppiMET_T1_pt_nominal>250",
+    "AH1lWRTight"          : singleLep + " && nGoodJet>=3 && MT<=140 && nJetBtagMedium == 0 && EventTopCategory>=1 && EventTopCategory<=3",
+    "AH1lWRLoose"          : singleLep + " && nGoodJet>=3 && MT<=140 && nJetBtagMedium == 0 && EventTopCategory>=4 && EventTopCategory<=6",
+
+    "AH0lZR"               : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>2.5 && nJetBtagLoose==0",
+    "AH0lZRTight"          : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>2.5 && nJetBtagLoose==0 && EventTopCategory>=1 && EventTopCategory<=3",
+    "AH0lZRLoose"          : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>2.5 && nJetBtagLoose==0 && EventTopCategory>=4 && EventTopCategory<=6",
+
+
+}
+
+
+
+regions = {}
+
+for vetoName, vetoCut in lepVetos.items():
+    for regionName, regionCut in SRregions.items():
+
+        newName = f"{regionName}_{vetoName}_lepVeto"
+        newCut = f"({regionCut}) && ({vetoCut})"
+
+        regions[newName] = newCut
+
+
+
+'''
 regions = {
 
     ################### May2024
-    "btagSFcheck"                   : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon==0)",
+    #"BaselineCutOnly"               :"1",
+    #"LooseVetoCut"                  :"(nVetoElectron_loose==0 && nVetoMuon_loose==0)",
+    #"TightVetoCut"                  :"(nVetoElectron_tight==0 && nVetoMuon_tight==0)",
+    #"LooseORTightVetCut"            :"(nVetoElectron_looseORtight==0 && nVetoMuon_looseORtight==0)",
+
+    "SRTop_NO_lepVeto"                         : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && nJetBtagLoose>0 && EventTopCategory>=1 && EventTopCategory<=3",
+    "SRTop_loose_lepVeto"                         : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron_loose==0 && nVetoMuon_loose==0) && nJetBtagLoose>0 && EventTopCategory>=1 && EventTopCategory<=3",
+    "SRTop_tight_lepVeto"                         : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron_tight==0 && nVetoMuon_tight==0) && nJetBtagLoose>0 && EventTopCategory>=1 && EventTopCategory<=3",
+    "SRTop_looseORtight_lepVeto"                  : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron_looseORtight==0 && nVetoMuon_looseORtight==0) && nJetBtagLoose>0 && EventTopCategory>=1 && EventTopCategory<=3",
+  
+    
+    #"btagSFcheck"                   : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon==0)",
 
     # "SRmhtg100"             : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && MHT>100",
     # "SRmhtl100"             : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && MHT<100",
@@ -223,3 +329,5 @@ regions = {
     # "PreselNoTop"          : "PuppiMET_T1_pt_nominal>250 && EventTopCategory==4",
     
 }
+
+'''
