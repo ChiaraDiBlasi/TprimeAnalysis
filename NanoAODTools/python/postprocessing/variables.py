@@ -96,7 +96,13 @@ vars.append(variable(name = "Top_score", title= "Top Score", nbins = 40, xmin = 
 vars.append(variable(name = "MT_T", title= "M_{T} [GeV]", nbins = 30, xmin = 500, xmax=2000, noUnOvFlowbin = True))
 vars.append(variable(name = "FatJet_particleNetWithMass_TvsQCD", title= "Top Score", nbins = 40, xmin = 0, xmax=1, noUnOvFlowbin = True))
 vars.append(variable(name = "FatJet_msoftdrop_nominal", title= "FatJet m_{SD} [GeV]", nbins = 20, xmin = 70, xmax=110))
-
+#vars.append(variable(name = "nVetoElectron_tight", title= "Tight Elctron Number", nbins = 10, xmin = -0.5, xmax=9.5))
+#vars.append(variable(name = "nVetoMuon_tight", title= "Tight Muons Number", nbins = 10, xmin = -0.5, xmax=9.5))
+#vars.append(variable(name = "nVetoMuon_looseORtight", title= "Loose OR Tight Muons", nbins = 10, xmin = -0.5, xmax=9.5))
+#vars.append(variable(name = "nVetoElectron_looseORtight", title= "Loose OR Tight Electrons", nbins = 10, xmin = -0.5, xmax=9.5))
+#vars.append(variable(name = "nVetoElectron_tight", title= "Tight Elctron Number", nbins = 10, xmin = -0.5, xmax=9.5))
+#vars.append(variable(name = "nVetoMuon_loose", title= "Loose Muons Number", nbins = 10, xmin = -0.5, xmax=9.5))
+#vars.append(variable(name = "nVetoElectron_loose", title= "Loose Electrons Number", nbins = 10, xmin = -0.5, xmax=9.5))
 
 # vars.append(variable(name = "Top_isolationPtJetsdR04", title= "Top Iso p_{T} (#Delta R=0.4)", nbins = 20, xmin = 0, xmax=2, noUnOvFlowbin = True))
 # vars.append(variable(name = "Top_isolationPtJetsdR06", title= "Top Iso p_{T} (#Delta R=0.6)", nbins = 20, xmin = 0, xmax=2, noUnOvFlowbin = True))
@@ -134,92 +140,443 @@ singleMu    = "(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && 
 singleE     = "(nTightElectron == 1 && nVetoElectron == 1 && nTightMuon == 0 && nVetoMuon == 0)"
 SRPresel    = "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0"
 
+
+# ============================================================
+# LEPTON VETO DEFINITIONS
+# ============================================================
+#
+# Four possible selections:
+#
+# NO           -> no lepton veto
+# loose        -> loose lepton veto
+# tight        -> tight lepton veto
+# looseORtight -> loose OR tight lepton veto
+#
+# The dictionary values are C++ expressions interpreted
+# by ROOT.RDataFrame.Filter().
+# ============================================================
+
+lepVetos = {
+
+    "NO": "1",
+
+    "loose": (
+        "(nVetoElectron_loose + nVetoMuon_loose == 0)"
+    ),
+
+    "tight": (
+        "(nVetoElectron_tight + nVetoMuon_tight == 0)"
+    ),
+
+    "looseORtight": (
+        "(nVetoElectron_looseORtight + "
+        "nVetoMuon_looseORtight == 0)"
+    )
+}
+
+# ============================================================
+# SIGNAL REGION PRESELECTION WITHOUT LEPTON VETO
+# ============================================================
+#
+# IMPORTANT:
+# Do not include any lepton veto here.
+# It will be added automatically for each configuration.
+# ============================================================
+
+SRBase = (
+    "PuppiMET_T1_pt_nominal>250 && "
+    "MinDelta_phi>0.6 && "
+    "nJetBtagLoose>0"
+)
+
+# Keep a veto-free preselection for possible external use.
+SRPresel = SRBase
+
+
+# ============================================================
+# SIGNAL REGIONS WITHOUT LEPTON VETO
+# ============================================================
+#
+# Define each signal region only once.
+# All veto configurations will be generated automatically.
+# ============================================================
+
+SRregions = {
+
+    # --------------------------------------------------------
+    # Inclusive signal regions
+    # --------------------------------------------------------
+
+    "SR":
+        SRBase,
+
+    "SR0fjets":
+        SRBase + " && nForwardJet==0",
+
+    "SRatleast1fjets":
+        SRBase + " && nForwardJet>0",
+
+
+    # --------------------------------------------------------
+    # Tight Top - Resolved (category 1)
+    # --------------------------------------------------------
+
+    "SRTopRes":
+        SRBase + " && EventTopCategory==1",
+
+    "SRTopRes0fjets":
+        SRBase + " && EventTopCategory==1 && nForwardJet==0",
+
+    "SRTopResatleast1fjets":
+        SRBase + " && EventTopCategory==1 && nForwardJet>0",
+
+
+    # --------------------------------------------------------
+    # Tight Top - Mixed (category 2)
+    # --------------------------------------------------------
+
+    "SRTopMix":
+        SRBase + " && EventTopCategory==2",
+
+    "SRTopMix0fjets":
+        SRBase + " && EventTopCategory==2 && nForwardJet==0",
+
+    "SRTopMixatleast1fjets":
+        SRBase + " && EventTopCategory==2 && nForwardJet>0",
+
+
+    # --------------------------------------------------------
+    # Tight Top - Merged (category 3)
+    # --------------------------------------------------------
+
+    "SRTopMer":
+        SRBase + " && EventTopCategory==3",
+
+    "SRTopMer0fjets":
+        SRBase + " && EventTopCategory==3 && nForwardJet==0",
+
+    "SRTopMeratleast1fjets":
+        SRBase + " && EventTopCategory==3 && nForwardJet>0",
+
+
+    # --------------------------------------------------------
+    # Inclusive Tight Top (categories 1, 2, 3)
+    # --------------------------------------------------------
+
+    "SRTop":
+        SRBase + " && EventTopCategory>=1 && EventTopCategory<=3",
+
+    "SRTop0fjets":
+        SRBase + " && EventTopCategory>=1 && EventTopCategory<=3 && nForwardJet==0",
+
+    "SRTopatleast1fjets":
+        SRBase + " && EventTopCategory>=1 && EventTopCategory<=3 && nForwardJet>0",
+
+
+    # --------------------------------------------------------
+    # Inclusive Loose Top (categories 4, 5, 6)
+    # --------------------------------------------------------
+
+    "SRTopLoose":
+        SRBase + " && EventTopCategory>=4 && EventTopCategory<=6",
+
+    "SRTop0fjetsLoose":
+        SRBase + " && EventTopCategory>=4 && EventTopCategory<=6 && nForwardJet==0",
+
+    "SRTopatleast1fjetsLoose":
+        SRBase + " && EventTopCategory>=4 && EventTopCategory<=6 && nForwardJet>0",
+
+
+    # --------------------------------------------------------
+    # Loose Top - Resolved (category 4)
+    # --------------------------------------------------------
+
+    "SRTopResLoose":
+        SRBase + " && EventTopCategory==4",
+
+    "SRTop0fjetsResLoose":
+        SRBase + " && EventTopCategory==4 && nForwardJet==0",
+
+    "SRTopatleast1fjetsResLoose":
+        SRBase + " && EventTopCategory==4 && nForwardJet>0",
+
+
+    # --------------------------------------------------------
+    # Loose Top - Mixed (category 5)
+    # --------------------------------------------------------
+
+    "SRTopMixLoose":
+        SRBase + " && EventTopCategory==5",
+
+    "SRTop0fjetsMixLoose":
+        SRBase + " && EventTopCategory==5 && nForwardJet==0",
+
+    "SRTopatleast1fjetsMixLoose":
+        SRBase + " && EventTopCategory==5 && nForwardJet>0",
+
+
+    # --------------------------------------------------------
+    # Loose Top - Merged (category 6)
+    # --------------------------------------------------------
+
+    "SRTopMerLoose":
+        SRBase + " && EventTopCategory==6",
+
+    "SRTop0fjetsMerLoose":
+        SRBase + " && EventTopCategory==6 && nForwardJet==0",
+
+    "SRTopatleast1fjetsMerLoose":
+        SRBase + " && EventTopCategory==6 && nForwardJet>0",
+
+
+
+
+    
+    # --------------------------------------------------------
+    # AH CONTROL REGION
+    # --------------------------------------------------------
+
+    "AH":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi<0.6 && "
+        "nJetBtagLoose>0",
+
+    "AHTight":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi<0.6 && "
+        "nJetBtagMedium>0 && "
+        "EventTopCategory>=1 && EventTopCategory<=3",
+
+    "AHLoose":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi<0.6 && "
+        "nJetBtagMedium>0 && "
+        "EventTopCategory>=4 && EventTopCategory<=6",
+
+
+    # --------------------------------------------------------
+    # SINGLE LEPTON CONTROL REGION
+    # --------------------------------------------------------
+
+    "SL":
+        singleLep +
+        " && nJetBtagLoose>0 && "
+        "PuppiMET_T1_pt_nominal>250",
+
+    "SLTight":
+        singleLep +
+        " && nJetBtagMedium>0 && "
+        "EventTopCategory>=1 && EventTopCategory<=3",
+
+    "SLLoose":
+        singleLep +
+        " && nJetBtagMedium>0 && "
+        "EventTopCategory>=4 && EventTopCategory<=6",
+
+
+    # --------------------------------------------------------
+    # W CONTROL REGION
+    # --------------------------------------------------------
+
+    "AH1lWR":
+        singleLep +
+        " && nGoodJet>=3 && "
+        "MT<=140 && "
+        "nJetBtagLoose==0 && "
+        "PuppiMET_T1_pt_nominal>250",
+
+    "AH1lWRTight":
+        singleLep +
+        " && nGoodJet>=3 && "
+        "MT<=140 && "
+        "nJetBtagMedium==0 && "
+        "EventTopCategory>=1 && EventTopCategory<=3",
+
+    "AH1lWRLoose":
+        singleLep +
+        " && nGoodJet>=3 && "
+        "MT<=140 && "
+        "nJetBtagMedium==0 && "
+        "EventTopCategory>=4 && EventTopCategory<=6",
+
+
+    # --------------------------------------------------------
+    # Z CONTROL REGION
+    # --------------------------------------------------------
+
+    "AH0lZR":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi>2.5 && "
+        "nJetBtagLoose==0",
+
+    "AH0lZRTight":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi>2.5 && "
+        "nJetBtagLoose==0 && "
+        "EventTopCategory>=1 && EventTopCategory<=3",
+
+    "AH0lZRLoose":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi>2.5 && "
+        "nJetBtagLoose==0 && "
+        "EventTopCategory>=4 && EventTopCategory<=6",
+}
+
+
+# ============================================================
+# CONTROL REGIONS
+# ============================================================
+#
+# These regions are kept unchanged with respect to the
+# original code.
+#
+# The automatic lepton veto loop will be applied only
+# to the Signal Regions.
+# ============================================================
+regions = {}
+"""
 regions = {
 
-    ################### May2024
-    "btagSFcheck"                   : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon==0)",
+    # --------------------------------------------------------
+    # AH CONTROL REGION
+    # --------------------------------------------------------
 
-    # "SRmhtg100"             : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && MHT>100",
-    # "SRmhtl100"             : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && MHT<100",
-    # "SRnoPU"               : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0",
-    
-    "SR"                            : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0",
-    "SR0fjets"                      : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet==0",
-    "SRatleast1fjets"               : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet>0",
-    "SRTopRes"                      : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==1",
-    "SRTopRes0fjets"                : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==1 && nForwardJet==0",
-    "SRTopResatleast1fjets"         : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==1 && nForwardJet>0",
-    "SRTopMix"                      : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==2",
-    "SRTopMix0fjets"                : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==2 && nForwardJet==0",
-    "SRTopMixatleast1fjets"         : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==2 && nForwardJet>0",
-    "SRTopMer"                      : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==3",
-    "SRTopMer0fjets"                : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==3 && nForwardJet==0",
-    "SRTopMeratleast1fjets"         : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==3 && nForwardJet>0",
-    "SRTop"                         : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory>=1 && EventTopCategory<=3",
-    "SRTop0fjets"                   : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet==0 && EventTopCategory>=1 && EventTopCategory<=3",
-    "SRTopatleast1fjets"            : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet>0 && EventTopCategory>=1 && EventTopCategory<=3",
+    "AH":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi<0.6 && "
+        "(nVetoMuon+nVetoElectron)==0 && "
+        "nJetBtagLoose>0",
 
-    "SRTopLoose"                    : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory>=4 && EventTopCategory<=6",
-    "SRTop0fjetsLoose"              : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet==0 && EventTopCategory>=4 && EventTopCategory<=6",
-    "SRTopatleast1fjetsLoose"       : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet>0 && EventTopCategory>=4 && EventTopCategory<=6",
-    "SRTopResLoose"                 : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==4",
-    "SRTop0fjetsResLoose"           : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet==0 && EventTopCategory==4",
-    "SRTopatleast1fjetsResLoose"    : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet>0 && EventTopCategory==4",
-    "SRTopMixLoose"                 : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==5",
-    "SRTop0fjetsMixLoose"           : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet==0 && EventTopCategory==5",
-    "SRTopatleast1fjetsMixLoose"    : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet>0 && EventTopCategory==5",
-    "SRTopMerLoose"                 : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==6",
-    "SRTop0fjetsMerLoose"           : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet==0 && EventTopCategory==6",
-    "SRTopatleast1fjetsMerLoose"    : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && nForwardJet>0 && EventTopCategory==6",
-    
+    "AHTight":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi<0.6 && "
+        "(nVetoMuon+nVetoElectron)==0 && "
+        "nJetBtagMedium>0 && "
+        "EventTopCategory>=1 && EventTopCategory<=3",
+
+    "AHLoose":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi<0.6 && "
+        "(nVetoMuon+nVetoElectron)==0 && "
+        "nJetBtagMedium>0 && "
+        "EventTopCategory>=4 && EventTopCategory<=6",
 
 
+    # --------------------------------------------------------
+    # SINGLE LEPTON CONTROL REGION
+    # --------------------------------------------------------
 
-    # "Presel"               : "PuppiMET_T1_pt_nominal>250",
-    "AH"                   : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi<0.6 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagLoose > 0",
-    # "AHResLoose"           : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi<0.6 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagMedium > 0 && EventTopCategory==4",
-    # "AHMixLoose"           : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi<0.6 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagMedium > 0 && EventTopCategory==5",
-    # "AHMerLoose"           : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi<0.6 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagMedium > 0 && EventTopCategory==6",
-    "AHTight"              : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi<0.6 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagMedium > 0 && EventTopCategory>=1 && EventTopCategory<=3",
-    "AHLoose"              : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi<0.6 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagMedium > 0 && EventTopCategory>=4 && EventTopCategory<=6",
+    "SL":
+        singleLep +
+        " && nJetBtagLoose>0 && "
+        "PuppiMET_T1_pt_nominal>250",
 
-    "SL"                   : singleLep + " && nJetBtagLoose > 0 && PuppiMET_T1_pt_nominal>250",
-    # "SLResLoose"           : singleLep + " && nJetBtagMedium > 0 && EventTopCategory==4",
-    # "SLMixLoose"           : singleLep + " && nJetBtagMedium > 0 && EventTopCategory==5",
-    # "SLMerLoose"           : singleLep + " && nJetBtagMedium > 0 && EventTopCategory==6",
-    "SLTight"              : singleLep + " && nJetBtagMedium > 0 && EventTopCategory>=1 && EventTopCategory<=3",
-    "SLLoose"              : singleLep + " && nJetBtagMedium > 0 && EventTopCategory>=4 && EventTopCategory<=6",
+    "SLTight":
+        singleLep +
+        " && nJetBtagMedium>0 && "
+        "EventTopCategory>=1 && EventTopCategory<=3",
 
-    # # "SEl"                  : singleE   + " && nJetBtagMedium > 0",
-    # # "SMu"                  : singleMu  + " && nJetBtagMedium > 0",
-
-    "AH1lWR"               : singleLep + " && nGoodJet>=3 && MT<=140 && nJetBtagLoose == 0 && PuppiMET_T1_pt_nominal>250",
-    # "AH1lWRResLoose"       : singleLep + " && nGoodJet>=3 && MT<=140 && nJetBtagMedium == 0 && EventTopCategory==4",
-    # "AH1lWRMixLoose"       : singleLep + " && nGoodJet>=3 && MT<=140 && nJetBtagMedium == 0 && EventTopCategory==5",
-    # "AH1lWRMerLoose"       : singleLep + " && nGoodJet>=3 && MT<=140 && nJetBtagMedium == 0 && EventTopCategory==6",
-    "AH1lWRTight"          : singleLep + " && nGoodJet>=3 && MT<=140 && nJetBtagMedium == 0 && EventTopCategory>=1 && EventTopCategory<=3",
-    "AH1lWRLoose"          : singleLep + " && nGoodJet>=3 && MT<=140 && nJetBtagMedium == 0 && EventTopCategory>=4 && EventTopCategory<=6",
-    # "AH1lWREl"             : singleE   + " && nGoodJet>=3 && MT<=140 && nJetBtagMedium == 0",
-    # "AH1lWRMu"             : singleMu  + " && nGoodJet>=3 && MT<=140 && nJetBtagMedium == 0",
-
-    "AH0lZR"               : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>2.5 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagLoose==0",
-    # "AH0lZRResLoose"       : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>2.5 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagLoose==0 && EventTopCategory==4",
-    # "AH0lZRMixLoose"       : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>2.5 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagLoose==0 && EventTopCategory==5",
-    # "AH0lZRMerLoose"       : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>2.5 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagLoose==0 && EventTopCategory==6",
-    "AH0lZRTight"          : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>2.5 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagLoose==0 && EventTopCategory>=1 && EventTopCategory<=3",
-    "AH0lZRLoose"          : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>2.5 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagLoose==0 && EventTopCategory>=4 && EventTopCategory<=6",
+    "SLLoose":
+        singleLep +
+        " && nJetBtagMedium>0 && "
+        "EventTopCategory>=4 && EventTopCategory<=6",
 
 
+    # --------------------------------------------------------
+    # W CONTROL REGION
+    # --------------------------------------------------------
 
-    # "AH0lQCDR"             : "PuppiMET_T1_pt_nominal<250 && MinDelta_phi<0.6 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagMedium == 0", 
-    # "NoTop"                : "PuppiMET_T1_pt_nominal>250 && MinDelta_phi>0.6 && (nVetoElectron==0 && nVetoMuon ==0) && nJetBtagLoose>0 && EventTopCategory==4",
+    "AH1lWR":
+        singleLep +
+        " && nGoodJet>=3 && "
+        "MT<=140 && "
+        "nJetBtagLoose==0 && "
+        "PuppiMET_T1_pt_nominal>250",
+
+    "AH1lWRTight":
+        singleLep +
+        " && nGoodJet>=3 && "
+        "MT<=140 && "
+        "nJetBtagMedium==0 && "
+        "EventTopCategory>=1 && EventTopCategory<=3",
+
+    "AH1lWRLoose":
+        singleLep +
+        " && nGoodJet>=3 && "
+        "MT<=140 && "
+        "nJetBtagMedium==0 && "
+        "EventTopCategory>=4 && EventTopCategory<=6",
 
 
-    # "PreselNoPu"           : "PuppiMET_T1_pt_nominal>250",
-    # "AHNoPu"               : "PuppiMET_T1_pt_nominal>250 && (nVetoMuon+nVetoElectron) == 0 && nJetBtagMedium > 0",
-    # "PreselResolved"       : "PuppiMET_T1_pt_nominal>250 && EventTopCategory==1",
-    # "PreselMixed"          : "PuppiMET_T1_pt_nominal>250 && EventTopCategory==2",
-    # "PreselMerged"         : "PuppiMET_T1_pt_nominal>250 && EventTopCategory==3",
-    # "PreselNoTop"          : "PuppiMET_T1_pt_nominal>250 && EventTopCategory==4",
-    
+    # --------------------------------------------------------
+    # Z CONTROL REGION
+    # --------------------------------------------------------
+
+    "AH0lZR":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi>2.5 && "
+        "(nVetoMuon+nVetoElectron)==0 && "
+        "nJetBtagLoose==0",
+
+    "AH0lZRTight":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi>2.5 && "
+        "(nVetoMuon+nVetoElectron)==0 && "
+        "nJetBtagLoose==0 && "
+        "EventTopCategory>=1 && EventTopCategory<=3",
+
+    "AH0lZRLoose":
+        "PuppiMET_T1_pt_nominal>250 && "
+        "MinDelta_phi>2.5 && "
+        "(nVetoMuon+nVetoElectron)==0 && "
+        "nJetBtagLoose==0 && "
+        "EventTopCategory>=4 && EventTopCategory<=6",
 }
+"""
+
+
+# ============================================================
+# AUTOMATIC SIGNAL REGION GENERATION
+# ============================================================
+#
+# For every signal region, generate four versions:
+#
+#   _NO_lepVeto
+#   _loose_lepVeto
+#   _tight_lepVeto
+#   _looseORtight_lepVeto
+#
+# Example:
+#
+#   SRTop_NO_lepVeto
+#   SRTop_loose_lepVeto
+#   SRTop_tight_lepVeto
+#   SRTop_looseORtight_lepVeto
+#
+# ============================================================
+
+for vetoName, vetoCut in lepVetos.items():
+
+    for regionName, regionCut in SRregions.items():
+
+        newRegionName = f"{regionName}_{vetoName}_lepVeto"
+
+        newRegionCut = f"({regionCut}) && ({vetoCut})"
+
+        regions[newRegionName] = newRegionCut
+
+
+# ============================================================
+# OPTIONAL CHECKS
+# ============================================================
+#
+# Uncomment these lines to inspect the generated regions.
+# ============================================================
+
+# print("Number of base signal regions:", len(SRregions))
+# print("Number of veto configurations:", len(lepVetos))
+# print("Total number of generated SR:", len(SRregions) * len(lepVetos))
+# print("Total number of regions (SR + CR):", len(regions))
+#
+# for regionName, regionCut in regions.items():
+#     print(regionName, ":", regionCut)

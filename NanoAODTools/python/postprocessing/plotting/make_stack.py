@@ -45,12 +45,18 @@ def make_stack_with_ratio(canv_name, histo_bkg_dict, histo_data=None, histo_sign
         # signals_factor  = 1
 
     # leg                 = CMS.cmsLeg(0.4, 0.88, 0.9, 0.67, textSize=0.025, columns=3)
-    leg                 = CMS.cmsLeg(0.4, 0.83, 0.9, 0.62, textSize=0.03, columns=3)
+    leg                 = CMS.cmsLeg(0.4, 0.83, 0.9, 0.62, textSize=0.025, columns=3)
     if region:
         latex           = ROOT.TLatex()
         latex.SetTextFont(52)
         latex.SetTextSize(0.045)
         latex.DrawLatexNDC(0.15, 0.83, f"{region}")
+        if histo_signals_dict:
+            for label, histo_signal in histo_signals_dict.items():
+                latex_signal = label.split("(")[0].strip()
+                latex_mass = label.split("(")[1].split(",")[1].split(")")[0].strip()
+                latex.DrawLatexNDC(0.15, 0.78, f"{latex_signal}, {latex_mass}")
+                break
 
         # CMS.cmsHeader(leg, f"{region}", textSize=0.05)
 
@@ -111,7 +117,9 @@ def make_stack_with_ratio(canv_name, histo_bkg_dict, histo_data=None, histo_sign
             CMS.cmsDraw(histo_signal, **style_signals_dict[label])
             # if signals_factor != 1:
             #     label = f"{label} [x{signals_factor}]"
-            leg.AddEntry(histo_signal, label, "l")
+            #leg.AddEntry(histo_signal, label, "l")
+            label_phi = label.split("(")[1].split(",")[0]
+            leg.AddEntry(histo_signal, label_phi, "l")
 
     pad1.RedrawAxis()
 
@@ -144,7 +152,7 @@ def make_stack_with_ratio(canv_name, histo_bkg_dict, histo_data=None, histo_sign
             if(h_bkg.GetBinContent(i)):
                 h_bkg_err.SetBinError(i, (h_bkg.GetBinError(i)/h_bkg.GetBinContent(i)))
             else:
-                h_bkg_err.SetBinError(i, 10^(-99))
+                h_bkg_err.SetBinError(i, 1e-99)
         CMS.cmsDraw(h_bkg_err, "e2same0", fcolor=ROOT.kGray+3, fstyle=3001, msize=0)
     else:
         h_bkg_err   = h_bkg.Clone("h_err")
@@ -154,7 +162,7 @@ def make_stack_with_ratio(canv_name, histo_bkg_dict, histo_data=None, histo_sign
             if(h_bkg.GetBinContent(i)):
                 h_bkg_err.SetBinError(i, (h_bkg.GetBinError(i)/h_bkg.GetBinContent(i)))
             else:
-                h_bkg_err.SetBinError(i, 10^(-99))
+                h_bkg_err.SetBinError(i, 1e-99)
         CMS.cmsDraw(h_bkg_err, "e2same0", fcolor=ROOT.kGray+3, fstyle=3001, msize=0)
 
         h_ratio_up   = h_err_syst_up.Clone("h_err_up")

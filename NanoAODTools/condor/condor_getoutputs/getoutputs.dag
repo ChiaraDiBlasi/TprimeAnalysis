@@ -1,0 +1,419 @@
+JOB job_0 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi10_mChi1_2024/condor.sub
+VARS job_0 dataset="TBDM_s_mPhi10_mChi1_2024" jobname="job_0"
+JOB job_1 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi50_mChi1_2024/condor.sub
+VARS job_1 dataset="TBDM_s_mPhi50_mChi1_2024" jobname="job_1"
+PARENT job_0 CHILD job_1
+JOB job_2 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi100_mChi1_2024/condor.sub
+VARS job_2 dataset="TBDM_s_mPhi100_mChi1_2024" jobname="job_2"
+PARENT job_1 CHILD job_2
+JOB job_3 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi150_mChi1_2024/condor.sub
+VARS job_3 dataset="TBDM_s_mPhi150_mChi1_2024" jobname="job_3"
+PARENT job_2 CHILD job_3
+JOB job_4 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi200_mChi1_2024/condor.sub
+VARS job_4 dataset="TBDM_s_mPhi200_mChi1_2024" jobname="job_4"
+PARENT job_3 CHILD job_4
+JOB job_5 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi250_mChi1_2024/condor.sub
+VARS job_5 dataset="TBDM_s_mPhi250_mChi1_2024" jobname="job_5"
+PARENT job_4 CHILD job_5
+JOB job_6 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi300_mChi1_2024/condor.sub
+VARS job_6 dataset="TBDM_s_mPhi300_mChi1_2024" jobname="job_6"
+PARENT job_5 CHILD job_6
+JOB job_7 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi350_mChi1_2024/condor.sub
+VARS job_7 dataset="TBDM_s_mPhi350_mChi1_2024" jobname="job_7"
+PARENT job_6 CHILD job_7
+JOB job_8 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi400_mChi1_2024/condor.sub
+VARS job_8 dataset="TBDM_s_mPhi400_mChi1_2024" jobname="job_8"
+PARENT job_7 CHILD job_8
+JOB job_9 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi500_mChi1_2024/condor.sub
+VARS job_9 dataset="TBDM_s_mPhi500_mChi1_2024" jobname="job_9"
+PARENT job_8 CHILD job_9
+JOB job_10 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi600_mChi1_2024/condor.sub
+VARS job_10 dataset="TBDM_s_mPhi600_mChi1_2024" jobname="job_10"
+PARENT job_9 CHILD job_10
+JOB job_11 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi700_mChi1_2024/condor.sub
+VARS job_11 dataset="TBDM_s_mPhi700_mChi1_2024" jobname="job_11"
+PARENT job_10 CHILD job_11
+JOB job_12 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi800_mChi1_2024/condor.sub
+VARS job_12 dataset="TBDM_s_mPhi800_mChi1_2024" jobname="job_12"
+PARENT job_11 CHILD job_12
+JOB job_13 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi1000_mChi1_2024/condor.sub
+VARS job_13 dataset="TBDM_s_mPhi1000_mChi1_2024" jobname="job_13"
+PARENT job_12 CHILD job_13
+JOB job_14 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi10_mChi1_2024/condor.sub
+VARS job_14 dataset="TBDM_ps_mPhi10_mChi1_2024" jobname="job_14"
+PARENT job_13 CHILD job_14
+JOB job_15 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi50_mChi1_2024/condor.sub
+VARS job_15 dataset="TBDM_ps_mPhi50_mChi1_2024" jobname="job_15"
+PARENT job_14 CHILD job_15
+JOB job_16 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi100_mChi1_2024/condor.sub
+VARS job_16 dataset="TBDM_ps_mPhi100_mChi1_2024" jobname="job_16"
+PARENT job_15 CHILD job_16
+JOB job_17 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi150_mChi1_2024/condor.sub
+VARS job_17 dataset="TBDM_ps_mPhi150_mChi1_2024" jobname="job_17"
+PARENT job_16 CHILD job_17
+JOB job_18 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi200_mChi1_2024/condor.sub
+VARS job_18 dataset="TBDM_ps_mPhi200_mChi1_2024" jobname="job_18"
+PARENT job_17 CHILD job_18
+JOB job_19 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi250_mChi1_2024/condor.sub
+VARS job_19 dataset="TBDM_ps_mPhi250_mChi1_2024" jobname="job_19"
+PARENT job_18 CHILD job_19
+JOB job_20 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi300_mChi1_2024/condor.sub
+VARS job_20 dataset="TBDM_ps_mPhi300_mChi1_2024" jobname="job_20"
+PARENT job_19 CHILD job_20
+JOB job_21 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi350_mChi1_2024/condor.sub
+VARS job_21 dataset="TBDM_ps_mPhi350_mChi1_2024" jobname="job_21"
+PARENT job_20 CHILD job_21
+JOB job_22 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi400_mChi1_2024/condor.sub
+VARS job_22 dataset="TBDM_ps_mPhi400_mChi1_2024" jobname="job_22"
+PARENT job_21 CHILD job_22
+JOB job_23 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi500_mChi1_2024/condor.sub
+VARS job_23 dataset="TBDM_ps_mPhi500_mChi1_2024" jobname="job_23"
+PARENT job_22 CHILD job_23
+JOB job_24 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi600_mChi1_2024/condor.sub
+VARS job_24 dataset="TBDM_ps_mPhi600_mChi1_2024" jobname="job_24"
+PARENT job_23 CHILD job_24
+JOB job_25 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi700_mChi1_2024/condor.sub
+VARS job_25 dataset="TBDM_ps_mPhi700_mChi1_2024" jobname="job_25"
+PARENT job_24 CHILD job_25
+JOB job_26 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi800_mChi1_2024/condor.sub
+VARS job_26 dataset="TBDM_ps_mPhi800_mChi1_2024" jobname="job_26"
+PARENT job_25 CHILD job_26
+JOB job_27 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_ps_mPhi1000_mChi1_2024/condor.sub
+VARS job_27 dataset="TBDM_ps_mPhi1000_mChi1_2024" jobname="job_27"
+PARENT job_26 CHILD job_27
+JOB job_28 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi10_mChi1_2024/condor.sub
+VARS job_28 dataset="TTDM_s_mPhi10_mChi1_2024" jobname="job_28"
+PARENT job_27 CHILD job_28
+JOB job_29 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi50_mChi1_2024/condor.sub
+VARS job_29 dataset="TTDM_s_mPhi50_mChi1_2024" jobname="job_29"
+PARENT job_28 CHILD job_29
+JOB job_30 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi100_mChi1_2024/condor.sub
+VARS job_30 dataset="TTDM_s_mPhi100_mChi1_2024" jobname="job_30"
+PARENT job_29 CHILD job_30
+JOB job_31 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi150_mChi1_2024/condor.sub
+VARS job_31 dataset="TTDM_s_mPhi150_mChi1_2024" jobname="job_31"
+PARENT job_30 CHILD job_31
+JOB job_32 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi200_mChi1_2024/condor.sub
+VARS job_32 dataset="TTDM_s_mPhi200_mChi1_2024" jobname="job_32"
+PARENT job_31 CHILD job_32
+JOB job_33 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi250_mChi1_2024/condor.sub
+VARS job_33 dataset="TTDM_s_mPhi250_mChi1_2024" jobname="job_33"
+PARENT job_32 CHILD job_33
+JOB job_34 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi300_mChi1_2024/condor.sub
+VARS job_34 dataset="TTDM_s_mPhi300_mChi1_2024" jobname="job_34"
+PARENT job_33 CHILD job_34
+JOB job_35 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi350_mChi1_2024/condor.sub
+VARS job_35 dataset="TTDM_s_mPhi350_mChi1_2024" jobname="job_35"
+PARENT job_34 CHILD job_35
+JOB job_36 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi400_mChi1_2024/condor.sub
+VARS job_36 dataset="TTDM_s_mPhi400_mChi1_2024" jobname="job_36"
+PARENT job_35 CHILD job_36
+JOB job_37 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi500_mChi1_2024/condor.sub
+VARS job_37 dataset="TTDM_s_mPhi500_mChi1_2024" jobname="job_37"
+PARENT job_36 CHILD job_37
+JOB job_38 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi600_mChi1_2024/condor.sub
+VARS job_38 dataset="TTDM_s_mPhi600_mChi1_2024" jobname="job_38"
+PARENT job_37 CHILD job_38
+JOB job_39 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi700_mChi1_2024/condor.sub
+VARS job_39 dataset="TTDM_s_mPhi700_mChi1_2024" jobname="job_39"
+PARENT job_38 CHILD job_39
+JOB job_40 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi800_mChi1_2024/condor.sub
+VARS job_40 dataset="TTDM_s_mPhi800_mChi1_2024" jobname="job_40"
+PARENT job_39 CHILD job_40
+JOB job_41 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_s_mPhi1000_mChi1_2024/condor.sub
+VARS job_41 dataset="TTDM_s_mPhi1000_mChi1_2024" jobname="job_41"
+PARENT job_40 CHILD job_41
+JOB job_42 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi10_mChi1_2024/condor.sub
+VARS job_42 dataset="TTDM_ps_mPhi10_mChi1_2024" jobname="job_42"
+PARENT job_41 CHILD job_42
+JOB job_43 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi50_mChi1_2024/condor.sub
+VARS job_43 dataset="TTDM_ps_mPhi50_mChi1_2024" jobname="job_43"
+PARENT job_42 CHILD job_43
+JOB job_44 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi100_mChi1_2024/condor.sub
+VARS job_44 dataset="TTDM_ps_mPhi100_mChi1_2024" jobname="job_44"
+PARENT job_43 CHILD job_44
+JOB job_45 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi150_mChi1_2024/condor.sub
+VARS job_45 dataset="TTDM_ps_mPhi150_mChi1_2024" jobname="job_45"
+PARENT job_44 CHILD job_45
+JOB job_46 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi200_mChi1_2024/condor.sub
+VARS job_46 dataset="TTDM_ps_mPhi200_mChi1_2024" jobname="job_46"
+PARENT job_45 CHILD job_46
+JOB job_47 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi250_mChi1_2024/condor.sub
+VARS job_47 dataset="TTDM_ps_mPhi250_mChi1_2024" jobname="job_47"
+PARENT job_46 CHILD job_47
+JOB job_48 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi300_mChi1_2024/condor.sub
+VARS job_48 dataset="TTDM_ps_mPhi300_mChi1_2024" jobname="job_48"
+PARENT job_47 CHILD job_48
+JOB job_49 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi350_mChi1_2024/condor.sub
+VARS job_49 dataset="TTDM_ps_mPhi350_mChi1_2024" jobname="job_49"
+PARENT job_48 CHILD job_49
+JOB job_50 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi400_mChi1_2024/condor.sub
+VARS job_50 dataset="TTDM_ps_mPhi400_mChi1_2024" jobname="job_50"
+PARENT job_49 CHILD job_50
+JOB job_51 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi500_mChi1_2024/condor.sub
+VARS job_51 dataset="TTDM_ps_mPhi500_mChi1_2024" jobname="job_51"
+PARENT job_50 CHILD job_51
+JOB job_52 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi600_mChi1_2024/condor.sub
+VARS job_52 dataset="TTDM_ps_mPhi600_mChi1_2024" jobname="job_52"
+PARENT job_51 CHILD job_52
+JOB job_53 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi700_mChi1_2024/condor.sub
+VARS job_53 dataset="TTDM_ps_mPhi700_mChi1_2024" jobname="job_53"
+PARENT job_52 CHILD job_53
+JOB job_54 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi800_mChi1_2024/condor.sub
+VARS job_54 dataset="TTDM_ps_mPhi800_mChi1_2024" jobname="job_54"
+PARENT job_53 CHILD job_54
+JOB job_55 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTDM_ps_mPhi1000_mChi1_2024/condor.sub
+VARS job_55 dataset="TTDM_ps_mPhi1000_mChi1_2024" jobname="job_55"
+PARENT job_54 CHILD job_55
+JOB job_56 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi10_mChi1_2024/condor.sub
+VARS job_56 dataset="TWDM_s_mPhi10_mChi1_2024" jobname="job_56"
+PARENT job_55 CHILD job_56
+JOB job_57 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi50_mChi1_2024/condor.sub
+VARS job_57 dataset="TWDM_s_mPhi50_mChi1_2024" jobname="job_57"
+PARENT job_56 CHILD job_57
+JOB job_58 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi100_mChi1_2024/condor.sub
+VARS job_58 dataset="TWDM_s_mPhi100_mChi1_2024" jobname="job_58"
+PARENT job_57 CHILD job_58
+JOB job_59 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi150_mChi1_2024/condor.sub
+VARS job_59 dataset="TWDM_s_mPhi150_mChi1_2024" jobname="job_59"
+PARENT job_58 CHILD job_59
+JOB job_60 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi200_mChi1_2024/condor.sub
+VARS job_60 dataset="TWDM_s_mPhi200_mChi1_2024" jobname="job_60"
+PARENT job_59 CHILD job_60
+JOB job_61 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi250_mChi1_2024/condor.sub
+VARS job_61 dataset="TWDM_s_mPhi250_mChi1_2024" jobname="job_61"
+PARENT job_60 CHILD job_61
+JOB job_62 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi300_mChi1_2024/condor.sub
+VARS job_62 dataset="TWDM_s_mPhi300_mChi1_2024" jobname="job_62"
+PARENT job_61 CHILD job_62
+JOB job_63 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi350_mChi1_2024/condor.sub
+VARS job_63 dataset="TWDM_s_mPhi350_mChi1_2024" jobname="job_63"
+PARENT job_62 CHILD job_63
+JOB job_64 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi400_mChi1_2024/condor.sub
+VARS job_64 dataset="TWDM_s_mPhi400_mChi1_2024" jobname="job_64"
+PARENT job_63 CHILD job_64
+JOB job_65 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi500_mChi1_2024/condor.sub
+VARS job_65 dataset="TWDM_s_mPhi500_mChi1_2024" jobname="job_65"
+PARENT job_64 CHILD job_65
+JOB job_66 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi600_mChi1_2024/condor.sub
+VARS job_66 dataset="TWDM_s_mPhi600_mChi1_2024" jobname="job_66"
+PARENT job_65 CHILD job_66
+JOB job_67 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi700_mChi1_2024/condor.sub
+VARS job_67 dataset="TWDM_s_mPhi700_mChi1_2024" jobname="job_67"
+PARENT job_66 CHILD job_67
+JOB job_68 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi800_mChi1_2024/condor.sub
+VARS job_68 dataset="TWDM_s_mPhi800_mChi1_2024" jobname="job_68"
+PARENT job_67 CHILD job_68
+JOB job_69 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_s_mPhi1000_mChi1_2024/condor.sub
+VARS job_69 dataset="TWDM_s_mPhi1000_mChi1_2024" jobname="job_69"
+PARENT job_68 CHILD job_69
+JOB job_70 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi10_mChi1_2024/condor.sub
+VARS job_70 dataset="TWDM_ps_mPhi10_mChi1_2024" jobname="job_70"
+PARENT job_69 CHILD job_70
+JOB job_71 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi50_mChi1_2024/condor.sub
+VARS job_71 dataset="TWDM_ps_mPhi50_mChi1_2024" jobname="job_71"
+PARENT job_70 CHILD job_71
+JOB job_72 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi100_mChi1_2024/condor.sub
+VARS job_72 dataset="TWDM_ps_mPhi100_mChi1_2024" jobname="job_72"
+PARENT job_71 CHILD job_72
+JOB job_73 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi150_mChi1_2024/condor.sub
+VARS job_73 dataset="TWDM_ps_mPhi150_mChi1_2024" jobname="job_73"
+PARENT job_72 CHILD job_73
+JOB job_74 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi200_mChi1_2024/condor.sub
+VARS job_74 dataset="TWDM_ps_mPhi200_mChi1_2024" jobname="job_74"
+PARENT job_73 CHILD job_74
+JOB job_75 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi250_mChi1_2024/condor.sub
+VARS job_75 dataset="TWDM_ps_mPhi250_mChi1_2024" jobname="job_75"
+PARENT job_74 CHILD job_75
+JOB job_76 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi300_mChi1_2024/condor.sub
+VARS job_76 dataset="TWDM_ps_mPhi300_mChi1_2024" jobname="job_76"
+PARENT job_75 CHILD job_76
+JOB job_77 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi350_mChi1_2024/condor.sub
+VARS job_77 dataset="TWDM_ps_mPhi350_mChi1_2024" jobname="job_77"
+PARENT job_76 CHILD job_77
+JOB job_78 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi400_mChi1_2024/condor.sub
+VARS job_78 dataset="TWDM_ps_mPhi400_mChi1_2024" jobname="job_78"
+PARENT job_77 CHILD job_78
+JOB job_79 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi500_mChi1_2024/condor.sub
+VARS job_79 dataset="TWDM_ps_mPhi500_mChi1_2024" jobname="job_79"
+PARENT job_78 CHILD job_79
+JOB job_80 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi600_mChi1_2024/condor.sub
+VARS job_80 dataset="TWDM_ps_mPhi600_mChi1_2024" jobname="job_80"
+PARENT job_79 CHILD job_80
+JOB job_81 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi700_mChi1_2024/condor.sub
+VARS job_81 dataset="TWDM_ps_mPhi700_mChi1_2024" jobname="job_81"
+PARENT job_80 CHILD job_81
+JOB job_82 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi800_mChi1_2024/condor.sub
+VARS job_82 dataset="TWDM_ps_mPhi800_mChi1_2024" jobname="job_82"
+PARENT job_81 CHILD job_82
+JOB job_83 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWDM_ps_mPhi1000_mChi1_2024/condor.sub
+VARS job_83 dataset="TWDM_ps_mPhi1000_mChi1_2024" jobname="job_83"
+PARENT job_82 CHILD job_83
+JOB job_84 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi10_mChi1_2024/condor.sub
+VARS job_84 dataset="TWto2LDM_s_mPhi10_mChi1_2024" jobname="job_84"
+PARENT job_83 CHILD job_84
+JOB job_85 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi50_mChi1_2024/condor.sub
+VARS job_85 dataset="TWto2LDM_s_mPhi50_mChi1_2024" jobname="job_85"
+PARENT job_84 CHILD job_85
+JOB job_86 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi100_mChi1_2024/condor.sub
+VARS job_86 dataset="TWto2LDM_s_mPhi100_mChi1_2024" jobname="job_86"
+PARENT job_85 CHILD job_86
+JOB job_87 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi150_mChi1_2024/condor.sub
+VARS job_87 dataset="TWto2LDM_s_mPhi150_mChi1_2024" jobname="job_87"
+PARENT job_86 CHILD job_87
+JOB job_88 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi200_mChi1_2024/condor.sub
+VARS job_88 dataset="TWto2LDM_s_mPhi200_mChi1_2024" jobname="job_88"
+PARENT job_87 CHILD job_88
+JOB job_89 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi250_mChi1_2024/condor.sub
+VARS job_89 dataset="TWto2LDM_s_mPhi250_mChi1_2024" jobname="job_89"
+PARENT job_88 CHILD job_89
+JOB job_90 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi300_mChi1_2024/condor.sub
+VARS job_90 dataset="TWto2LDM_s_mPhi300_mChi1_2024" jobname="job_90"
+PARENT job_89 CHILD job_90
+JOB job_91 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi350_mChi1_2024/condor.sub
+VARS job_91 dataset="TWto2LDM_s_mPhi350_mChi1_2024" jobname="job_91"
+PARENT job_90 CHILD job_91
+JOB job_92 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi400_mChi1_2024/condor.sub
+VARS job_92 dataset="TWto2LDM_s_mPhi400_mChi1_2024" jobname="job_92"
+PARENT job_91 CHILD job_92
+JOB job_93 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi500_mChi1_2024/condor.sub
+VARS job_93 dataset="TWto2LDM_s_mPhi500_mChi1_2024" jobname="job_93"
+PARENT job_92 CHILD job_93
+JOB job_94 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi600_mChi1_2024/condor.sub
+VARS job_94 dataset="TWto2LDM_s_mPhi600_mChi1_2024" jobname="job_94"
+PARENT job_93 CHILD job_94
+JOB job_95 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi700_mChi1_2024/condor.sub
+VARS job_95 dataset="TWto2LDM_s_mPhi700_mChi1_2024" jobname="job_95"
+PARENT job_94 CHILD job_95
+JOB job_96 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi800_mChi1_2024/condor.sub
+VARS job_96 dataset="TWto2LDM_s_mPhi800_mChi1_2024" jobname="job_96"
+PARENT job_95 CHILD job_96
+JOB job_97 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_s_mPhi1000_mChi1_2024/condor.sub
+VARS job_97 dataset="TWto2LDM_s_mPhi1000_mChi1_2024" jobname="job_97"
+PARENT job_96 CHILD job_97
+JOB job_98 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi10_mChi1_2024/condor.sub
+VARS job_98 dataset="TWto2LDM_ps_mPhi10_mChi1_2024" jobname="job_98"
+PARENT job_97 CHILD job_98
+JOB job_99 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi50_mChi1_2024/condor.sub
+VARS job_99 dataset="TWto2LDM_ps_mPhi50_mChi1_2024" jobname="job_99"
+PARENT job_98 CHILD job_99
+JOB job_100 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi100_mChi1_2024/condor.sub
+VARS job_100 dataset="TWto2LDM_ps_mPhi100_mChi1_2024" jobname="job_100"
+PARENT job_99 CHILD job_100
+JOB job_101 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi150_mChi1_2024/condor.sub
+VARS job_101 dataset="TWto2LDM_ps_mPhi150_mChi1_2024" jobname="job_101"
+PARENT job_100 CHILD job_101
+JOB job_102 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi200_mChi1_2024/condor.sub
+VARS job_102 dataset="TWto2LDM_ps_mPhi200_mChi1_2024" jobname="job_102"
+PARENT job_101 CHILD job_102
+JOB job_103 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi250_mChi1_2024/condor.sub
+VARS job_103 dataset="TWto2LDM_ps_mPhi250_mChi1_2024" jobname="job_103"
+PARENT job_102 CHILD job_103
+JOB job_104 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi300_mChi1_2024/condor.sub
+VARS job_104 dataset="TWto2LDM_ps_mPhi300_mChi1_2024" jobname="job_104"
+PARENT job_103 CHILD job_104
+JOB job_105 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi350_mChi1_2024/condor.sub
+VARS job_105 dataset="TWto2LDM_ps_mPhi350_mChi1_2024" jobname="job_105"
+PARENT job_104 CHILD job_105
+JOB job_106 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi400_mChi1_2024/condor.sub
+VARS job_106 dataset="TWto2LDM_ps_mPhi400_mChi1_2024" jobname="job_106"
+PARENT job_105 CHILD job_106
+JOB job_107 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi500_mChi1_2024/condor.sub
+VARS job_107 dataset="TWto2LDM_ps_mPhi500_mChi1_2024" jobname="job_107"
+PARENT job_106 CHILD job_107
+JOB job_108 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi600_mChi1_2024/condor.sub
+VARS job_108 dataset="TWto2LDM_ps_mPhi600_mChi1_2024" jobname="job_108"
+PARENT job_107 CHILD job_108
+JOB job_109 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi700_mChi1_2024/condor.sub
+VARS job_109 dataset="TWto2LDM_ps_mPhi700_mChi1_2024" jobname="job_109"
+PARENT job_108 CHILD job_109
+JOB job_110 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi800_mChi1_2024/condor.sub
+VARS job_110 dataset="TWto2LDM_ps_mPhi800_mChi1_2024" jobname="job_110"
+PARENT job_109 CHILD job_110
+JOB job_111 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TWto2LDM_ps_mPhi1000_mChi1_2024/condor.sub
+VARS job_111 dataset="TWto2LDM_ps_mPhi1000_mChi1_2024" jobname="job_111"
+PARENT job_110 CHILD job_111
+JOB job_112 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi10_mChi1_2024/condor.sub
+VARS job_112 dataset="TTto2LDM_s_mPhi10_mChi1_2024" jobname="job_112"
+PARENT job_111 CHILD job_112
+JOB job_113 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi50_mChi1_2024/condor.sub
+VARS job_113 dataset="TTto2LDM_s_mPhi50_mChi1_2024" jobname="job_113"
+PARENT job_112 CHILD job_113
+JOB job_114 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi100_mChi1_2024/condor.sub
+VARS job_114 dataset="TTto2LDM_s_mPhi100_mChi1_2024" jobname="job_114"
+PARENT job_113 CHILD job_114
+JOB job_115 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi150_mChi1_2024/condor.sub
+VARS job_115 dataset="TTto2LDM_s_mPhi150_mChi1_2024" jobname="job_115"
+PARENT job_114 CHILD job_115
+JOB job_116 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi200_mChi1_2024/condor.sub
+VARS job_116 dataset="TTto2LDM_s_mPhi200_mChi1_2024" jobname="job_116"
+PARENT job_115 CHILD job_116
+JOB job_117 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi250_mChi1_2024/condor.sub
+VARS job_117 dataset="TTto2LDM_s_mPhi250_mChi1_2024" jobname="job_117"
+PARENT job_116 CHILD job_117
+JOB job_118 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi300_mChi1_2024/condor.sub
+VARS job_118 dataset="TTto2LDM_s_mPhi300_mChi1_2024" jobname="job_118"
+PARENT job_117 CHILD job_118
+JOB job_119 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi350_mChi1_2024/condor.sub
+VARS job_119 dataset="TTto2LDM_s_mPhi350_mChi1_2024" jobname="job_119"
+PARENT job_118 CHILD job_119
+JOB job_120 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi400_mChi1_2024/condor.sub
+VARS job_120 dataset="TTto2LDM_s_mPhi400_mChi1_2024" jobname="job_120"
+PARENT job_119 CHILD job_120
+JOB job_121 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi500_mChi1_2024/condor.sub
+VARS job_121 dataset="TTto2LDM_s_mPhi500_mChi1_2024" jobname="job_121"
+PARENT job_120 CHILD job_121
+JOB job_122 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi600_mChi1_2024/condor.sub
+VARS job_122 dataset="TTto2LDM_s_mPhi600_mChi1_2024" jobname="job_122"
+PARENT job_121 CHILD job_122
+JOB job_123 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi700_mChi1_2024/condor.sub
+VARS job_123 dataset="TTto2LDM_s_mPhi700_mChi1_2024" jobname="job_123"
+PARENT job_122 CHILD job_123
+JOB job_124 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi800_mChi1_2024/condor.sub
+VARS job_124 dataset="TTto2LDM_s_mPhi800_mChi1_2024" jobname="job_124"
+PARENT job_123 CHILD job_124
+JOB job_125 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_s_mPhi1000_mChi1_2024/condor.sub
+VARS job_125 dataset="TTto2LDM_s_mPhi1000_mChi1_2024" jobname="job_125"
+PARENT job_124 CHILD job_125
+JOB job_126 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi10_mChi1_2024/condor.sub
+VARS job_126 dataset="TTto2LDM_ps_mPhi10_mChi1_2024" jobname="job_126"
+PARENT job_125 CHILD job_126
+JOB job_127 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi50_mChi1_2024/condor.sub
+VARS job_127 dataset="TTto2LDM_ps_mPhi50_mChi1_2024" jobname="job_127"
+PARENT job_126 CHILD job_127
+JOB job_128 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi100_mChi1_2024/condor.sub
+VARS job_128 dataset="TTto2LDM_ps_mPhi100_mChi1_2024" jobname="job_128"
+PARENT job_127 CHILD job_128
+JOB job_129 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi150_mChi1_2024/condor.sub
+VARS job_129 dataset="TTto2LDM_ps_mPhi150_mChi1_2024" jobname="job_129"
+PARENT job_128 CHILD job_129
+JOB job_130 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi200_mChi1_2024/condor.sub
+VARS job_130 dataset="TTto2LDM_ps_mPhi200_mChi1_2024" jobname="job_130"
+PARENT job_129 CHILD job_130
+JOB job_131 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi250_mChi1_2024/condor.sub
+VARS job_131 dataset="TTto2LDM_ps_mPhi250_mChi1_2024" jobname="job_131"
+PARENT job_130 CHILD job_131
+JOB job_132 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi300_mChi1_2024/condor.sub
+VARS job_132 dataset="TTto2LDM_ps_mPhi300_mChi1_2024" jobname="job_132"
+PARENT job_131 CHILD job_132
+JOB job_133 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi350_mChi1_2024/condor.sub
+VARS job_133 dataset="TTto2LDM_ps_mPhi350_mChi1_2024" jobname="job_133"
+PARENT job_132 CHILD job_133
+JOB job_134 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi400_mChi1_2024/condor.sub
+VARS job_134 dataset="TTto2LDM_ps_mPhi400_mChi1_2024" jobname="job_134"
+PARENT job_133 CHILD job_134
+JOB job_135 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi500_mChi1_2024/condor.sub
+VARS job_135 dataset="TTto2LDM_ps_mPhi500_mChi1_2024" jobname="job_135"
+PARENT job_134 CHILD job_135
+JOB job_136 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi600_mChi1_2024/condor.sub
+VARS job_136 dataset="TTto2LDM_ps_mPhi600_mChi1_2024" jobname="job_136"
+PARENT job_135 CHILD job_136
+JOB job_137 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi700_mChi1_2024/condor.sub
+VARS job_137 dataset="TTto2LDM_ps_mPhi700_mChi1_2024" jobname="job_137"
+PARENT job_136 CHILD job_137
+JOB job_138 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi800_mChi1_2024/condor.sub
+VARS job_138 dataset="TTto2LDM_ps_mPhi800_mChi1_2024" jobname="job_138"
+PARENT job_137 CHILD job_138
+JOB job_139 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TTto2LDM_ps_mPhi1000_mChi1_2024/condor.sub
+VARS job_139 dataset="TTto2LDM_ps_mPhi1000_mChi1_2024" jobname="job_139"
+PARENT job_138 CHILD job_139

@@ -14,6 +14,11 @@
 #include "correction.h"
 
 #include "TDavixFile.h"
+#include <vector>
+#include <complex>
+#include <cmath>
+#include <algorithm>
+#include "TLorentzVector.h"
 
 using namespace ROOT::VecOps;
 using RNode = ROOT::RDF::RNode;
@@ -32,18 +37,25 @@ const float dR=  0.8;
 //  Top Resolved threshold 2022 training { 'fpr 10': 0.1422998, 'fpr 5': 0.29475874, 'fpr 1': 0.59264845, 'fpr 01': 0.86580896}
 //  Top Mixed threshold 2022 training {"10%": {"thr": 0.7214655876159668,},"5%": {"thr": 0.8474694490432739,},"1%": {"thr": 0.9436638951301575,},"0.1%": {"thr": 0.9789741635322571,}}
 
+const float btagPNet_tightWP_2022           = 0.6734;
+const float btagPNet_tightWP_2022EE         = 0.6915;
+const float btagPNet_tightWP_2023           = 0.6172;
+const float btagPNet_tightWP_2023postBPix   = 0.6133;
+const float btagUParTAK4B_tightWP_2024      = 0.4648;
+
 const float btagDeepB_mediumWP_2018         = 0.2783;
 const float btagPNet_mediumWP_2022          = 0.245 ;
 const float btagPNet_mediumWP_2022EE        = 0.2605;
 const float btagPNet_mediumWP_2023          = 0.1917;
 const float btagPNet_mediumWP_2023postBPix  = 0.1919;
+const float btagUParTAK4B_mediumWP_2024     = 0.1272;
 
 const float btagDeepB_looseWP_2018          = 0.0490;
 const float btagPNet_looseWP_2022           = 0.047 ;
 const float btagPNet_looseWP_2022EE         = 0.0499;
 const float btagPNet_looseWP_2023           = 0.0358;
 const float btagPNet_looseWP_2023postBPix   = 0.0359;
-
+const float btagUParTAK4B_looseWP_2024      = 0.0246;
 
 // ########################################################
 bool isMC(int SampleFlag){
@@ -565,66 +577,505 @@ RVec<int> CalculateToptruth1(rvec_i TopMixed_idxJet0, rvec_i TopMixed_idxJet1, r
 // ########################################################
 // ########## PRESELECTION ################################
 // ########################################################
-int nTightElectron(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased)
+int nTightElectron(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
 {
   int n=0;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=4 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5) n+=1;
+    if(Electron_cutBased[i]>=4 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
   }
   return n;
 }
 
-RVec<int> TightElectron_idx(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased)
+RVec<int> TightElectron_idx(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
 {
   RVec<int> ids;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=4 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5) ids.emplace_back(i);
+    if(Electron_cutBased[i]>=4 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
   }
   return ids;
 }
 
-int nTightMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId)
-{
-  int n=0;
-  for(int i = 0; i<Muon_pt.size(); i++)
-  {
-    if(Muon_tightId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4) n+=1;
-  }
-  return n;
-}
-
-RVec<int> TightMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId)
-{
-  RVec<int> ids;
-  for(int i = 0; i<Muon_pt.size(); i++)
-  {
-    if(Muon_tightId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4) ids.emplace_back(i);
-  }
-  return ids;
-}
-
-int nVetoElectron(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80)
+int nLooseElectron(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
 {
   int n=0;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) n+=1;
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
   }
   return n;
 }
 
-int nVetoMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId)
+RVec<int> LooseElectron_idx(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+int nVetoElectron(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+  int n=0;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+  }
+  return n;
+}
+
+RVec<int> VetoElectron_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+int nTightMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
 {
   int n=0;
   for(int i = 0; i<Muon_pt.size(); i++)
   {
-    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3) n+=1;
+    if(Muon_tightId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
   }
   return n;
 }
 
+RVec<int> TightMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_tightId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+int nLooseMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  int n=0;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+  }
+  return n;
+}
+
+RVec<int> LooseMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+int nVetoMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  int n=0;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+  }
+  return n;
+}
+
+RVec<int> VetoMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+//################################very tight. Nuove definizioni di veto.#######################################
+//#############################################################################################################
+int nVetoMuon_loose(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  int n=0;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+  }
+  return n;
+}
+
+
+int nVetoElectron_tight(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA,rvec_f Electron_dxy, rvec_f Electron_dz, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+  int n=0;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if((Electron_cutBased[i]>=3 && abs(Electron_eta[i])<2.5 && Electron_convVeto[i]==1 && Electron_promptMVA[i] > 0.90 && Electron_pt[i] >25 && Electron_minDeltaR_fromGoodJets[i] > 0.3 ) )
+    {
+      if (abs(Electron_eta[i]) <= 1.479)
+      {
+        if ((abs(Electron_dxy[i])) <0.05 and (abs(Electron_dz[i])) <0.1)
+          {
+          n+=1;
+          }
+      }    
+      else if(abs(Electron_eta[i]) > 1.479)
+      {
+          if ((abs(Electron_dxy[i])) <0.1 and (abs(Electron_dz[i])) <0.2)
+            {
+            n+=1;
+            }
+          
+      }
+
+    }
+    }
+  
+  return n;
+}
+int nVetoMuon_tight(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  int n=0;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_tightId[i]==1 && Muon_promptMVA[i]>0.67 && Muon_pt[i] > 25 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=2 && abs(Muon_dz[i])<0.1 && abs(Muon_dxy[i])<0.02 && Muon_minDeltaR_fromGoodJets[i] > 0.3)
+    {
+      
+      
+        n+=1;
+      
+    }
+
+  }
+  return n;
+}
+
+RVec<int> VetoMuon_tight_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_tightId[i]==1 && Muon_promptMVA[i]>0.67 && Muon_pt[i] > 25 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=2 && abs(Muon_dz[i])<0.1 && abs(Muon_dxy[i])<0.02 && Muon_minDeltaR_fromGoodJets[i] > 0.3) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+RVec<int> VetoElectron_tight_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA,rvec_f Electron_dxy, rvec_f Electron_dz, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if((Electron_cutBased[i]>=3 && abs(Electron_eta[i])<2.5 && Electron_convVeto[i]==1 && Electron_promptMVA[i] > 0.90 && Electron_pt[i] >25 && Electron_minDeltaR_fromGoodJets[i] > 0.3 ) )
+    {
+      if (abs(Electron_eta[i]) <= 1.479)
+      {
+        if ((abs(Electron_dxy[i])) <0.05 and (abs(Electron_dz[i])) <0.1)
+          {
+          ids.emplace_back(i);
+          }
+      }    
+      else if(abs(Electron_eta[i]) > 1.479)
+      {
+          if ((abs(Electron_dxy[i])) <0.1 and (abs(Electron_dz[i])) <0.2)
+            {
+            ids.emplace_back(i);
+            }
+          
+      }
+
+    }
+    }
+  return ids;
+  }
+
+
+RVec<int> VetoElectron_loose_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4 ) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+RVec<int> VetoMuon_loose_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+  }
+  return ids;
+}
+int nVetoElectron_loose(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+  int n=0;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+  }
+  return n;
+}
+// funzione che restituisce gli indici che passano loose oppure tight, senza duplicati per gli elettroni
+RVec<int> VetoElectron_looseORtight_idx(
+    rvec_f Electron_pt, rvec_f Electron_cutBased,
+    rvec_f Electron_eta, rvec_b Electron_convVeto,
+    rvec_f Electron_promptMVA, rvec_f Electron_dxy,
+    rvec_f Electron_dz, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+    RVec<int> ids_or;
+    RVec<int> ids_loose;
+    RVec<int> ids_tight;
+
+    ids_loose = VetoElectron_idx(
+        Electron_pt, Electron_cutBased, Electron_eta,
+        Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets
+    );
+
+    ids_tight = VetoElectron_tight_idx(
+        Electron_pt, Electron_cutBased, Electron_eta,
+        Electron_convVeto, Electron_promptMVA,
+        Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets
+    );
+
+    if (ids_loose.size() > 0 || ids_tight.size() > 0)
+    {
+        if (ids_loose.size() > 0 && ids_tight.size() > 0)
+        {
+            ids_or = ids_tight;
+
+            for (int i = 0; i < ids_loose.size(); ++i)
+            {
+                bool presente = false;
+
+                for (int j = 0; j < ids_tight.size(); ++j)
+                {
+                    if (ids_loose[i] == ids_tight[j])
+                    {
+                        presente = true;
+                        break;
+                    }
+                }
+
+                if (!presente)
+                {
+                    ids_or.emplace_back(ids_loose[i]);
+                }
+            }
+        }
+        else
+        {
+            if (ids_loose.size() > 0)
+            {
+                ids_or = ids_loose;
+            }
+
+            if (ids_tight.size() > 0)
+            {
+                ids_or = ids_tight;
+            }
+        }
+    }
+
+    return ids_or;
+}
+
+// funzione che restituisce gli indici che passano loose oppure tight, senza duplicati per i muoni
+
+RVec<int> VetoMuon_looseORtight_idx(
+    rvec_f Muon_pt, rvec_f Muon_eta,
+    rvec_f Muon_looseId, rvec_f Muon_tightId,
+    rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA,
+    rvec_f Muon_dxy, rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+    RVec<int> ids_or;
+    RVec<int> ids_loose;
+    RVec<int> ids_tight;
+
+    ids_loose = VetoMuon_idx(
+        Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets
+    );
+
+    ids_tight = VetoMuon_tight_idx(
+        Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId,
+        Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets
+    );
+
+    if (ids_loose.size() > 0 || ids_tight.size() > 0)
+    {
+        if (ids_loose.size() > 0 && ids_tight.size() > 0)
+        {
+            ids_or = ids_tight;
+
+            for (int i = 0; i < ids_loose.size(); ++i)
+            {
+                bool presente = false;
+
+                for (int j = 0; j < ids_tight.size(); ++j)
+                {
+                    if (ids_loose[i] == ids_tight[j])
+                    {
+                        presente = true;
+                        break;
+                    }
+                }
+
+                if (!presente)
+                {
+                    ids_or.emplace_back(ids_loose[i]);
+                }
+            }
+        }
+        else
+        {
+            if (ids_loose.size() > 0)
+            {
+                ids_or = ids_loose;
+            }
+
+            if (ids_tight.size() > 0)
+            {
+                ids_or = ids_tight;
+            }
+        }
+    }
+
+    return ids_or;
+}
+
+//funzione che restituisce il numero di muoni che passano loose oppure tight, senza duplicati per gli elettroni
+int nVetoMuon_looseORtight(
+    rvec_f Muon_pt, rvec_f Muon_eta,
+    rvec_f Muon_looseId, rvec_f Muon_tightId,
+    rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA,
+    rvec_f Muon_dxy, rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+    int n=0;
+    RVec<int> ids_loose;
+    RVec<int> ids_tight;
+
+    ids_loose = VetoMuon_idx(
+        Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets
+    );
+
+    ids_tight = VetoMuon_tight_idx(
+        Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId,
+        Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets
+    );
+    
+    if (ids_loose.size() > 0 || ids_tight.size() > 0)
+    {
+        if (ids_loose.size() > 0 && ids_tight.size() > 0)
+        {
+            n = ids_tight.size();
+
+            for (int i = 0; i < ids_loose.size(); ++i)
+            {
+                bool presente = false;
+
+                for (int j = 0; j < ids_tight.size(); ++j)
+                {
+                    if (ids_loose[i] == ids_tight[j])
+                    {
+                        presente = true;
+                        break;
+                    }
+                }
+
+                if (!presente)
+                {
+                    n +=1; 
+                }
+            }
+        }
+        else
+        {
+            if (ids_loose.size() > 0)
+            {
+                n = ids_loose.size();
+            }
+
+            if (ids_tight.size() > 0)
+            {
+                n = ids_tight.size();
+            }
+        }
+    }
+
+    return n;
+}
+
+int nVetoElectron_looseORtight(
+    rvec_f Electron_pt, rvec_f Electron_cutBased,
+    rvec_f Electron_eta, rvec_b Electron_convVeto,
+    rvec_f Electron_promptMVA, rvec_f Electron_dxy,
+    rvec_f Electron_dz, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+    int n = 0;
+    RVec<int> ids_loose;
+    RVec<int> ids_tight;
+
+    ids_loose = VetoElectron_idx(
+        Electron_pt, Electron_cutBased, Electron_eta,
+        Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets
+    );
+
+    ids_tight = VetoElectron_tight_idx(
+        Electron_pt, Electron_cutBased, Electron_eta,
+        Electron_convVeto, Electron_promptMVA,
+        Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets
+    );
+
+    if (ids_loose.size() > 0 || ids_tight.size() > 0)
+    {
+        if (ids_loose.size() > 0 && ids_tight.size() > 0)
+        {
+            n = ids_tight.size();
+
+            for (int i = 0; i < ids_loose.size(); ++i)
+            {
+                bool presente = false;
+
+                for (int j = 0; j < ids_tight.size(); ++j)
+                {
+                    if (ids_loose[i] == ids_tight[j])
+                    {
+                        presente = true;
+                        break;
+                    }
+                }
+
+                if (!presente)
+                {
+                    n += 1;
+                }
+            }
+        }
+        else
+        {
+            if (ids_loose.size() > 0)
+            {
+                n = ids_loose.size();
+            }
+
+            if (ids_tight.size() > 0)
+            {
+                n = ids_tight.size();
+            }
+        }
+    }
+
+    return n;
+}
+
+
+//fine
 bool LepVeto(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80, rvec_f Muon_pt, rvec_f Muon_eta, rvec_b Muon_looseId, rvec_i Muon_pfIsoId)
 {
   int EleVetoPassed = 0;
@@ -692,7 +1143,7 @@ RVec<int> GetGoodJet(rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_jetId)
   for(int i = 0; i<Jet_pt.size(); i++)
   {
     // taglio in eta portato da 2.7 a 2.4 -> per definizione forward jets
-      if (Jet_pt[i]>30 && abs(Jet_eta[i])<2.4 && Jet_jetId[i])
+      if (Jet_pt[i]>30 && abs(Jet_eta[i])<2.4 && Jet_jetId[i]==6)
       {
         ids.emplace_back(i);
       }
@@ -706,7 +1157,7 @@ RVec<int> GetGoodFatJet(rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_jetId)
   for(int i = 0; i<Jet_pt.size(); i++)
   {
     // taglio in eta portato da 2.7 a 2.4 -> per definizione forward jets
-      if (Jet_pt[i]>150 && abs(Jet_eta[i])<2.4 && Jet_jetId[i]==6)
+      if (Jet_pt[i]>200 && abs(Jet_eta[i])<2.4 && Jet_jetId[i]==6)
       {
         ids.emplace_back(i);
       }
@@ -896,8 +1347,8 @@ Int_t nForwardJet(rvec_f Jet_pt, rvec_f Jet_jetId, rvec_f Jet_eta)
   return nfwdjet;
 }
 
-RVec<int> GetJetBTag(rvec_i GoodJet, rvec_f Jet_btagDeepB, int year, bool EE, bool wp){
-  // WP legend: 0->loose, 1->medium
+RVec<int> GetJetBTag(rvec_i GoodJet, rvec_f Jet_btagDeepB, int year, bool EE, int wp){
+  // WP legend: 0->loose, 1->medium, 2->tight
     RVec<int> ids;
     float bthres;    
     if(year == 2018){
@@ -907,42 +1358,79 @@ RVec<int> GetJetBTag(rvec_i GoodJet, rvec_f Jet_btagDeepB, int year, bool EE, bo
       else if(wp==0){
         bthres = btagDeepB_looseWP_2018;
       }
-    }else if(year == 2022){
-        if(EE){
-          if(wp == 1){
-            bthres = btagPNet_mediumWP_2022EE;
-          }
-          else if(wp==0){
-            bthres = btagPNet_looseWP_2022EE;
-          }
+    }
+    else if(year == 2022){
+      if(EE){
+        if(wp == 2){
+          bthres = btagPNet_tightWP_2022EE;
         }
-        else{
-          if(wp == 1){
-            bthres = btagPNet_mediumWP_2022;
-          }
-          else if(wp==0){
-            bthres = btagPNet_looseWP_2022;
-          }
-          
+        else if(wp == 1){
+          bthres = btagPNet_mediumWP_2022EE;
         }
-    }else if(year == 2023){
-        if(EE){
-          if(wp == 1){
-            bthres = btagPNet_mediumWP_2023postBPix;
-          }
-          else if(wp==0){
-            bthres = btagPNet_looseWP_2023postBPix;
-          }
+        else if(wp==0){
+          bthres = btagPNet_looseWP_2022EE;
         }
-        else{
-          if(wp == 1){
-            bthres = btagPNet_mediumWP_2023;
-          }
-          else if(wp==0){
-            bthres = btagPNet_looseWP_2023;
-          }
-          
+      }
+      else{
+        if(wp == 2){
+          bthres = btagPNet_tightWP_2022;
         }
+        else if(wp == 1){
+          bthres = btagPNet_mediumWP_2022;
+        }
+        else if(wp==0){
+          bthres = btagPNet_looseWP_2022;
+        }
+        
+      }
+    }
+    else if(year == 2023){
+      if(EE){
+        if(wp == 2){
+          bthres = btagPNet_tightWP_2023postBPix;
+        }
+        else if(wp == 1){
+          bthres = btagPNet_mediumWP_2023postBPix;
+        }
+        else if(wp==0){
+          bthres = btagPNet_looseWP_2023postBPix;
+        }
+      }
+      else{
+        if(wp == 2){
+          bthres = btagPNet_tightWP_2023;
+        }
+        else if(wp == 1){
+          bthres = btagPNet_mediumWP_2023;
+        }
+        else if(wp==0){
+          bthres = btagPNet_looseWP_2023;
+        }
+      }
+    }
+    else if(year == 2024){
+      if(EE){
+        if(wp == 2){
+          bthres = btagUParTAK4B_tightWP_2024;
+        }
+        else if(wp == 1){
+          bthres = btagUParTAK4B_mediumWP_2024;
+        }
+        else if(wp==0){
+          bthres = btagUParTAK4B_looseWP_2024;
+        }
+      }
+      else{
+        if(wp == 2){
+          bthres = btagUParTAK4B_tightWP_2024;
+        }
+        else if(wp == 1){
+          bthres = btagUParTAK4B_mediumWP_2024;
+        }
+        else if(wp==0){
+          bthres = btagUParTAK4B_looseWP_2024;
+        }
+      }
     }
     // cout << "btag thr: " << bthres << endl;
     
@@ -954,6 +1442,16 @@ RVec<int> GetJetBTag(rvec_i GoodJet, rvec_f Jet_btagDeepB, int year, bool EE, bo
         }
     }
     return ids;
+}
+
+RVec<float> GetJetBTagScore(rvec_i GoodJet, rvec_f Jet_btagDeepB)
+{
+    RVec<float> scores;
+    for(int i = 0; i<GoodJet.size(); i++)
+    {
+        scores.emplace_back(Jet_btagDeepB[GoodJet[i]]);
+    }
+    return scores;
 }
 
 // ########################################################
@@ -1025,7 +1523,7 @@ RVec<int> select_TopMix(rvec_f TopMixed_TopScore, rvec_f TopMixed_idxFatJet, rve
 {
   RVec<int> ids;
   RVec<float> scores;
-  RVec<float> ids_selected;
+  RVec<int> ids_selected;
 
   for (int i = 0; i < TopMixed_TopScore.size(); i++)
   {
@@ -1056,7 +1554,7 @@ RVec<int> select_TopMix(rvec_f TopMixed_TopScore, rvec_f TopMixed_idxFatJet, rve
       int bestTop_idx = 0;
       while(!same_top and bestTop_idx < ids_selected.size())
       {
-        same_top = check_same_top(TopMixed_idxFatJet[ids_sorted[i]], TopMixed_idxJet0[ids_sorted[i]], TopMixed_idxJet1[ids_sorted[i]], TopMixed_idxJet2[ids_sorted[i]], TopMixed_idxFatJet[ids_sorted[bestTop_idx]], TopMixed_idxJet0[ids_sorted[bestTop_idx]], TopMixed_idxJet1[ids_sorted[bestTop_idx]], TopMixed_idxJet2[ids_sorted[bestTop_idx]]);
+        same_top = check_same_top(TopMixed_idxFatJet[ids_sorted[i]], TopMixed_idxJet0[ids_sorted[i]], TopMixed_idxJet1[ids_sorted[i]], TopMixed_idxJet2[ids_sorted[i]], TopMixed_idxFatJet[ids_selected[bestTop_idx]], TopMixed_idxJet0[ids_selected[bestTop_idx]], TopMixed_idxJet1[ids_selected[bestTop_idx]], TopMixed_idxJet2[ids_selected[bestTop_idx]]);
         bestTop_idx += 1;
       }
       if(!same_top)
@@ -1102,7 +1600,7 @@ RVec<int> select_TopRes(rvec_f TopResolved_TopScore, rvec_f TopResolved_idxJet0,
       int bestTop_idx = 0;
       while(!same_top and bestTop_idx < ids_selected.size())
       {
-        same_top = check_same_top(-1, TopResolved_idxJet0[ids_sorted[i]], TopResolved_idxJet1[ids_sorted[i]], TopResolved_idxJet2[ids_sorted[i]], -1, TopResolved_idxJet0[ids_sorted[bestTop_idx]], TopResolved_idxJet1[ids_sorted[bestTop_idx]], TopResolved_idxJet2[ids_sorted[bestTop_idx]]);
+        same_top = check_same_top(-1, TopResolved_idxJet0[ids_sorted[i]], TopResolved_idxJet1[ids_sorted[i]], TopResolved_idxJet2[ids_sorted[i]], -1, TopResolved_idxJet0[ids_selected[bestTop_idx]], TopResolved_idxJet1[ids_selected[bestTop_idx]], TopResolved_idxJet2[ids_selected[bestTop_idx]]);
         bestTop_idx += 1;
       }
       if(!same_top)
@@ -1138,7 +1636,7 @@ Int_t select_TopCategory(rvec_i TightTopMer_idx, rvec_i TightTopMix_idx, rvec_i 
   else if (nTightRes<=1 && nTightMix==1 && nTightMer==0){
     return 2;
   }
-  else if ((nTightRes==0 && nTightMix<=1 && nTightMer==1) || (nTightRes==1 && nTightMix==1 && nTightMer==1)){
+  else if ((nTightRes==0 && nTightMix==0 && nTightMer==1) || (nTightRes<=1 && nTightMix==1 && nTightMer==1)){
     return 3;
   }
 
@@ -1149,7 +1647,7 @@ Int_t select_TopCategory(rvec_i TightTopMer_idx, rvec_i TightTopMix_idx, rvec_i 
   else if (nLooseRes<=1 && nLooseMix==1 && nLooseMer==0){
     return 5;
   }
-  else if ((nLooseRes==0 && nLooseMix<=1 && nLooseMer==1) || (nLooseRes==1 && nLooseMix==1 && nLooseMer==1)){
+  else if ((nLooseRes==0 && nLooseMix==0 && nLooseMer==1) || (nLooseRes<=1 && nLooseMix==1 && nLooseMer==1)){
     return 6;
   }
   else 
@@ -1185,7 +1683,7 @@ Int_t select_bestTop(int EventTopCategory, rvec_f FatJet_particleNet_TvsQCD, rve
     } 
     idx = ArgMax(scores);
   }
-  else if (EventTopCategory==4){
+  else if (EventTopCategory==6){
     for(int i = 0; i < FatJet_particleNet_TvsQCD.size(); i++)
     {
       scores.emplace_back(FatJet_particleNet_TvsQCD[i]);
@@ -1199,7 +1697,7 @@ Int_t select_bestTop(int EventTopCategory, rvec_f FatJet_particleNet_TvsQCD, rve
     }
     idx = ArgMax(scores); 
   }
-  else if (EventTopCategory==6){
+  else if (EventTopCategory==4){
     for(int i = 0; i < TopResolved_TopScore.size(); i++)
     {
       scores.emplace_back(TopResolved_TopScore[i]);
@@ -1240,14 +1738,48 @@ Int_t select_bestTop(int EventTopCategory, rvec_f FatJet_particleNet_TvsQCD, rve
   return idx;
 }
 
+// Best top restricted to the candidates that define the EventTopCategory (score above WP and good jets):
+// Tight*_idx for categories 1-3, LooseNOTTight*_idx for categories 4-6. Category 7 falls back to select_bestTop.
+Int_t select_bestTopInCategory(int EventTopCategory, rvec_i TightTopMer_idx, rvec_i TightTopMix_idx, rvec_i TightTopRes_idx, rvec_i LooseNOTTightTopMer_idx, rvec_i LooseNOTTightTopMix_idx, rvec_i LooseNOTTightTopRes_idx, rvec_f FatJet_particleNet_TvsQCD, rvec_f TopMixed_TopScore, rvec_f TopResolved_TopScore)
+{
+  RVec<int> candidates;
+  RVec<float> scores;
+  if (EventTopCategory==1 || EventTopCategory==4)
+  {
+    candidates = (EventTopCategory==1) ? TightTopRes_idx : LooseNOTTightTopRes_idx;
+    scores     = TopResolved_TopScore;
+  }
+  else if (EventTopCategory==2 || EventTopCategory==5)
+  {
+    candidates = (EventTopCategory==2) ? TightTopMix_idx : LooseNOTTightTopMix_idx;
+    scores     = TopMixed_TopScore;
+  }
+  else if (EventTopCategory==3 || EventTopCategory==6)
+  {
+    candidates = (EventTopCategory==3) ? TightTopMer_idx : LooseNOTTightTopMer_idx;
+    scores     = FatJet_particleNet_TvsQCD;
+  }
+  else
+  {
+    return select_bestTop(EventTopCategory, FatJet_particleNet_TvsQCD, TopMixed_TopScore, TopResolved_TopScore);
+  }
+
+  int idx = -1;
+  for (int i = 0; i < candidates.size(); i++)
+  {
+    if (idx == -1 || scores[candidates[i]] > scores[idx]) idx = candidates[i];
+  }
+  return idx;
+}
+
 Float_t select_TopVar(Int_t EventTopCategory, Int_t Top_idx, rvec_f FatJet_pt, rvec_f TopMixed_pt, rvec_f TopResolved_pt)
 {
   if (EventTopCategory==1) return TopResolved_pt[Top_idx];
   else if (EventTopCategory==2) return TopMixed_pt[Top_idx];
   else if (EventTopCategory==3) return FatJet_pt[Top_idx];
-  else if (EventTopCategory==4) return FatJet_pt[Top_idx];
+  else if (EventTopCategory==4) return TopResolved_pt[Top_idx];
   else if (EventTopCategory==5) return TopMixed_pt[Top_idx];
-  else if (EventTopCategory==6) return TopResolved_pt[Top_idx];
+  else if (EventTopCategory==6) return FatJet_pt[Top_idx];
   else if (EventTopCategory==7) 
   {
     if (TopMixed_pt.size()>0) return TopMixed_pt[Top_idx];
@@ -1626,6 +2158,238 @@ float genpartTopPt(rvec_f GenPart_pt, rvec_i GenPart_pdgId, rvec_i GenPart_genPa
 }
 
 
+////// Matching between Top Candidates and Gen Tops requiring their deltaR to be below a certain threshold
+Int_t TopMatched_to_GenTop_with_dR(rvec_f TopGenTopPart_eta, rvec_f TopGenTopPart_phi, float BestTopCand_eta, float BestTopCand_phi, float deltaR_thr)
+{
+  if(TopGenTopPart_eta.size()==0) // no gen tops in the event (QCD, etc.)
+  {
+    return 0;
+  }
+  
+  Int_t matched = 0;
+  for(int i = 0; i < TopGenTopPart_eta.size(); i++)
+  {
+    if(deltaR(TopGenTopPart_eta[i], TopGenTopPart_phi[i], BestTopCand_eta, BestTopCand_phi) < deltaR_thr)
+    {
+      matched = 1;
+      break;
+    }
+  }
+  return matched;
+}
+
+RVec<int> JetBTag_NotInsideBestTopCand_idx(rvec_i JetBTag_idx, rvec_i TopCand_idxJet0, rvec_i TopCand_idxJet1, rvec_i TopCand_idxJet2, int BestTopCand_idx)
+{
+  int jet0 = TopCand_idxJet0[BestTopCand_idx];
+  int jet1 = TopCand_idxJet1[BestTopCand_idx];
+  int jet2 = TopCand_idxJet2[BestTopCand_idx];
+
+  RVec<int> bjets_not_in_tophadr;
+  for(int i = 0; i < JetBTag_idx.size(); i++)
+  {
+    if(JetBTag_idx[i] != jet0 && JetBTag_idx[i] != jet1 && JetBTag_idx[i] != jet2)
+    {
+      bjets_not_in_tophadr.emplace_back(JetBTag_idx[i]);
+    }
+  }
+  return bjets_not_in_tophadr;
+}
+
+////// Return indexes of b-jets that are matched to good muons within deltaR < 2.0
+RVec<int> idx_of_bJetsMatched_to_GoodMuon_with_dR(rvec_i GoodMu_idx, rvec_f Muon_eta, rvec_f Muon_phi, rvec_i JetBTag_idx, rvec_f Jet_eta, rvec_f Jet_phi, float deltaR_thr)
+{
+  RVec<int> b;
+  if (JetBTag_idx.size() == 0 || GoodMu_idx.size() == 0)
+  {
+    return b;
+  }
+  for(int i=0; i < JetBTag_idx.size(); i++)
+  {
+    bool alreadycounted = false;
+    
+    for(int m=0; m < GoodMu_idx.size(); m++)
+    {
+      if(deltaR(Jet_eta[JetBTag_idx[i]], Jet_phi[JetBTag_idx[i]], Muon_eta[GoodMu_idx[m]], Muon_phi[GoodMu_idx[m]]) < deltaR_thr) 
+      {
+        b.emplace_back(JetBTag_idx[i]);
+        alreadycounted = true;
+      }
+      if(alreadycounted) 
+      {
+          break;
+      }
+    }
+    
+  }
+  return b;
+}
+
+////// Return dR(bjet,mu) of b-jets that are matched to good muons within deltaR < 2.0
+RVec<float> dR_of_bJetsMatched_to_GoodMuon_with_dR(rvec_i GoodMu_idx, rvec_f Muon_eta, rvec_f Muon_phi, rvec_i JetBTag_idx, rvec_f Jet_eta, rvec_f Jet_phi, float deltaR_thr, float BestTopCand_eta, float BestTopCand_phi)
+{
+  RVec<float> b;
+  if (JetBTag_idx.size() == 0 || GoodMu_idx.size() == 0)
+  {
+    return b;
+  }
+  for(int i=0; i < JetBTag_idx.size(); i++)
+  {
+    bool alreadycounted = false;
+    
+    for(int m=0; m < GoodMu_idx.size(); m++)
+    {
+      if(deltaR(BestTopCand_eta, BestTopCand_phi, Jet_eta[JetBTag_idx[i]], Jet_phi[JetBTag_idx[i]]) >= 1.2) // require that the b-jet is not coming from the hadronic top candidate
+      {
+        if(deltaR(BestTopCand_eta, BestTopCand_phi, Muon_eta[GoodMu_idx[m]], Muon_phi[GoodMu_idx[m]]) >= 1.2) // require that the muon is not coming from the hadronic top candidate
+        {
+          if(deltaR(Jet_eta[JetBTag_idx[i]], Jet_phi[JetBTag_idx[i]], Muon_eta[GoodMu_idx[m]], Muon_phi[GoodMu_idx[m]]) < deltaR_thr) // if the b-jet is matched to the good muon within the deltaR threshold
+          {
+            b.emplace_back(deltaR(Jet_eta[JetBTag_idx[i]], Jet_phi[JetBTag_idx[i]], Muon_eta[GoodMu_idx[m]], Muon_phi[GoodMu_idx[m]]));
+            alreadycounted = true;
+          }
+        }
+      }
+      if(alreadycounted)
+      {
+          break;
+      }
+    }
+    
+  }
+  return b;
+}
+
+// Return dR(bjet,mu) of b-jets that are matched to good muons within deltaR_min < deltaR < 2.0
+RVec<float> dR_bJets_to_GoodMuons_within_dRthr(rvec_i GoodMu_idx, rvec_f Muon_eta, rvec_f Muon_phi, rvec_i JetBTag_idx, rvec_f Jet_eta, rvec_f Jet_phi, float deltaR_min, float deltaR_thr)
+{
+  RVec<float> dR_sel;
+  RVec<int> b_sel;
+  RVec<int> m_sel;
+
+  if (JetBTag_idx.size() == 0 || GoodMu_idx.size() == 0)
+  {
+    return dR_sel;
+  }
+  for(int i=0; i < JetBTag_idx.size(); i++)
+  {
+    for(int m=0; m < GoodMu_idx.size(); m++)
+    {
+      float dR = deltaR(Jet_eta[JetBTag_idx[i]], Jet_phi[JetBTag_idx[i]], Muon_eta[GoodMu_idx[m]], Muon_phi[GoodMu_idx[m]]);
+      if(dR < deltaR_thr && dR >= deltaR_min)
+      {
+        dR_sel.emplace_back(dR);
+        b_sel.emplace_back(JetBTag_idx[i]);
+        m_sel.emplace_back(GoodMu_idx[m]);
+      }
+    }
+  }
+
+  return dR_sel;
+}
+
+// Return index of b-jets that are matched to good muons within deltaR_min < deltaR < 2.0
+RVec<float> bidx_bJets_to_GoodMuons_within_dRthr(rvec_i GoodMu_idx, rvec_f Muon_eta, rvec_f Muon_phi, rvec_i JetBTag_idx, rvec_f Jet_eta, rvec_f Jet_phi, float deltaR_min, float deltaR_thr)
+{
+  RVec<float> dR_sel;
+  RVec<int> b_sel;
+  RVec<int> m_sel;
+
+  if (JetBTag_idx.size() == 0 || GoodMu_idx.size() == 0)
+  {
+    return b_sel;
+  }
+  for(int i=0; i < JetBTag_idx.size(); i++)
+  {
+    for(int m=0; m < GoodMu_idx.size(); m++)
+    {
+      float dR = deltaR(Jet_eta[JetBTag_idx[i]], Jet_phi[JetBTag_idx[i]], Muon_eta[GoodMu_idx[m]], Muon_phi[GoodMu_idx[m]]);
+      if(dR < deltaR_thr && dR >= deltaR_min)
+      {
+        dR_sel.emplace_back(dR);
+        b_sel.emplace_back(JetBTag_idx[i]);
+        m_sel.emplace_back(GoodMu_idx[m]);
+      }
+    }
+  }
+
+  return b_sel;
+}
+
+// Return index of muons that are matched to good muons within deltaR_min < deltaR < 2.0
+RVec<float> midx_bJets_to_GoodMuons_within_dRthr(rvec_i GoodMu_idx, rvec_f Muon_eta, rvec_f Muon_phi, rvec_i JetBTag_idx, rvec_f Jet_eta, rvec_f Jet_phi, float deltaR_min, float deltaR_thr)
+{
+  RVec<float> dR_sel;
+  RVec<int> b_sel;
+  RVec<int> m_sel;
+
+  if (JetBTag_idx.size() == 0 || GoodMu_idx.size() == 0)
+  {
+    return m_sel;
+  }
+  for(int i=0; i < JetBTag_idx.size(); i++)
+  {
+    for(int m=0; m < GoodMu_idx.size(); m++)
+    {
+      float dR = deltaR(Jet_eta[JetBTag_idx[i]], Jet_phi[JetBTag_idx[i]], Muon_eta[GoodMu_idx[m]], Muon_phi[GoodMu_idx[m]]);
+      if(dR < deltaR_thr && dR >= deltaR_min)
+      {
+        dR_sel.emplace_back(dR);
+        b_sel.emplace_back(JetBTag_idx[i]);
+        m_sel.emplace_back(GoodMu_idx[m]);
+      }
+    }
+  }
+
+  return m_sel;
+}
+
+
+// #########################################
+// ############## Muon SF     ##############
+// #########################################
+float GetMuonSF(std::string json_file, rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets, std::string unc){
+  auto cset = correction::CorrectionSet::from_file(json_file);
+  auto MuonSF_corr = cset->at("NUM_HLT_DEN_TrkHighPtTightRelIsoProbes");
+  RVec<int> ids = TightMuon_idx(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets);
+  float muon_eta = Muon_eta[ids[0]];
+  float muon_pt = Muon_pt[ids[0]];
+  float weight = 1.0;
+  if (muon_pt >= 50){
+    weight = MuonSF_corr->evaluate({muon_eta, muon_pt, unc});
+  }
+  return weight;
+}
+
+// #########################################
+// ############## Utilities   ##############
+// #########################################
+
+float TransverseMass_part1part2(float pt1, float phi1, float pt2, float phi2)
+{
+  return sqrt(2*pt1*pt2*(1-cos(deltaPhi(phi1,phi2))));
+}
+
+float WtoLNu_pt(float lep_pt, float lep_eta, float lep_phi, float lep_mass, float nu_pt, float nu_eta, float nu_phi, float nu_mass)
+{
+  TLorentzVector lep;
+  TLorentzVector nu;
+  lep.SetPtEtaPhiM(lep_pt, lep_eta, lep_phi, lep_mass);
+  nu.SetPtEtaPhiM(nu_pt, nu_eta, nu_phi, nu_mass);
+
+  float W_pt = (lep + nu).Pt();
+  return W_pt;
+}
+
+float WtoLNu_phi(float lep_pt, float lep_eta, float lep_phi, float lep_mass, float nu_pt, float nu_eta, float nu_phi, float nu_mass)
+{
+  TLorentzVector lep;
+  TLorentzVector nu;
+  lep.SetPtEtaPhiM(lep_pt, lep_eta, lep_phi, lep_mass);
+  nu.SetPtEtaPhiM(nu_pt, nu_eta, nu_phi, nu_mass);
+
+  float W_phi = (lep + nu).Phi();
+  return W_phi;
+}
 
 // ################################################
 // ############## Top pT reweighting ##############
@@ -1680,17 +2444,23 @@ RVec<float> TopGenLep_var(rvec_i TopGenLep_idx, rvec_f GenPart_var)
 
 float topPtReweighting(float top_pt, float antitop_pt)
 {
-  if (top_pt > 500) // the reweighting is only defined up to 500 GeV, above that we keep the weight constant at the value it has at 500 GeV (according to the recommendation of the TOP PAG: https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting)
-  {
-    top_pt = 500;
-  }
-  if (antitop_pt > 500)
-  {
-    antitop_pt = 500;
-  }
-  float q = 0.0615;
-  float m = -0.0005;
-  float w = sqrt(exp(m*top_pt + q) * exp(m*antitop_pt + q));
+  // TOP PAG twiki for Top pT reweighting: https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
+  // if (top_pt > 500) // the reweighting is only defined up to 500 GeV, above that we keep the weight constant at the value it has at 500 GeV (according to the recommendation of the TOP PAG: https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting)
+  // {
+  //   top_pt = 500;
+  // }
+  // if (antitop_pt > 500)
+  // {
+  //   antitop_pt = 500;
+  // }
+  // float q = 0.0615;
+  // float m = -0.0005;
+  // float w = sqrt(exp(m*top_pt + q) * exp(m*antitop_pt + q));
+
+
+  float sf_top = (0.103*exp(-0.0118*top_pt)-0.000134*top_pt+0.973)*(0.991+0.000075*top_pt);
+  float sf_antitop = (0.103*exp(-0.0118*antitop_pt)-0.000134*antitop_pt+0.973)*(0.991+0.000075*antitop_pt);
+  float w = sqrt(sf_top * sf_antitop);
   return w;
 }
 
@@ -1948,3 +2718,288 @@ float CalculateCategoryTrotaEventWeight(rvec_f TopCand_TrotaSF, rvec_i TopCand_f
   
   return weight;
 }
+
+////// Calculate dR between each lepton (can be either Muon or Electron) with all good jets in the event, and return a vector of the minimum dR for each lepton
+RVec<float> MinDeltaR_Lepton_Jets(rvec_f Lepton_eta, rvec_f Lepton_phi, rvec_f Jet_eta, rvec_f Jet_phi, rvec_i GoodJet_idx)
+{
+  RVec<float> min_dR;
+  for (int i = 0; i < Lepton_eta.size(); i++)
+  {
+    float min_dR_i = 9999.0;
+    for (int j = 0; j < GoodJet_idx.size(); j++)
+    {
+      float dR_ij = deltaR(Lepton_eta[i], Lepton_phi[i], Jet_eta[GoodJet_idx[j]], Jet_phi[GoodJet_idx[j]]);
+      if (dR_ij < min_dR_i)
+      {
+        min_dR_i = dR_ij;
+      }
+    }
+    min_dR.push_back(min_dR_i);
+  }
+  return min_dR;
+}
+
+
+
+namespace TopReco {
+
+template <typename T>
+inline std::vector<T> EquationSolver(const T& a, const T& b, const T& c, const T& d)
+{
+    std::vector<T> result;
+    if (a == T(0)) return result;
+
+    std::complex<T> x1, x2, x3;
+    const T q = (T(3)*a*c - b*b) / (T(9)*a*a);
+    const T r = (T(9)*a*b*c - T(27)*a*a*d - T(2)*b*b*b) / (T(54)*a*a*a);
+    const T Delta = q*q*q + r*r;
+
+    std::complex<T> s, t;
+    if (Delta <= T(0)) {
+        const T rho = std::sqrt(-(q*q*q));
+        const T theta = std::acos(r / rho);
+        s = std::polar(std::sqrt(-q),  theta / T(3));
+        t = std::polar(std::sqrt(-q), -theta / T(3));
+    } else {
+        s = std::complex<T>(std::cbrt(r + std::sqrt(Delta)), 0);
+        t = std::complex<T>(std::cbrt(r - std::sqrt(Delta)), 0);
+    }
+
+    const std::complex<T> I(0, 1);
+
+    x1 = s + t - std::complex<T>(b / (T(3)*a), 0);
+    x2 = (s + t) * std::complex<T>(-0.5, 0)
+       - std::complex<T>(b / (T(3)*a), 0)
+       + (s - t) * I * std::complex<T>(std::sqrt(T(3)) / T(2), 0);
+    x3 = (s + t) * std::complex<T>(-0.5, 0)
+       - std::complex<T>(b / (T(3)*a), 0)
+       - (s - t) * I * std::complex<T>(std::sqrt(T(3)) / T(2), 0);
+
+    if (std::abs(x1.imag()) < T(1e-4)) result.push_back(x1.real());
+    if (std::abs(x2.imag()) < T(1e-4)) result.push_back(x2.real());
+    if (std::abs(x3.imag()) < T(1e-4)) result.push_back(x3.real());
+
+    return result;
+}
+
+inline ROOT::Math::PxPyPzEVector MakeP4(float pt, float eta, float phi, float mass)
+{
+    ROOT::Math::PtEtaPhiMVector v(pt, eta, phi, mass);
+    return ROOT::Math::PxPyPzEVector(v.Px(), v.Py(), v.Pz(), v.E());
+}
+
+inline ROOT::Math::PxPyPzEVector NuMomentum(
+    float leptonPx, float leptonPy, float leptonPz,
+    float leptonPt, float leptonE,
+    float metPx, float metPy)
+{
+    constexpr double mW = 80.399;
+    ROOT::Math::PxPyPzEVector result(0., 0., 0., 0.);
+
+    const double misET2 = metPx*metPx + metPy*metPy;
+    const double denom  = leptonE*leptonE - leptonPz*leptonPz;
+
+    if (std::abs(denom) < 1e-9) return result;
+    if (std::abs(leptonPt) < 1e-9) return result;
+    if (std::abs(leptonPx) < 1e-9) return result;
+
+    const double mu = (mW*mW)/2. + metPx*leptonPx + metPy*leptonPy;
+    const double a  = (mu * leptonPz) / denom;
+    const double a2 = a*a;
+    const double b  = ((leptonE*leptonE)*misET2 - mu*mu) / denom;
+
+    double pznu = 0.;
+
+    if (a2 - b > 0.) {
+        const double root = std::sqrt(a2 - b);
+        const double pz1  = a + root;
+        const double pz2  = a - root;
+        pznu = (std::abs(pz1) < std::abs(pz2)) ? pz1 : pz2;
+
+        const double Enu = std::sqrt(misET2 + pznu*pznu);
+        result = ROOT::Math::PxPyPzEVector(metPx, metPy, pznu, Enu);
+        return result;
+    }
+
+    const double ptlep = leptonPt;
+    const double pxlep = leptonPx;
+    const double pylep = leptonPy;
+    const double metpx = metPx;
+    const double metpy = metPy;
+
+    const double EquationA = 1.;
+    const double EquationB = -3. * pylep * mW / ptlep;
+    const double EquationC =
+        mW*mW * (2. * pylep*pylep) / (ptlep*ptlep)
+        + mW*mW
+        - 4. * pxlep*pxlep*pxlep * metpx / (ptlep*ptlep)
+        - 4. * pxlep*pxlep*pylep * metpy / (ptlep*ptlep);
+    const double EquationD =
+        4. * pxlep*pxlep * mW * metpy / ptlep
+        - pylep * mW*mW*mW / ptlep;
+
+    const auto solutions  = EquationSolver<long double>(
+        (long double)EquationA, (long double)EquationB,
+        (long double)EquationC, (long double)EquationD
+    );
+    const auto solutions2 = EquationSolver<long double>(
+        (long double)EquationA, -(long double)EquationB,
+        (long double)EquationC, -(long double)EquationD
+    );
+
+    double deltaMin = 14000. * 14000.;
+    const double zeroValue = -mW*mW / (4. * pxlep);
+    double minPx = 0.;
+    double minPy = 0.;
+
+    for (int i = 0; i < (int)solutions.size(); ++i) {
+        if (solutions[i] < 0.) continue;
+
+        const double p_x = (solutions[i]*solutions[i] - mW*mW) / (4. * pxlep);
+        const double p_y = (mW*mW*pylep + 2.*pxlep*pylep*p_x - mW*ptlep*solutions[i])
+                         / (2. * pxlep * pxlep);
+        const double Delta2 = (p_x - metpx)*(p_x - metpx) + (p_y - metpy)*(p_y - metpy);
+
+        if (Delta2 < deltaMin && Delta2 > 0.) {
+            deltaMin = Delta2;
+            minPx = p_x;
+            minPy = p_y;
+        }
+    }
+
+    for (int i = 0; i < (int)solutions2.size(); ++i) {
+        if (solutions2[i] < 0.) continue;
+
+        const double p_x = (solutions2[i]*solutions2[i] - mW*mW) / (4. * pxlep);
+        const double p_y = (mW*mW*pylep + 2.*pxlep*pylep*p_x + mW*ptlep*solutions2[i])
+                         / (2. * pxlep * pxlep);
+        const double Delta2 = (p_x - metpx)*(p_x - metpx) + (p_y - metpy)*(p_y - metpy);
+
+        if (Delta2 < deltaMin && Delta2 > 0.) {
+            deltaMin = Delta2;
+            minPx = p_x;
+            minPy = p_y;
+        }
+    }
+
+    const double pyZeroValue    = (mW*mW*pxlep + 2.*pxlep*pylep*zeroValue);
+    const double delta2ZeroValue =
+        (zeroValue - metpx)*(zeroValue - metpx) +
+        (pyZeroValue - metpy)*(pyZeroValue - metpy);
+
+    if (deltaMin == 14000. * 14000.) return result;
+
+    if (delta2ZeroValue < deltaMin) {
+        minPx = zeroValue;
+        minPy = pyZeroValue;
+    }
+
+    const double muMinimum = (mW*mW)/2. + minPx*pxlep + minPy*pylep;
+    pznu = (muMinimum * leptonPz) / denom;
+
+    const double Enu = std::sqrt(minPx*minPx + minPy*minPy + pznu*pznu);
+    result = ROOT::Math::PxPyPzEVector(minPx, minPy, pznu, Enu);
+    return result;
+}
+
+inline ROOT::Math::PxPyPzEVector Top4Momentum(
+    float leptonPx, float leptonPy, float leptonPz, float leptonE,
+    float jetPx, float jetPy, float jetPz, float jetE,
+    float metPx, float metPy)
+{
+    const float leptonPt = std::hypot(leptonPx, leptonPy);
+    const auto nu  = NuMomentum(leptonPx, leptonPy, leptonPz, leptonPt, leptonE, metPx, metPy);
+    const ROOT::Math::PxPyPzEVector lep(leptonPx, leptonPy, leptonPz, leptonE);
+    const ROOT::Math::PxPyPzEVector jet(jetPx, jetPy, jetPz, jetE);
+    return lep + jet + nu;
+}
+
+inline ROOT::Math::PxPyPzEVector Top4MomentumFromPtEtaPhiM(
+    float lepton_pt, float lepton_eta, float lepton_phi, float lepton_mass,
+    float jet_pt,    float jet_eta,    float jet_phi,    float jet_mass,
+    float met_pt,    float met_phi)
+{
+    const auto lep = MakeP4(lepton_pt, lepton_eta, lepton_phi, lepton_mass);
+    const auto jet = MakeP4(jet_pt,    jet_eta,    jet_phi,    jet_mass);
+
+    const float metPx = met_pt * std::cos(met_phi);
+    const float metPy = met_pt * std::sin(met_phi);
+
+    return Top4Momentum(
+        lep.Px(), lep.Py(), lep.Pz(), lep.E(),
+        jet.Px(), jet.Py(), jet.Pz(), jet.E(),
+        metPx, metPy
+    );
+}
+
+inline float TopMassFromPtEtaPhiM(
+    float lepton_pt, float lepton_eta, float lepton_phi, float lepton_mass,
+    float jet_pt,    float jet_eta,    float jet_phi,    float jet_mass,
+    float met_pt,    float met_phi)
+{
+    return Top4MomentumFromPtEtaPhiM(
+        lepton_pt, lepton_eta, lepton_phi, lepton_mass,
+        jet_pt, jet_eta, jet_phi, jet_mass,
+        met_pt, met_phi
+    ).M();
+}
+
+inline float TopPtFromPtEtaPhiM(
+    float lepton_pt, float lepton_eta, float lepton_phi, float lepton_mass,
+    float jet_pt,    float jet_eta,    float jet_phi,    float jet_mass,
+    float met_pt,    float met_phi)
+{
+    return Top4MomentumFromPtEtaPhiM(
+        lepton_pt, lepton_eta, lepton_phi, lepton_mass,
+        jet_pt, jet_eta, jet_phi, jet_mass,
+        met_pt, met_phi
+    ).Pt();
+}
+
+inline float TopMtwFromPtEtaPhiM(
+    float lepton_pt, float lepton_eta, float lepton_phi, float lepton_mass,
+    float jet_pt,    float jet_eta,    float jet_phi,    float jet_mass,
+    float met_pt,    float met_phi)
+{
+    const auto lep = MakeP4(lepton_pt, lepton_eta, lepton_phi, lepton_mass);
+    const auto jet = MakeP4(jet_pt,    jet_eta,    jet_phi,    jet_mass);
+
+    const float metPx = met_pt * std::cos(met_phi);
+    const float metPy = met_pt * std::sin(met_phi);
+
+    const auto lb  = lep + jet;
+    const double mlb2  = lb.M2();
+    const double etlb  = std::sqrt(std::max(0.0, mlb2 + lb.Pt()*lb.Pt()));
+    const double metPT = std::hypot(metPx, metPy);
+
+    return std::sqrt(std::max(
+        0.0,
+        mlb2 + 2.0 * (etlb * metPT - lb.Px() * metPx - lb.Py() * metPy)
+    ));
+}
+
+float TopEtaFromPtEtaPhiM(
+    float lepton_pt, float lepton_eta, float lepton_phi, float lepton_mass,
+    float jet_pt,    float jet_eta,    float jet_phi,    float jet_mass,
+    float met_pt,    float met_phi)
+{
+    return Top4MomentumFromPtEtaPhiM(
+        lepton_pt, lepton_eta, lepton_phi, lepton_mass,
+        jet_pt, jet_eta, jet_phi, jet_mass,
+        met_pt, met_phi
+    ).Eta();
+}
+
+float TopPhiFromPtEtaPhiM(
+    float lepton_pt, float lepton_eta, float lepton_phi, float lepton_mass,
+    float jet_pt,    float jet_eta,    float jet_phi,    float jet_mass,
+    float met_pt,    float met_phi)
+{
+    return Top4MomentumFromPtEtaPhiM(
+        lepton_pt, lepton_eta, lepton_phi, lepton_mass,
+        jet_pt, jet_eta, jet_phi, jet_mass,
+        met_pt, met_phi
+    ).Phi();
+}
+
+} // namespace TopReco

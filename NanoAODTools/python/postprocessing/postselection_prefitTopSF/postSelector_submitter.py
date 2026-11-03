@@ -98,7 +98,7 @@ def runner_writer(run_folder, dataset, TopCategory, dict_samples_file, hist_fold
     f = open(run_folder+"runner.sh", "w")
     f.write("#!/usr/bin/bash\n")
     f.write("cd /afs/cern.ch/user/" + inituser + "/" + username + "/\n")
-    f.write("source analysis_TPrime.sh\n")
+    f.write("source tDM.sh\n")
     f.write("cd python/postprocessing/postselection_prefitTopSF/\n")
     pycommand = "python3 postSelector.py "+f"-d {dataset} --TopCategory {TopCategory} --dict_samples_file {dict_samples_file} --hist_folder {hist_folder} --nfiles_max {nfiles_max} --tmpfold"
     if syst:

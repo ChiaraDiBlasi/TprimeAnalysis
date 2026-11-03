@@ -1,0 +1,128 @@
+{
+  "ZJetsToNuNu_2024": {
+    "ZJetsToNuNu_HT100to200_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT100to200_2024/20260910_121610/tree_hadd_0.root",
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT100to200_2024/20260910_121610/tree_hadd_1.root",
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT100to200_2024/20260910_121610/tree_hadd_2.root"
+      ],
+      "ntot": [
+        234710,
+        147585,
+        156378
+      ]
+    },
+    "ZJetsToNuNu_HT200to400_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT200to400_2024/20260910_121610/tree_hadd_1.root"
+      ],
+      "ntot": [
+        143011
+      ]
+    },
+    "ZJetsToNuNu_HT400to800_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT400to800_2024/20260910_121610/tree_hadd_0.root"
+      ],
+      "ntot": [
+        80209
+      ]
+    },
+    "ZJetsToNuNu_HT800to1500_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT800to1500_2024/20260910_121610/tree_hadd_1.root"
+      ],
+      "ntot": [
+        15053
+      ]
+    },
+    "ZJetsToNuNu_HT1500to2500_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT1500to2500_2024/20260910_121610/tree_hadd_0.root",
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT1500to2500_2024/20260910_121610/tree_hadd_1.root"
+      ],
+      "ntot": [
+        1310,
+        1351
+      ]
+    },
+    "ZJetsToNuNu_HT2500_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT2500_2024/20260910_121610/tree_hadd_1.root",
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT2500_2024/20260910_121610/tree_hadd_2.root"
+      ],
+      "ntot": [
+        74485,
+        40148
+      ]
+    }
+  },
+  "ZJetsToNuNu_HT100to200_2024": {
+    "ZJetsToNuNu_HT100to200_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT100to200_2024/20260910_121610/tree_hadd_0.root",
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT100to200_2024/20260910_121610/tree_hadd_1.root",
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT100to200_2024/20260910_121610/tree_hadd_2.root"
+      ],
+      "ntot": [
+        234710,
+        147585,
+        156378
+      ]
+    }
+  },
+  "ZJetsToNuNu_HT200to400_2024": {
+    "ZJetsToNuNu_HT200to400_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT200to400_2024/20260910_121610/tree_hadd_1.root"
+      ],
+      "ntot": [
+        143011
+      ]
+    }
+  },
+  "ZJetsToNuNu_HT400to800_2024": {
+    "ZJetsToNuNu_HT400to800_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT400to800_2024/20260910_121610/tree_hadd_0.root"
+      ],
+      "ntot": [
+        80209
+      ]
+    }
+  },
+  "ZJetsToNuNu_HT800to1500_2024": {
+    "ZJetsToNuNu_HT800to1500_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT800to1500_2024/20260910_121610/tree_hadd_1.root"
+      ],
+      "ntot": [
+        15053
+      ]
+    }
+  },
+  "ZJetsToNuNu_HT1500to2500_2024": {
+    "ZJetsToNuNu_HT1500to2500_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT1500to2500_2024/20260910_121610/tree_hadd_0.root",
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT1500to2500_2024/20260910_121610/tree_hadd_1.root"
+      ],
+      "ntot": [
+        1310,
+        1351
+      ]
+    }
+  },
+  "ZJetsToNuNu_HT2500_2024": {
+    "ZJetsToNuNu_HT2500_2024": {
+      "strings": [
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT2500_2024/20260910_121610/tree_hadd_1.root",
+        "davs://stwebdav.pi.infn.it:8443/cms/store/user/fscrivan/Run3Analysis_Tprime/ZJetsToNuNu_HT2500_2024/20260910_121610/tree_hadd_2.root"
+      ],
+      "ntot": [
+        74485,
+        40148
+      ]
+    }
+  }
+}
