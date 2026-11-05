@@ -31,11 +31,15 @@ parser.add_option(      '--noTopPtWeight',          dest='noTopPtWeight',       
 parser.add_option(      '--noTrotaSF',              dest='noTrotaSF',           action='store_true',    default = False,                                        help='remove Trota SF')
 parser.add_option(      '--printcutflow',           dest='printcutflow',        action='store_true',    default = False,                                        help='print cutflow')
 parser.add_option(      '--suffix',                 dest='suffix',              type=str,               default = None,                                         help='suffix to add to condor folder name')
+parser.add_option(      '--printcutflow',           dest='printcutflow',        action='store_true',    default = False,                                        help='print cutflow')
+parser.add_option(      '--suffix',                 dest='suffix',              type=str,               default = None,                                         help='suffix to add to condor folder name')
 
 (opt, args)         = parser.parse_args()
 dataset_to_run      = opt.dat
 syst                = opt.syst
 dryrun              = opt.dryrun
+nfiles_max          = 10000
+# nfiles_max          = 10000 if not dryrun else 1
 nfiles_max          = 10000
 # nfiles_max          = 10000 if not dryrun else 1
 noSFbtag            = opt.noSFbtag
@@ -59,6 +63,8 @@ if "2022" in period:
     year            = "2022"
 elif "2023" in period:
     year            = "2023"
+elif "2024" in period:
+    year            = "2024"
 elif "2024" in period:
     year            = "2024"
 
@@ -86,6 +92,7 @@ workdir         = "user" if "user" in os.environ.get('PWD') else "work"
 os.popen("cp /tmp/x509up_u" + str(uid) + " /afs/cern.ch/user/" + inituser + "/" + username + "/private/x509up")
 
 def sub_writer(run_folder, log_folder, dataset, suffix):
+def sub_writer(run_folder, log_folder, dataset, suffix):
     f = open(run_folder+"condor.sub", "w")
     f.write("Proxy_filename          = x509up\n")
     f.write("Proxy_path              = /afs/cern.ch/user/" + inituser + "/" + username + "/private/$(Proxy_filename)\n")
@@ -98,6 +105,7 @@ def sub_writer(run_folder, log_folder, dataset, suffix):
     # f.write("transfer_output_remaps  = \""+outname+"_Skim.root=root://eosuser.cern.ch///eos/user/"+inituser + "/" + username+"/DarkMatter/topcandidate_file/"+dat_name+"_Skim.root\"\n")
     # f.write('requirements            = (TARGET.OpSysAndVer =?= "CentOS7")\n')
     f.write("+JobFlavour             = \"nextweek\"\n") # options are espresso = 20 minutes, microcentury = 1 hour, longlunch = 2 hours, workday = 8 hours, tomorrow = 1 day, testmatch = 3 days, nextweek = 1 week
+    f.write('+JobTag                 = "'+dataset+suffix+'"\n')
     f.write('+JobTag                 = "'+dataset+suffix+'"\n')
     f.write("executable              = "+run_folder+"runner.sh\n")
     f.write("arguments               = \n")
@@ -112,6 +120,8 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
     runner_path = run_folder + "runner.sh"
     run_label   = os.path.basename(os.path.normpath(hist_folder))
     dest_dir    = hist_folder.rstrip("/") + "/plots"
+    base_tmp    = "/tmp/" + username
+
     base_tmp    = "/tmp/" + username
 
     pycommand = (
@@ -145,7 +155,9 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
         f.write('echo "User: ${USER:-unknown}"\n')
         f.write('echo "PWD at start: $(pwd)"\n')
 
+
         f.write("cd /afs/cern.ch/user/" + inituser + "/" + username + "/\n")
+        f.write("source tDM.sh\n")
         f.write("source tDM.sh\n")
         f.write("cd python/postprocessing/postselection/\n\n")
 
@@ -169,8 +181,13 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
         # Run postSelector
         # ------------------------------------------------------------
 
+        # ------------------------------------------------------------
+        # Run postSelector
+        # ------------------------------------------------------------
+
         f.write('echo "Running postSelector command:"\n')
         f.write(f'echo "{pycommand}"\n\n')
+
 
         f.write(pycommand + "\n")
         f.write("postselector_status=$?\n\n")
@@ -190,19 +207,42 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
         # Check output file
         # ------------------------------------------------------------
 
+        f.write("postselector_status=$?\n\n")
+
+        f.write('echo "postSelector.py exit code: ${postselector_status}"\n\n')
+
+        # ------------------------------------------------------------
+        # Check postSelector exit code
+        # ------------------------------------------------------------
+
+        f.write('if [ "${postselector_status}" -ne 0 ]; then\n')
+        f.write('    echo "ERROR: postSelector.py failed with exit code ${postselector_status}" >&2\n')
+        f.write('    exit "${postselector_status}"\n')
+        f.write("fi\n\n")
+
+        # ------------------------------------------------------------
+        # Check output file
+        # ------------------------------------------------------------
+
         f.write('echo "Checking expected output file: ${outfile}"\n')
+
 
         f.write('if [ ! -s "${outfile}" ]; then\n')
         f.write('    echo "ERROR: expected output file does not exist or is empty: ${outfile}" >&2\n')
 
+
         f.write('    echo "Listing base tmp area:" >&2\n')
         f.write('    ls -lthra "${base_tmp}" || true\n')
+
 
         f.write('    echo "Listing run label directory:" >&2\n')
         f.write('    ls -lthra "${base_tmp}/${run_label}" || true\n')
 
+
         f.write('    echo "Listing expected output directory:" >&2\n')
         f.write('    ls -lthra "${outdir}" || true\n')
+
+        f.write("    exit 1\n")
 
         f.write("    exit 1\n")
         f.write("fi\n\n")
@@ -214,7 +254,25 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
         # Copy output
         # ------------------------------------------------------------
 
+        f.write('echo "Output file successfully produced:"\n')
+        f.write('ls -lh "${outfile}"\n\n')
+
+        # ------------------------------------------------------------
+        # Copy output
+        # ------------------------------------------------------------
+
         f.write('echo "Copying output to ${destdir}"\n')
+        f.write('cp "${outfile}" "${destdir}/"\n')
+        f.write("cp_status=$?\n\n")
+
+        f.write('if [ "${cp_status}" -ne 0 ]; then\n')
+        f.write('    echo "ERROR: failed to copy output to ${destdir}" >&2\n')
+        f.write('    exit "${cp_status}"\n')
+        f.write("fi\n\n")
+
+        # ------------------------------------------------------------
+        # Final check
+        # ------------------------------------------------------------
         f.write('cp "${outfile}" "${destdir}/"\n')
         f.write("cp_status=$?\n\n")
 
@@ -290,6 +348,8 @@ print("Samples to run: ", [s.label for s in samples])
 for sample in samples:
     condor_folder           = os.environ.get('PWD') + "/condor" + suffix + "/"
     condor_subfolder        = condor_folder + sample.label + suffix + "/"
+    condor_folder           = os.environ.get('PWD') + "/condor" + suffix + "/"
+    condor_subfolder        = condor_folder + sample.label + suffix + "/"
     log_folder              = condor_subfolder + "condor/"
     if not os.path.exists(condor_folder):
         os.makedirs(condor_folder)
@@ -319,6 +379,7 @@ for sample in samples:
     run_folder              = condor_subfolder
 
     runner_writer(run_folder, sample.label, dict_samples_file, outFolder_path, nfiles_max, syst)
+    sub_writer(run_folder, log_folder, sample.label, suffix)
     sub_writer(run_folder, log_folder, sample.label, suffix)
     if not dryrun:
         os.system("condor_submit " + run_folder + "condor.sub")

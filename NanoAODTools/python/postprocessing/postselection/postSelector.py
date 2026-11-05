@@ -12,6 +12,8 @@ from datetime import datetime
 from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 import importlib.util
 # from PhysicsTools.NanoAODTools.postprocessing.variables import *
+import importlib.util
+# from PhysicsTools.NanoAODTools.postprocessing.variables import *
 sys.path.append('../')
 
 username = str(os.environ.get('USER'))
@@ -24,6 +26,7 @@ parser                  = optparse.OptionParser(usage)
 parser.add_option('-d', '--datasets',           dest='datasets',            type=str,               default="QCD_2023",                             help='Datasets to process, in the form: QCD_2023,TT_2023...')
 parser.add_option(      '--dict_samples_file',  dest='dict_samples_file',   type=str,               default="../samples/dict_samples_2023.json",    help='Path to the JSON file containing the sample definitions')
 parser.add_option(      '--varfile',            dest='varfile',             type=str,               default="../variables.py",                      help='Path to the variable file')
+parser.add_option(      '--varfile',            dest='varfile',             type=str,               default="../variables.py",                      help='Path to the variable file')
 parser.add_option(      '--hist_folder',        dest='hist_folder',         type=str,               default="",                                     help='Folder where to save the histograms')
 parser.add_option(      '--syst',               dest='syst',                action='store_true',    default=False,                                  help='calculate jerc')
 parser.add_option(      '--nfiles_max',         dest='nfiles_max',          type=int,               default=1,                                      help='Max number of files to process per sample')
@@ -33,6 +36,10 @@ parser.add_option(      '--noTopPtWeight',      dest='noTopPtWeight',       acti
 parser.add_option(      '--noTrotaSF',          dest='noTrotaSF',           action='store_true',    default=False,                                  help='remove Trota SF')
 parser.add_option(      '--tmpfold',            dest='tmpfold',             action='store_true',    default=False,                                  help='test tmp folder for out file')
 parser.add_option(      '--printcutflow',       dest='printcutflow',        action='store_true',    default=False,                                  help='print cutflow')
+parser.add_option(      '--partsize',       dest='partsize',        type=int,    default=-1,                                  help='number of files to run for a given portion To use if you are doing the a-priori splitting option, together with firstfile  ')
+parser.add_option(      '--firstfile',       dest='firstfile',        type=int,    default=0,                                  help='fist file to run in the dataset, to use together with partsize')
+parser.add_option(      '--npart',       dest='npart',        type=int,    default=1,                                  help='part number of the dataset for the outfile, to use together with partsize')
+
 parser.add_option(      '--partsize',       dest='partsize',        type=int,    default=-1,                                  help='number of files to run for a given portion To use if you are doing the a-priori splitting option, together with firstfile  ')
 parser.add_option(      '--firstfile',       dest='firstfile',        type=int,    default=0,                                  help='fist file to run in the dataset, to use together with partsize')
 parser.add_option(      '--npart',       dest='npart',        type=int,    default=1,                                  help='part number of the dataset for the outfile, to use together with partsize')
@@ -52,6 +59,7 @@ hist_folder             = opt.hist_folder
 tmpfold                 = opt.tmpfold
 printcutflow            = opt.printcutflow
 varfile                 = opt.varfile
+varfile                 = opt.varfile
 do_histos               = True
 do_snapshot             = False
 if do_variations:
@@ -61,7 +69,11 @@ remote_subfolder_name   = datetime.now().strftime("%Y%m%d") #20231229
 partsize=opt.partsize
 firstfile=opt.firstfile
 npart=opt.npart
+partsize=opt.partsize
+firstfile=opt.firstfile
+npart=opt.npart
 
+partname="" if partsize==-1 else "_part"+str(npart)
 partname="" if partsize==-1 else "_part"+str(npart)
 
 if do_variations == True:
@@ -80,7 +92,16 @@ repohisto               = folder+"plots/"
 
 if not os.path.exists(folder):
     os.makedirs(folder)
+    os.makedirs(folder)
 if not os.path.exists(repohisto):
+    os.makedirs(repohisto)
+
+#This does occasionally create problems, removed it
+#    with tempfile.NamedTemporaryFile( mode="w", prefix=f"test_{opt.datasets}", suffix=".txt", dir=repohisto) as f:
+#    f.write("This folder contains the output histograms from the postSelector step.\n")
+#except Exception as exc:
+#    print(f"ERROR: histogram directory write check failed for {repohisto}: {type(exc)._name}: {exc}", file=sys.stderr, flush=True)
+#    sys.exit(1)
     os.makedirs(repohisto)
 
 #This does occasionally create problems, removed it
@@ -98,12 +119,24 @@ branches = [
             "nTightElectron", "nTightMuon", "nVetoMuon", "nVetoElectron",
             "TightElectron_idx", "VetoElectron_idx", "TightMuon_idx", "VetoMuon_idx",
             "Electron_minDeltaR_fromGoodJets", "Muon_minDeltaR_fromGoodJets",
+            "nMuon", "nElectron",
+            "nTightElectron", "nTightMuon", "nVetoMuon", "nVetoElectron",
+            "TightElectron_idx", "VetoElectron_idx", "TightMuon_idx", "VetoMuon_idx",
+            "Electron_minDeltaR_fromGoodJets", "Muon_minDeltaR_fromGoodJets",
             # "nJetBtagLoose", "JetBTagLoose_idx", "nJetBtagMedium", "JetBTagMedium_idx",
             "nGoodJet", "GoodJet_idx",
             # "nGoodFatJet", "GoodFatJet_idx",
             # "Jet_jetId", 
             # "Jet_passJetIdTight", "Jet_passJetIdTightLepVeto", "Jet_jetId_new",
+            "nGoodJet", "GoodJet_idx",
+            # "nGoodFatJet", "GoodFatJet_idx",
+            # "Jet_jetId", 
+            # "Jet_passJetIdTight", "Jet_passJetIdTightLepVeto", "Jet_jetId_new",
             # "MT", "MT_T",
+            # "EventTopCategory", "Top_idx",
+            # "MinDelta_phi", "PuppiMET_T1_pt_nominal", "nVetoElectron", "nVetoMuon", "nJetBtagLoose",
+            # "TopResolved_TopScore_nominal", "TopMixed_TopScore_nominal", "TopMerged_TopScore_nominal",
+            # "TopResolved_pt_nominal", "TopMixed_pt_nominal", "FatJet_pt_nominal",
             # "EventTopCategory", "Top_idx",
             # "MinDelta_phi", "PuppiMET_T1_pt_nominal", "nVetoElectron", "nVetoMuon", "nJetBtagLoose",
             # "TopResolved_TopScore_nominal", "TopMixed_TopScore_nominal", "TopMerged_TopScore_nominal",
@@ -120,7 +153,20 @@ branches = [
             # "ResolvedTrotaEventWeight",
             # "ResolvedTrotaEventWeightUp",
             # "ResolvedTrotaEventWeightDown",
+            # "TopResolved_isMatched_to_GenTop_dR0p2",    "TopResolved_process",
+            # "TopMixed_isMatched_to_GenTop_dR0p2",       "TopMixed_process",
+            # "TopMerged_isMatched_to_GenTop_dR0p2",      "TopMerged_process",
+            # "TopResolved_Independent_idx",  "TopMixed_Independent_idx",     "TopMerged_Independent_idx",
+            # "nTopResolved_forEvWeight",     "nTopMixed_forEvWeight",        "nTopMerged_forEvWeight",
+            # "TopResolved_forEvWeight_idx",  "TopMixed_forEvWeight_idx",     "TopMerged_forEvWeight_idx",
+            # "TopResolved_TrotaSF",          "TopMixed_TrotaSF",             "TopMerged_TrotaSF",           
+            # "ResolvedTrotaEventWeight",
+            # "ResolvedTrotaEventWeightUp",
+            # "ResolvedTrotaEventWeightDown",
             
+            # "MixedTrotaEventWeight",
+            # "MixedTrotaEventWeightUp",
+            # "MixedTrotaEventWeightDown",
             # "MixedTrotaEventWeight",
             # "MixedTrotaEventWeightUp",
             # "MixedTrotaEventWeightDown",
@@ -128,10 +174,16 @@ branches = [
             # "MergedTrotaEventWeight",
             # "MergedTrotaEventWeightUp",
             # "MergedTrotaEventWeightDown",
+            # "MergedTrotaEventWeight",
+            # "MergedTrotaEventWeightUp",
+            # "MergedTrotaEventWeightDown",
 
+            # "TotalTrotaEventWeight",
             # "TotalTrotaEventWeight",
             # "TotalTrotaEventWeightUp",
             # "TotalTrotaEventWeightDown",
+            # "w_nominal", "w_nominal_woTrota", "puWeight", "SFbtag_nominal",
+            # "triggerSF", "w_topPt", "NLOEW", 
             # "w_nominal", "w_nominal_woTrota", "puWeight", "SFbtag_nominal",
             # "triggerSF", "w_topPt", "NLOEW", 
            ]
@@ -154,7 +206,15 @@ variables_path  = os.path.abspath(varfile)
 spec            = importlib.util.spec_from_file_location("variables", variables_path)
 variables       = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(variables)
+#### LOAD variables.py ####
+variables_path  = os.path.abspath(varfile)
+spec            = importlib.util.spec_from_file_location("variables", variables_path)
+variables       = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(variables)
 
+#### LOAD TopTagging_WorkingPoints.json ####
+with open(WorkDir+"/TopTagging_WorkingPoints.json", "r") as json_file:
+    TopTagging_WorkingPoints = json.load(json_file)
 #### LOAD TopTagging_WorkingPoints.json ####
 with open(WorkDir+"/TopTagging_WorkingPoints.json", "r") as json_file:
     TopTagging_WorkingPoints = json.load(json_file)
@@ -182,11 +242,19 @@ cut         = variables.requirements  # ---> see variables.py
 regions_def = variables.regions       # ---> see variables.py
 var         = variables.vars          # ---> variables.py
 var2d       = variables.vars2D        # ---> variables.py
+cut         = variables.requirements  # ---> see variables.py
+regions_def = variables.regions       # ---> see variables.py
+var         = variables.vars          # ---> variables.py
+var2d       = variables.vars2D        # ---> variables.py
 
 TopSF_CorrLibFilePath_dict = {
                                 "2022":             "",
                                 "2022EE":           "",
                                 # "2023":             "/eos/user/l/lfavilla/RDF_DManalysis/TopSF/corrections/2023/CorrLib_TrotaScaleFactors_2023.json",
+                                # "2023":             "/eos/user/l/lfavilla/RDF_DManalysis/TopSF/corrections/2023_NewWPs/CorrLib_TrotaScaleFactors_2023.json",
+                                "2023":             "./TopSF-corrections/CorrLib_TrotaScaleFactors_2023.json",
+                                "2023postBPix":     "",
+                                "2024":             "",
                                 # "2023":             "/eos/user/l/lfavilla/RDF_DManalysis/TopSF/corrections/2023_NewWPs/CorrLib_TrotaScaleFactors_2023.json",
                                 "2023":             "./TopSF-corrections/CorrLib_TrotaScaleFactors_2023.json",
                                 "2023postBPix":     "",
@@ -205,6 +273,7 @@ for in_d in in_dataset:
     if not in_d in sample_dict.keys():
         print("Check the in_dataset string... ", sample_dict.keys())
     else: 
+        print("Dataset is ", in_d, "sample is ", sample_dict[in_d])
         print("Dataset is ", in_d, "sample is ", sample_dict[in_d])
         datasets.append(sample_dict[in_d])
 print("Datasets to process: ", [d.label for d in datasets])
@@ -233,7 +302,10 @@ for d in datasets:
                 os.makedirs(repohisto_tmp)
             outfile_path = repohisto_tmp+s.label+partname+'.root'
             print("outfile path is: ",outfile_path)
+            outfile_path = repohisto_tmp+s.label+partname+'.root'
+            print("outfile path is: ",outfile_path)
         else:
+            outfile_path = repohisto+s.label+partname+'.root'
             outfile_path = repohisto+s.label+partname+'.root'
 
         outfile_dict[s.label] = outfile_path
@@ -353,6 +425,7 @@ def preselection(df, btagAlg, year, EE):
     df = df.Define("GoodFatJet_idx",                    "GetGoodFatJet(FatJet_pt, FatJet_eta, FatJet_jetId)") # richiesto jetId==6
     df = df.Define("nGoodFatJet",                       "GoodFatJet_idx.size()")
     df = df.Filter("nGoodJet>2 || nGoodFatJet>0 ",      "jet presel")
+
     df = df.Redefine("MinDelta_phi",                    "min_DeltaPhi(PuppiMET_T1_phi_nominal, Jet_phi, GoodJet_idx)")
     df = df.Define("Electron_minDeltaR_fromGoodJets",   "MinDeltaR_Lepton_Jets(Electron_eta, Electron_phi, Jet_eta, Jet_phi, GoodJet_idx)")\
            .Define("nTightElectron",                    "nTightElectron(Electron_pt, Electron_eta, Electron_cutBased, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")\
@@ -370,24 +443,22 @@ def preselection(df, btagAlg, year, EE):
            .Define("nVetoMuon",                         "nVetoMuon(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets)")\
            .Define("VetoMuon_idx",                      "VetoMuon_idx(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets)")
            
-    #nuove categorie
+    df = df.Define("Lepton_flavour",                    "Lepton_flavour(nTightElectron, nTightMuon)").Define("Lep_pt", "Lepton_var(Lepton_flavour, Electron_pt, TightElectron_idx, Muon_pt, TightMuon_idx)").Define("Lep_phi", "Lepton_var(Lepton_flavour, Electron_phi, TightElectron_idx, Muon_phi, TightMuon_idx)")
+    df = df.Define("MT",                                "sqrt(2 * Lep_pt * PuppiMET_T1_pt_nominal * (1 - cos(Lep_phi - PuppiMET_T1_phi_nominal)))")
+
     df = df.Define("nVetoMuon_loose",                   "nVetoMuon_loose(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets)")\
            .Define("VetoMuon_loose_idx",                "VetoMuon_loose_idx(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets)")\
            .Define("nVetoMuon_tight",                   "nVetoMuon_tight(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")\
            .Define("VetoMuon_tight_idx",                "VetoMuon_tight_idx(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")\
-           .Define("VetoMuon_looseORtight_idx",         "VetoMuon_looseORtight_idx(Muon_pt, Muon_eta, Muon_looseId, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")\
-           .Define("nVetoMuon_looseORtight",            "nVetoMuon_looseORtight(Muon_pt, Muon_eta, Muon_looseId, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")
-           
+           .Define("VetoMuon_looseORtight_idx",         "VetoMuon_looseORtight_idx (Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_tightId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")\
+           .Define("nVetoMuon_looseORtight",            "nVetoMuon_looseORtight(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_tightId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")
     df = df.Define("nVetoElectron_loose",               "nVetoElectron_loose(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")\
            .Define("VetoElectron_loose_idx",            "VetoElectron_loose_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")\
            .Define("nVetoElectron_tight",               "nVetoElectron_tight(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets)")\
            .Define("VetoElectron_tight_idx",            "VetoElectron_tight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets)")\
-           .Define("VetoElectron_looseORtight_idx",     "VetoElectron_looseORtight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")\
-           .Define("nVetoElectron_looseORtight",        "nVetoElectron_looseORtight(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")
+           .Define("VetoElectron_looseORtight_idx",     "VetoElectron_looseORtight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets)")\
+           .Define("nVetoElectron_looseORtight",        "nVetoElectron_looseORtight(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets)")
 
-
-    df = df.Define("Lepton_flavour",                    "Lepton_flavour(nTightElectron, nTightMuon)").Define("Lep_pt", "Lepton_var(Lepton_flavour, Electron_pt, TightElectron_idx, Muon_pt, TightMuon_idx)").Define("Lep_phi", "Lepton_var(Lepton_flavour, Electron_phi, TightElectron_idx, Muon_phi, TightMuon_idx)")
-    df = df.Define("MT",                                "sqrt(2 * Lep_pt * PuppiMET_T1_pt_nominal * (1 - cos(Lep_phi - PuppiMET_T1_phi_nominal)))")
     
     df = df.Define("LeadingJetPt_idx",                  "GetLeadingPtJet(Jet_pt_nominal)")\
            .Define("LeadingJetPt_pt",                   "GetLeadingJetVar(LeadingJetPt_idx, Jet_pt_nominal)")\

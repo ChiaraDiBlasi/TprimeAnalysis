@@ -19,6 +19,31 @@ def make_stack_with_ratio(canv_name, histo_bkg_dict, histo_data=None, histo_sign
         print("yMin must be greater than 0 when logy is True.")
         yMin = 1e-1  # Set a small value for yMin to avoid log(0) issues
         print(f"Setting yMin to {yMin} for logarithmic scale.")
+    
+    show_ratio = histo_data is not None
+
+    if show_ratio:
+        dicanv = CMS.cmsDiCanvas(
+            canv_name,
+            xMin, xMax, yMin, yMax,
+            rMin, rMax,
+            xTitle, yTitle, rTitle,
+            square=CMS.kRectangular,
+            extraSpace=extraSpace,
+            iPos=iPos,
+        )
+    else:
+        dicanv = CMS.cmsCanvas(
+            canv_name,
+            xMin, xMax, yMin, yMax,
+            xTitle, yTitle,
+            square=CMS.kRectangular,
+            extraSpace=extraSpace,
+            iPos=iPos,
+        )
+
+    #MODIFICA QUI
+    '''
     dicanv = CMS.cmsDiCanvas(
                             canv_name,
                             xMin,
@@ -34,8 +59,11 @@ def make_stack_with_ratio(canv_name, histo_bkg_dict, histo_data=None, histo_sign
                             extraSpace=extraSpace,
                             iPos=iPos,
                         )
+    '''
     ################## PAD1 ##################
-    pad1                = dicanv.cd(1)
+    #MODIFICA QUI
+    #pad1                = dicanv.cd(1)
+    pad1 = dicanv.cd(1) if show_ratio else dicanv.cd()
     # hup                 = CMS.GetcmsCanvasHist(pad1)
     # hup.Draw("hist")
     # signals_factor      = 10
@@ -45,18 +73,37 @@ def make_stack_with_ratio(canv_name, histo_bkg_dict, histo_data=None, histo_sign
         # signals_factor  = 1
 
     # leg                 = CMS.cmsLeg(0.4, 0.88, 0.9, 0.67, textSize=0.025, columns=3)
-    leg                 = CMS.cmsLeg(0.4, 0.83, 0.9, 0.62, textSize=0.025, columns=3)
+    #leg                 = CMS.cmsLeg(0.4, 0.83, 0.9, 0.62, textSize=0.03, columns=3)
+    if show_ratio:
+        leg = CMS.cmsLeg(0.4, 0.83, 0.9, 0.62, textSize=0.03, columns=3)
+    else:
+        leg = CMS.cmsLeg(0.52, 0.87, 0.9, 0.62, textSize=0.022, columns=3)
     if region:
         latex           = ROOT.TLatex()
         latex.SetTextFont(52)
-        latex.SetTextSize(0.045)
-        latex.DrawLatexNDC(0.15, 0.83, f"{region}")
+
+        if show_ratio:
+            # Posizioni originali per le regioni unblinded
+            latex.SetTextSize(0.045)
+            x_text = 0.15
+            y_region = 0.83
+            y_signal = 0.78
+        else:
+            # Posizioni per le regioni blinded
+            latex.SetTextSize(0.035)
+            x_text = 0.23
+            y_region = 0.86
+            y_signal = 0.81
+        
+        latex.DrawLatexNDC(x_text, y_region, f"{region}")
+
         if histo_signals_dict:
             for label, histo_signal in histo_signals_dict.items():
-                latex_signal = label.split("(")[0].strip()
-                latex_mass = label.split("(")[1].split(",")[1].split(")")[0].strip()
-                latex.DrawLatexNDC(0.15, 0.78, f"{latex_signal}, {latex_mass}")
+                label_signal = label.split("(")[0].strip()
+                label_dark = label.split("(")[1].split(",")[1].split(")")[0].strip()
+                latex.DrawLatexNDC(x_text, y_signal, f"{label_signal}, {label_dark}")
                 break
+
 
         # CMS.cmsHeader(leg, f"{region}", textSize=0.05)
 
@@ -117,76 +164,77 @@ def make_stack_with_ratio(canv_name, histo_bkg_dict, histo_data=None, histo_sign
             CMS.cmsDraw(histo_signal, **style_signals_dict[label])
             # if signals_factor != 1:
             #     label = f"{label} [x{signals_factor}]"
-            #leg.AddEntry(histo_signal, label, "l")
+            #DOBBIAMO MODIFICARE QUI LA LEGENDA
             label_phi = label.split("(")[1].split(",")[0]
             leg.AddEntry(histo_signal, label_phi, "l")
 
     pad1.RedrawAxis()
 
     ################## PAD2 ##################
-    pad2    = dicanv.cd(2)
-    # hdw     = CMS.GetcmsCanvasHist(pad2)
-    # hdw.Draw("hist")
+    if show_ratio:
+        pad2    = dicanv.cd(2)
+        # hdw     = CMS.GetcmsCanvasHist(pad2)
+        # hdw.Draw("hist")
 
-    # how alternative way to pass style options
-    # style = {"style": "hist", "lcolor": ROOT.kAzure + 2, "lwidth": 2, "fstyle": 0}
-    # CMS.cmsDraw(self.ratio_nosignal, **style)
-    # CMS.cmsDraw(
+        # how alternative way to pass style options
+        # style = {"style": "hist", "lcolor": ROOT.kAzure + 2, "lwidth": 2, "fstyle": 0}
+        # CMS.cmsDraw(self.ratio_nosignal, **style)
+        # CMS.cmsDraw(
 
-    # histo_ratio = histo_data.Clone("histo_ratio")
-    # histo_ratio.Divide(histo_signal)
-    if histo_data is None:
-        pass
-    else:
-        histo_ratio = histo_data.Clone("histo_ratio")
-        histo_ratio.Divide(stack.GetStack().Last())
-        CMS.cmsDraw(histo_ratio, "epx0e0same", mcolor=ROOT.kBlack, msize=1.2)
-
-
-
-    if not systErr:
-        h_bkg_err   = h_bkg.Clone("h_err")
-        h_bkg_err.Reset()
-        for i in range(1, h_bkg.GetNbinsX()+1):
-            h_bkg_err.SetBinContent(i,1)
-            if(h_bkg.GetBinContent(i)):
-                h_bkg_err.SetBinError(i, (h_bkg.GetBinError(i)/h_bkg.GetBinContent(i)))
-            else:
-                h_bkg_err.SetBinError(i, 1e-99)
-        CMS.cmsDraw(h_bkg_err, "e2same0", fcolor=ROOT.kGray+3, fstyle=3001, msize=0)
-    else:
-        h_bkg_err   = h_bkg.Clone("h_err")
-        h_bkg_err.Reset()
-        for i in range(1, h_bkg.GetNbinsX()+1):
-            h_bkg_err.SetBinContent(i,1)
-            if(h_bkg.GetBinContent(i)):
-                h_bkg_err.SetBinError(i, (h_bkg.GetBinError(i)/h_bkg.GetBinContent(i)))
-            else:
-                h_bkg_err.SetBinError(i, 1e-99)
-        CMS.cmsDraw(h_bkg_err, "e2same0", fcolor=ROOT.kGray+3, fstyle=3001, msize=0)
-
-        h_ratio_up   = h_err_syst_up.Clone("h_err_up")
-        h_ratio_up.Divide(h_bkg)
-        h_ratio_down = h_err_syst_down.Clone("h_err_down")
-        h_ratio_down.Divide(h_bkg)
-        CMS.cmsDraw(h_ratio_up, "HISTSAME", lcolor=ROOT.kBlue, lstyle=ROOT.kDashed, msize=0, fstyle=0)
-        CMS.cmsDraw(h_ratio_down, "HISTSAME", lcolor=ROOT.kRed, lstyle=ROOT.kDashed, msize=0, fstyle=0)
-
-
-    ###### Calculate total discrepancy between Data and MC in the ratio plot and add it to the legend ######
-    if histo_data is not None:
-        total_discrepancy = 0
-        for i in range(1, histo_ratio.GetNbinsX()+1):
-            if histo_ratio.GetBinContent(i) != 0:
-                total_discrepancy += abs(histo_ratio.GetBinContent(i) - 1) / h_bkg_err.GetBinError(i)
-                # total_discrepancy += ((histo_ratio.GetBinContent(i) - 1) / h_bkg_err.GetBinError(i))**2
-        # total_discrepancy = math.sqrt(total_discrepancy)
-        leg.AddEntry(ROOT.nullptr, f"Total Discrepancy: {total_discrepancy:.2f}", "")
+        # histo_ratio = histo_data.Clone("histo_ratio")
+        # histo_ratio.Divide(histo_signal)
+        if histo_data is None:
+            pass
+        else:
+            histo_ratio = histo_data.Clone("histo_ratio")
+            histo_ratio.Divide(stack.GetStack().Last())
+            CMS.cmsDraw(histo_ratio, "epx0e0same", mcolor=ROOT.kBlack, msize=1.2)
 
 
 
-    ref_line = ROOT.TLine(xMin, 1, xMax, 1)
-    CMS.cmsDrawLine(ref_line, lcolor=ROOT.kBlack, lstyle=ROOT.kDotted)
+        if not systErr:
+            h_bkg_err   = h_bkg.Clone("h_err")
+            h_bkg_err.Reset()
+            for i in range(1, h_bkg.GetNbinsX()+1):
+                h_bkg_err.SetBinContent(i,1)
+                if(h_bkg.GetBinContent(i)):
+                    h_bkg_err.SetBinError(i, (h_bkg.GetBinError(i)/h_bkg.GetBinContent(i)))
+                else:
+                    h_bkg_err.SetBinError(i, 1e-99)
+            CMS.cmsDraw(h_bkg_err, "e2same0", fcolor=ROOT.kGray+3, fstyle=3001, msize=0)
+        else:
+            h_bkg_err   = h_bkg.Clone("h_err")
+            h_bkg_err.Reset()
+            for i in range(1, h_bkg.GetNbinsX()+1):
+                h_bkg_err.SetBinContent(i,1)
+                if(h_bkg.GetBinContent(i)):
+                    h_bkg_err.SetBinError(i, (h_bkg.GetBinError(i)/h_bkg.GetBinContent(i)))
+                else:
+                    h_bkg_err.SetBinError(i, 10^(-99))
+            CMS.cmsDraw(h_bkg_err, "e2same0", fcolor=ROOT.kGray+3, fstyle=3001, msize=0)
+
+            h_ratio_up   = h_err_syst_up.Clone("h_err_up")
+            h_ratio_up.Divide(h_bkg)
+            h_ratio_down = h_err_syst_down.Clone("h_err_down")
+            h_ratio_down.Divide(h_bkg)
+            CMS.cmsDraw(h_ratio_up, "HISTSAME", lcolor=ROOT.kBlue, lstyle=ROOT.kDashed, msize=0, fstyle=0)
+            CMS.cmsDraw(h_ratio_down, "HISTSAME", lcolor=ROOT.kRed, lstyle=ROOT.kDashed, msize=0, fstyle=0)
+
+
+        ###### Calculate total discrepancy between Data and MC in the ratio plot and add it to the legend ######
+        if histo_data is not None:
+            total_discrepancy = 0
+            for i in range(1, histo_ratio.GetNbinsX()+1):
+                if histo_ratio.GetBinContent(i) != 0:
+                    total_discrepancy += abs(histo_ratio.GetBinContent(i) - 1) / h_bkg_err.GetBinError(i)
+                    # total_discrepancy += ((histo_ratio.GetBinContent(i) - 1) / h_bkg_err.GetBinError(i))**2
+            # total_discrepancy = math.sqrt(total_discrepancy)
+            leg.AddEntry(ROOT.nullptr, f"Total Discrepancy: {total_discrepancy:.2f}", "")
+
+
+
+        ref_line = ROOT.TLine(xMin, 1, xMax, 1)
+        CMS.cmsDrawLine(ref_line, lcolor=ROOT.kBlack, lstyle=ROOT.kDotted)
 
 
     
