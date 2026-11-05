@@ -34,13 +34,13 @@ print([sample.label for sample in samples])
 # Create DAG
 # --------------------------------------------------
 
-condor_folder   = f"/afs/cern.ch/user/{inituser}/{username}/TprimeAnalysis/NanoAODTools/condor/condor_getoutputs"
+condor_folder   = f"/afs/cern.ch/user/{inituser}/{username}/tDM/NanoAODTools/condor/condor_getoutputs"
 dag_file        = f"{condor_folder}/getoutputs.dag"
 
 with open(dag_file, "w") as f:
     for i, component in enumerate(samples):
         jobname         = f"job_{i}"
-        condor_subfolder   = f"/afs/cern.ch/user/{inituser}/{username}/TprimeAnalysis/NanoAODTools/condor/condor_getoutputs/{component.label}"
+        condor_subfolder   = f"/afs/cern.ch/user/{inituser}/{username}/tDM/NanoAODTools/condor/condor_getoutputs/{component.label}"
         # Define job
         f.write(
             f"JOB {jobname} {condor_subfolder}/condor.sub\n"

@@ -1,0 +1,14 @@
+Proxy_filename          = x509up
+Proxy_path              = /afs/cern.ch/user/f/fscrivan/private/$(Proxy_filename)
+universe                = vanilla
+x509userproxy           = $(Proxy_path)
+use_x509userproxy       = true
+transfer_input_files    = $(Proxy_path)
++JobFlavour             = "workday"
++JobTag                 = "QCD_HT200to400_2022EE"
+executable              = /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT200to400_2022EE/runner.sh
+arguments               = 
+output                  = /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT200to400_2022EE/condor/output/QCD_HT200to400_2022EE.out
+error                   = /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT200to400_2022EE/condor/error/QCD_HT200to400_2022EE.err
+log                     = /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT200to400_2022EE/condor/log/QCD_HT200to400_2022EE.log
+queue

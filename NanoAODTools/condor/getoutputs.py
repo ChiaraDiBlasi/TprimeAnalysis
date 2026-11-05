@@ -132,8 +132,8 @@ for sample in samples:
     for file_name, file_size in file_sizes.items():
         jobNumber        = int(file_name.split("_")[-1].split(".")[0])
         if jobNumber in jobs_toResubmit_emptyFile:
-            job_logFile      = "/afs/cern.ch/user/" + inituser + "/" + username + "/TprimeAnalysis/NanoAODTools/condor/tmp/" + sample.label + "/condor/log/" + sample.label + "_file" + str(jobNumber) + ".log"
-            job_errFile      = "/afs/cern.ch/user/" + inituser + "/" + username + "/TprimeAnalysis/NanoAODTools/condor/tmp/" + sample.label + "/condor/error/" + sample.label + "_file" + str(jobNumber) + ".err"
+            job_logFile      = "/afs/cern.ch/user/" + inituser + "/" + username + "/tDM/NanoAODTools/condor/tmp/" + sample.label + "/condor/log/" + sample.label + "_file" + str(jobNumber) + ".log"
+            job_errFile      = "/afs/cern.ch/user/" + inituser + "/" + username + "/tDM/NanoAODTools/condor/tmp/" + sample.label + "/condor/error/" + sample.label + "_file" + str(jobNumber) + ".err"
             print(f"Excluding File: {file_name}, Size: {file_size} bytes")
             print(f"\t\tcheck the log file: {job_logFile}")
             print(f"\t\tcheck the err file: {job_errFile}")

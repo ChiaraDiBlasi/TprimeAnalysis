@@ -1,0 +1,29 @@
+JOB job_0 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT70to100_2022EE/condor.sub
+VARS job_0 dataset="QCD_HT70to100_2022EE" jobname="job_0"
+JOB job_1 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT100to200_2022EE/condor.sub
+VARS job_1 dataset="QCD_HT100to200_2022EE" jobname="job_1"
+PARENT job_0 CHILD job_1
+JOB job_2 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT200to400_2022EE/condor.sub
+VARS job_2 dataset="QCD_HT200to400_2022EE" jobname="job_2"
+PARENT job_1 CHILD job_2
+JOB job_3 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT400to600_2022EE/condor.sub
+VARS job_3 dataset="QCD_HT400to600_2022EE" jobname="job_3"
+PARENT job_2 CHILD job_3
+JOB job_4 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT600to800_2022EE/condor.sub
+VARS job_4 dataset="QCD_HT600to800_2022EE" jobname="job_4"
+PARENT job_3 CHILD job_4
+JOB job_5 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT800to1000_2022EE/condor.sub
+VARS job_5 dataset="QCD_HT800to1000_2022EE" jobname="job_5"
+PARENT job_4 CHILD job_5
+JOB job_6 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT1000to1200_2022EE/condor.sub
+VARS job_6 dataset="QCD_HT1000to1200_2022EE" jobname="job_6"
+PARENT job_5 CHILD job_6
+JOB job_7 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT1200to1500_2022EE/condor.sub
+VARS job_7 dataset="QCD_HT1200to1500_2022EE" jobname="job_7"
+PARENT job_6 CHILD job_7
+JOB job_8 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT1500to2000_2022EE/condor.sub
+VARS job_8 dataset="QCD_HT1500to2000_2022EE" jobname="job_8"
+PARENT job_7 CHILD job_8
+JOB job_9 /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/QCD_HT2000_2022EE/condor.sub
+VARS job_9 dataset="QCD_HT2000_2022EE" jobname="job_9"
+PARENT job_8 CHILD job_9

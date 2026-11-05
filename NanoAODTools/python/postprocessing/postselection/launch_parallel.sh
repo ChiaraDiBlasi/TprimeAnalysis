@@ -10,8 +10,6 @@
 # NOTA BENE: there are two paths :
 # --mergepath is for MERGED files, i.e. the TRUE FOLDER you will use for plots 
 # --outpath is the path for SPLIT files, i.e. you DO NOT have to use it for plots
-# Split outputs (<sample>_partN.root) are saved in $OUTPATH/parts/, while -m h writes the merged
-# files in $MERGEPATH/plots/ (samples with a single part are written directly in $OUTPATH/plots/)
 #
 ### ==> Sequence of operations:
 # first run it with -s, then with -r to resubmit failed jobs (usually after a few minutes the jobs that had to fail will fail
@@ -26,37 +24,36 @@
 # For simplicity, it's done with bash variables here - make your scripting however you want! 
 ####################################################################################################
 
-export OPT=s
-export OUTPATH="/eos/user/o/oiorio/tDM/FrameworkTestV5/"
-export MERGEPATH="/eos/user/o/oiorio/tDM/MergedV5/"
-export CONFIGPATH="../config/config.yaml" 
+export OPT=h
+export OUTPATH="/eos/user/f/fscrivan/tDM/postselector_results/2024/n_split"
+export MERGEPATH="/eos/user/f/fscrivan/tDM/postselector_results/2024/plots_new2"
+#vecchi versione
 
-### TTBar
-python3 postSelector_submitter_large.py -d TT_2024 --suffix TestParallelV3 --noSFbtag --noTrotaSF --config_paths $CONFIGPATH --partsize 10 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --verbose 1
+#versioni mie
 
-
+#TTBar
+#python3 postSelector_submitter_large.py -d TT_2024 --suffix TestParallel_v4 --syst --noSFbtag --noTrotaSF --partsize 10 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
+#python3 postSelector_submitter_large.py -d TT_dilep_2024 --suffix TestParallel --syst --noSFbtag --noTrotaSF --partsize 10 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
 ### ZJets
-python3 postSelector_submitter_large.py -d ZJetsToNuNu_2jets_2024 --suffix TestParallelV3 --noSFbtag --noTrotaSF --config_paths $CONFIGPATH --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH 
-#
-#HT binned - careful incomplete samples at the moment
-#3 postSelector_submitter_large.py -d ZJetsToNuNu_2024 --suffix TestParallelV3 --noSFbtag --noTrotaSF --config_paths "../config/config_zj.yaml" --partsize 50 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH 
-#
-#WJets
-python3 postSelector_submitter_large.py -d WJets_2jets_2024 --suffix TestParallelV3 --noSFbtag --noTrotaSF --config_paths $CONFIGPATH --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --verbose 1
-#
-#Single top TW
-python3 postSelector_submitter_large.py -d TW_2024 --suffix TestParallelV3 --noSFbtag --noTrotaSF --config_paths $CONFIGPATH --partsize 25 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH 
-#
-#QCD
-python3 postSelector_submitter_large.py -d QCD_2024 --suffix TestParallelV3 --noSFbtag --noTrotaSF --config_paths $CONFIGPATH --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH 
-#
-#Data
-python3 postSelector_submitter_large.py -d DataJetMET_2024 --suffix TestParallelV3 --noSFbtag --noTrotaSF --config_paths $CONFIGPATH --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH 
-#
-python3 postSelector_submitter_large.py -d DataEGamma_2024 --suffix TestParallelV3 --noSFbtag --noTrotaSF --config_paths $CONFIGPATH --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH 
-#
-python3 postSelector_submitter_large.py -d DataMuon_2024 --suffix TestParallelV3 --noSFbtag --noTrotaSF --config_paths $CONFIGPATH --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH
-#
-#t/ttDM
-python3 postSelector_submitter_large.py -d TBDM_s_2024,TBDM_ps_2024,TTDM_s_2024,TTDM_ps_2024,TWDM_s_2024,TWDM_ps_2024 --suffix TestParallelV3 --noSFbtag --noTrotaSF --config_path $CONFIGPATH --partsize 25 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "../samples/dict_samples_2024_tdm.json"
-#
+#python3 postSelector_submitter_large.py -d ZJetsToNuNu_2jets_2024 --suffix TestParallel_v4 --syst --noSFbtag --noTrotaSF --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
+
+### WJets
+python3 postSelector_submitter_large.py -d WJets_2jets_2024 --suffix TestParallel_v4 --syst --noSFbtag --noTrotaSF --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
+#python3 postSelector_submitter_large.py -d WJets_2jets_ENu_0J_2024 --suffix TestParallel --syst --noSFbtag --noTrotaSF --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
+### Single top TW
+#python3 postSelector_submitter_large.py -d TW_2024 --suffix TestParallel_v3 --syst --noSFbtag --noTrotaSF --partsize 25 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
+
+### QCD
+#python3 postSelector_submitter_large.py -d QCD_2024 --suffix TestParallel_v4 --syst --noSFbtag --noTrotaSF --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json" 
+
+###Data
+#python3 postSelector_submitter_large.py -d DataJetMET_2024 --suffix TestParallel_v4 --noSFbtag --noTrotaSF --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
+
+#python3 postSelector_submitter_large.py -d DataEGamma_2024 --suffix TestParallel --syst --noSFbtag --noTrotaSF --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
+
+#python3 postSelector_submitter_large.py -d DataMuon_2024 --suffix TestParallel --syst --noSFbtag --noTrotaSF --partsize 20 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
+
+##TDM
+#python3 postSelector_submitter_large.py -d TBDM_s_2024,TBDM_ps_2024,TTDM_s_2024,TTDM_ps_2024,TWDM_s_2024,TWDM_ps_2024,TWto2LDM_s_2024,TWto2LDM_ps_2024,TTto2LDM_s_2024,TTto2LDM_ps_2024 --suffix TestParallel_v4 --syst --noSFbtag --noTrotaSF --partsize 25 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
+#python3 postSelector_submitter_large.py -d TBDM_s_2024 --suffix TestParallel --syst --noSFbtag --noPuWeight --noTrotaSF --partsize 25 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
+

@@ -53,12 +53,12 @@ source standalone/env_standalone.sh
 ## Usage
 ### Step 0: env setup
 ```bash
-# analysis_TPrime.sh 
+# tDM.sh 
 source /cvmfs/sft.cern.ch/lcg/views/setupViews.sh LCG_107 x86_64-el9-gcc13-opt
 cd /afs/cern.ch/user/{u}/{username}
 source myvenv_lcg107/bin/activate
 export TF_USE_LEGACY_KERAS=1
-cd /afs/cern.ch/user/{u}/{username}/TprimeAnalysis/NanoAODTools
+cd /afs/cern.ch/user/{u}/{username}/tDM/NanoAODTools
 source standalone/env_standalone.sh
 ```
 

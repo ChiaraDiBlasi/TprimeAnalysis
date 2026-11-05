@@ -34,7 +34,7 @@ parser.add_option(      '--mergepath',           dest='mergepath',        type=s
 
 parser.add_option(      '--outpath',           dest='outpath',        type=str,    default = "",       help='path where you want to output histograms, if different from  path of the config file  ')
 parser.add_option(      '--verbose',           dest='verbose',        type=int,    default = 0,       help='output verbosity level  ')
-parser.add_option(      '--setupFile',           dest='setupFile',        type=str,    default = "analysis_TPrime.sh",       help='shell files to setup analysis in the home directory  ')
+parser.add_option(      '--setupFile',           dest='setupFile',        type=str,    default = "tDM.sh",       help='shell files to setup analysis in the home directory  ')
 
 (opt, args)         = parser.parse_args()
 dataset_to_run      = opt.dat
@@ -176,7 +176,7 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
         f.write("cd /afs/cern.ch/user/" + inituser + "/" + username + "/\n")
         f.write("source "+opt.setupFile+"\n")
         #f.write("source setANRun3Workspace.sh\n")
-        #f.write("source analysis_TPrime.sh\n")
+        #f.write("source tDM.sh\n")
 
         f.write("cd python/postprocessing/postselection/\n\n")
 
@@ -290,7 +290,7 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
     # f = open(run_folder+"runner.sh", "w")
     # f.write("#!/usr/bin/bash\n")
     # f.write("cd /afs/cern.ch/user/" + inituser + "/" + username + "/\n")
-    # f.write("source analysis_TPrime.sh\n")
+    # f.write("source tDM.sh\n")
     # f.write("cd python/postprocessing/postselection/\n")
     # pycommand = "python3 postSelector.py "+f"-d {dataset} --dict_samples_file {dict_samples_file} --hist_folder {hist_folder} --nfiles_max {nfiles_max} --tmpfold"
     # if syst:

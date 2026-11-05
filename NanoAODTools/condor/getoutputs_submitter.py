@@ -77,7 +77,7 @@ def runner_writer(run_folder, dataset, output_json):
         f.write('echo "Date: $(date)"\n')
         f.write(f'echo "Dataset: {dataset}"\n\n')
         f.write("cd /afs/cern.ch/user/" + inituser + "/" + username + "/\n")
-        f.write("source analysis_TPrime.sh\n")
+        f.write("source tDM.sh\n")
         f.write("cd condor/\n\n")
         f.write('echo "Running command:"\n')
         f.write(f'echo "{pycommand}"\n\n')

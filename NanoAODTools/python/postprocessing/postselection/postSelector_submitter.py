@@ -19,7 +19,7 @@ else:
     sys.exit(1)
 
 
-usage               = "python3 postSelector_submitter.py -d dataset_name --syst --dryrun --noSFbtag"
+usage               = "python3 postSelector_submitter.py -d dataset_name --syst --dryrun --noSFbtag --noTrotaSF"
 parser              = optparse.OptionParser(usage)
 parser.add_option("-d", "--dat",                    dest="dat",                 type=str,                                                                       help="Please enter a dataset name")
 # parser.add_option(      '--period',                 dest='period',              type=str,               default = "2023",                                       help='era you are running: 2022, 2022EE, 2023 or 2023postBPix')
@@ -49,10 +49,12 @@ if "Data" in dataset_to_run:
     suffix          = ""
 
 period              = dataset_to_run.split("_")[-1]
-if period not in ["2022", "2022EE", "2023", "2023postBPix", "2024"]:
-    print("Please select a valid period among: 2022, 2022EE, 2023, 2023postBPix")
+if period not in ["2018", "2022", "2022EE", "2023", "2023postBPix", "2024"]:
+    print("Please select a valid period among: 2018, 2022, 2022EE, 2023, 2023postBPix")
     sys.exit(1)
 year                = 0
+if "2018" in period:
+    year            = "2018"
 if "2022" in period:
     year            = "2022"
 elif "2023" in period:
@@ -144,7 +146,7 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
         f.write('echo "PWD at start: $(pwd)"\n')
 
         f.write("cd /afs/cern.ch/user/" + inituser + "/" + username + "/\n")
-        f.write("source analysis_TPrime.sh\n")
+        f.write("source tDM.sh\n")
         f.write("cd python/postprocessing/postselection/\n\n")
 
         f.write(f'base_tmp="{base_tmp}"\n')
@@ -235,7 +237,7 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
     # f = open(run_folder+"runner.sh", "w")
     # f.write("#!/usr/bin/bash\n")
     # f.write("cd /afs/cern.ch/user/" + inituser + "/" + username + "/\n")
-    # f.write("source analysis_TPrime.sh\n")
+    # f.write("source tDM.sh\n")
     # f.write("cd python/postprocessing/postselection/\n")
     # pycommand = "python3 postSelector.py "+f"-d {dataset} --dict_samples_file {dict_samples_file} --hist_folder {hist_folder} --nfiles_max {nfiles_max} --tmpfold"
     # if syst:
@@ -319,5 +321,5 @@ for sample in samples:
     runner_writer(run_folder, sample.label, dict_samples_file, outFolder_path, nfiles_max, syst)
     sub_writer(run_folder, log_folder, sample.label, suffix)
     if not dryrun:
-        os.popen("condor_submit " + run_folder + "condor.sub")
+        os.system("condor_submit " + run_folder + "condor.sub")
     time.sleep(2)

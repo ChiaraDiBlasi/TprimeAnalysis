@@ -1,0 +1,14 @@
+Proxy_filename          = x509up
+Proxy_path              = /afs/cern.ch/user/f/fscrivan/private/$(Proxy_filename)
+universe                = vanilla
+x509userproxy           = $(Proxy_path)
+use_x509userproxy       = true
+transfer_input_files    = $(Proxy_path)
++JobFlavour             = "workday"
++JobTag                 = "TBDM_s_mPhi800_mChi1_2024"
+executable              = /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi800_mChi1_2024/runner.sh
+arguments               = 
+output                  = /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi800_mChi1_2024/condor/output/TBDM_s_mPhi800_mChi1_2024.out
+error                   = /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi800_mChi1_2024/condor/error/TBDM_s_mPhi800_mChi1_2024.err
+log                     = /afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/condor/condor_getoutputs/TBDM_s_mPhi800_mChi1_2024/condor/log/TBDM_s_mPhi800_mChi1_2024.log
+queue

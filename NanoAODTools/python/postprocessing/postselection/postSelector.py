@@ -353,7 +353,6 @@ def preselection(df, btagAlg, year, EE):
     df = df.Define("GoodFatJet_idx",                    "GetGoodFatJet(FatJet_pt, FatJet_eta, FatJet_jetId)") # richiesto jetId==6
     df = df.Define("nGoodFatJet",                       "GoodFatJet_idx.size()")
     df = df.Filter("nGoodJet>2 || nGoodFatJet>0 ",      "jet presel")
-
     df = df.Redefine("MinDelta_phi",                    "min_DeltaPhi(PuppiMET_T1_phi_nominal, Jet_phi, GoodJet_idx)")
     df = df.Define("Electron_minDeltaR_fromGoodJets",   "MinDeltaR_Lepton_Jets(Electron_eta, Electron_phi, Jet_eta, Jet_phi, GoodJet_idx)")\
            .Define("nTightElectron",                    "nTightElectron(Electron_pt, Electron_eta, Electron_cutBased, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")\
@@ -371,6 +370,22 @@ def preselection(df, btagAlg, year, EE):
            .Define("nVetoMuon",                         "nVetoMuon(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets)")\
            .Define("VetoMuon_idx",                      "VetoMuon_idx(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets)")
            
+    #nuove categorie
+    df = df.Define("nVetoMuon_loose",                   "nVetoMuon_loose(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets)")\
+           .Define("VetoMuon_loose_idx",                "VetoMuon_loose_idx(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets)")\
+           .Define("nVetoMuon_tight",                   "nVetoMuon_tight(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")\
+           .Define("VetoMuon_tight_idx",                "VetoMuon_tight_idx(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")\
+           .Define("VetoMuon_looseORtight_idx",         "VetoMuon_looseORtight_idx(Muon_pt, Muon_eta, Muon_looseId, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")\
+           .Define("nVetoMuon_looseORtight",            "nVetoMuon_looseORtight(Muon_pt, Muon_eta, Muon_looseId, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")
+           
+    df = df.Define("nVetoElectron_loose",               "nVetoElectron_loose(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")\
+           .Define("VetoElectron_loose_idx",            "VetoElectron_loose_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")\
+           .Define("nVetoElectron_tight",               "nVetoElectron_tight(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets)")\
+           .Define("VetoElectron_tight_idx",            "VetoElectron_tight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets)")\
+           .Define("VetoElectron_looseORtight_idx",     "VetoElectron_looseORtight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")\
+           .Define("nVetoElectron_looseORtight",        "nVetoElectron_looseORtight(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")
+
+
     df = df.Define("Lepton_flavour",                    "Lepton_flavour(nTightElectron, nTightMuon)").Define("Lep_pt", "Lepton_var(Lepton_flavour, Electron_pt, TightElectron_idx, Muon_pt, TightMuon_idx)").Define("Lep_phi", "Lepton_var(Lepton_flavour, Electron_phi, TightElectron_idx, Muon_phi, TightMuon_idx)")
     df = df.Define("MT",                                "sqrt(2 * Lep_pt * PuppiMET_T1_pt_nominal * (1 - cos(Lep_phi - PuppiMET_T1_phi_nominal)))")
     
@@ -930,6 +945,8 @@ for d in datasets:
                     df_hlt = df_hlt.Define("w_topPt", "topPtReweighting(TopGenTopPart_pt[0], TopGenLep_pt[0])")
                 elif "dilep" in s.label:
                     df_hlt = df_hlt.Define("w_topPt", "topPtReweighting(TopGenLep_pt[0], TopGenLep_pt[1])")
+                else:
+                    df_hlt = df_hlt.Define("w_topPt", "1.0")
             else:
                 df_hlt = df_hlt.Define("w_topPt", "1.0")
 

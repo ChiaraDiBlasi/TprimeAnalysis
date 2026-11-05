@@ -42,7 +42,7 @@ username = str(os.environ.get('USER'))
 inituser = str(os.environ.get('USER')[0])
 uid      = int(os.getuid())
 workdir  = "user" if "user" in os.environ.get('PWD') else "work"
-name_main_folder = "TprimeAnalysis" if "TprimeAnalysis" in os.environ.get('PWD') else "Analysis"
+name_main_folder = "tDM"
 
 if(uid == 0):
     print("Please insert your uid")
@@ -53,7 +53,7 @@ os.popen("cp /tmp/x509up_u" + str(uid) + " /afs/cern.ch/user/" + inituser + "/" 
 
 
 # insert here the name of output folder
-remote_folder_name = "Run3Analysis_Tprime"
+remote_folder_name = "Run3Analysis_tDM"
 
 print("\033[92m\n\n######################## POSTPROC SUBMITTER ########################\033[0m")
 print("Launching crab script for dataset: ", opt.dat)
@@ -155,7 +155,7 @@ def runner_writer(folder, i, remote_folder_name, sample_folder, launchtime, outf
     f = open(folder+"/runner.sh", "w")
     f.write("#!/bin/bash\n")
     f.write("cd /afs/cern.ch/user/" + inituser + "/" + username + "/\n")
-    f.write("source analysis_TPrime.sh\n")
+    f.write("source tDM.sh\n")
     f.write("mkdir -p "+outfolder+"\n")
     f.write("cd "+outfolder+"\n")
     f.write("pwd\n")
@@ -227,7 +227,7 @@ if submit:
             else:
                 print("Folder : {}/store/user/{}/{}/{}/{} created".format(redirector, username, remote_folder_name, sample_folder, launchtime))
 
-        outfolder_tmp = "/tmp/"+username+"/"
+        outfolder_tmp = "/tmp/"+username+"/tDM/"
         outfolder_crabscript = outfolder_tmp+sample.label+"/"
 
         if "Data" in sample.label:

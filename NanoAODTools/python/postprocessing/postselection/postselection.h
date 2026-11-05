@@ -612,7 +612,7 @@ RVec<int> LooseElectron_idx(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Elec
   RVec<int> ids;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) ids.emplace_back(i);
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
   }
   return ids;
 }
@@ -697,6 +697,395 @@ RVec<int> VetoMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rve
   return ids;
 }
 
+RVec<int> VetoMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+//################################very tight. Nuove definizioni di veto.#######################################
+//#############################################################################################################
+int nVetoMuon_loose(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  int n=0;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+  }
+  return n;
+}
+
+
+int nVetoElectron_tight(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA,rvec_f Electron_dxy, rvec_f Electron_dz, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+  int n=0;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if((Electron_cutBased[i]>=3 && abs(Electron_eta[i])<2.5 && Electron_convVeto[i]==1 && Electron_promptMVA[i] > 0.90 && Electron_pt[i] >25 && Electron_minDeltaR_fromGoodJets[i] > 0.3 ) )
+    {
+      if (abs(Electron_eta[i]) <= 1.479)
+      {
+        if ((abs(Electron_dxy[i])) <0.05 and (abs(Electron_dz[i])) <0.1)
+          {
+          n+=1;
+          }
+      }    
+      else if(abs(Electron_eta[i]) > 1.479)
+      {
+          if ((abs(Electron_dxy[i])) <0.1 and (abs(Electron_dz[i])) <0.2)
+            {
+            n+=1;
+            }
+          
+      }
+
+    }
+    }
+  
+  return n;
+}
+int nVetoMuon_tight(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  int n=0;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_tightId[i]==1 && Muon_promptMVA[i]>0.67 && Muon_pt[i] > 25 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=2 && abs(Muon_dz[i])<0.1 && abs(Muon_dxy[i])<0.02 && Muon_minDeltaR_fromGoodJets[i] > 0.3)
+    {
+      
+      
+        n+=1;
+      
+    }
+
+  }
+  return n;
+}
+
+RVec<int> VetoMuon_tight_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_tightId[i]==1 && Muon_promptMVA[i]>0.67 && Muon_pt[i] > 25 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=2 && abs(Muon_dz[i])<0.1 && abs(Muon_dxy[i])<0.02 && Muon_minDeltaR_fromGoodJets[i] > 0.3) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+RVec<int> VetoElectron_tight_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA,rvec_f Electron_dxy, rvec_f Electron_dz, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if((Electron_cutBased[i]>=3 && abs(Electron_eta[i])<2.5 && Electron_convVeto[i]==1 && Electron_promptMVA[i] > 0.90 && Electron_pt[i] >25 && Electron_minDeltaR_fromGoodJets[i] > 0.3 ) )
+    {
+      if (abs(Electron_eta[i]) <= 1.479)
+      {
+        if ((abs(Electron_dxy[i])) <0.05 and (abs(Electron_dz[i])) <0.1)
+          {
+          ids.emplace_back(i);
+          }
+      }    
+      else if(abs(Electron_eta[i]) > 1.479)
+      {
+          if ((abs(Electron_dxy[i])) <0.1 and (abs(Electron_dz[i])) <0.2)
+            {
+            ids.emplace_back(i);
+            }
+          
+      }
+
+    }
+    }
+  return ids;
+  }
+
+
+RVec<int> VetoElectron_loose_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4 ) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+RVec<int> VetoMuon_loose_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+  }
+  return ids;
+}
+int nVetoElectron_loose(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+  int n=0;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+  }
+  return n;
+}
+// funzione che restituisce gli indici che passano loose oppure tight, senza duplicati per gli elettroni
+RVec<int> VetoElectron_looseORtight_idx(
+    rvec_f Electron_pt, rvec_f Electron_cutBased,
+    rvec_f Electron_eta, rvec_b Electron_convVeto,
+    rvec_f Electron_promptMVA, rvec_f Electron_dxy,
+    rvec_f Electron_dz, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+    RVec<int> ids_or;
+    RVec<int> ids_loose;
+    RVec<int> ids_tight;
+
+    ids_loose = VetoElectron_idx(
+        Electron_pt, Electron_cutBased, Electron_eta,
+        Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets
+    );
+
+    ids_tight = VetoElectron_tight_idx(
+        Electron_pt, Electron_cutBased, Electron_eta,
+        Electron_convVeto, Electron_promptMVA,
+        Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets
+    );
+
+    if (ids_loose.size() > 0 || ids_tight.size() > 0)
+    {
+        if (ids_loose.size() > 0 && ids_tight.size() > 0)
+        {
+            ids_or = ids_tight;
+
+            for (int i = 0; i < ids_loose.size(); ++i)
+            {
+                bool presente = false;
+
+                for (int j = 0; j < ids_tight.size(); ++j)
+                {
+                    if (ids_loose[i] == ids_tight[j])
+                    {
+                        presente = true;
+                        break;
+                    }
+                }
+
+                if (!presente)
+                {
+                    ids_or.emplace_back(ids_loose[i]);
+                }
+            }
+        }
+        else
+        {
+            if (ids_loose.size() > 0)
+            {
+                ids_or = ids_loose;
+            }
+
+            if (ids_tight.size() > 0)
+            {
+                ids_or = ids_tight;
+            }
+        }
+    }
+
+    return ids_or;
+}
+
+// funzione che restituisce gli indici che passano loose oppure tight, senza duplicati per i muoni
+
+RVec<int> VetoMuon_looseORtight_idx(
+    rvec_f Muon_pt, rvec_f Muon_eta,
+    rvec_f Muon_looseId, rvec_f Muon_tightId,
+    rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA,
+    rvec_f Muon_dxy, rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+    RVec<int> ids_or;
+    RVec<int> ids_loose;
+    RVec<int> ids_tight;
+
+    ids_loose = VetoMuon_idx(
+        Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets
+    );
+
+    ids_tight = VetoMuon_tight_idx(
+        Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId,
+        Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets
+    );
+
+    if (ids_loose.size() > 0 || ids_tight.size() > 0)
+    {
+        if (ids_loose.size() > 0 && ids_tight.size() > 0)
+        {
+            ids_or = ids_tight;
+
+            for (int i = 0; i < ids_loose.size(); ++i)
+            {
+                bool presente = false;
+
+                for (int j = 0; j < ids_tight.size(); ++j)
+                {
+                    if (ids_loose[i] == ids_tight[j])
+                    {
+                        presente = true;
+                        break;
+                    }
+                }
+
+                if (!presente)
+                {
+                    ids_or.emplace_back(ids_loose[i]);
+                }
+            }
+        }
+        else
+        {
+            if (ids_loose.size() > 0)
+            {
+                ids_or = ids_loose;
+            }
+
+            if (ids_tight.size() > 0)
+            {
+                ids_or = ids_tight;
+            }
+        }
+    }
+
+    return ids_or;
+}
+
+//funzione che restituisce il numero di muoni che passano loose oppure tight, senza duplicati per gli elettroni
+int nVetoMuon_looseORtight(
+    rvec_f Muon_pt, rvec_f Muon_eta,
+    rvec_f Muon_looseId, rvec_f Muon_tightId,
+    rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA,
+    rvec_f Muon_dxy, rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+{
+    int n=0;
+    RVec<int> ids_loose;
+    RVec<int> ids_tight;
+
+    ids_loose = VetoMuon_idx(
+        Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets
+    );
+
+    ids_tight = VetoMuon_tight_idx(
+        Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId,
+        Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets
+    );
+    
+    if (ids_loose.size() > 0 || ids_tight.size() > 0)
+    {
+        if (ids_loose.size() > 0 && ids_tight.size() > 0)
+        {
+            n = ids_tight.size();
+
+            for (int i = 0; i < ids_loose.size(); ++i)
+            {
+                bool presente = false;
+
+                for (int j = 0; j < ids_tight.size(); ++j)
+                {
+                    if (ids_loose[i] == ids_tight[j])
+                    {
+                        presente = true;
+                        break;
+                    }
+                }
+
+                if (!presente)
+                {
+                    n +=1; 
+                }
+            }
+        }
+        else
+        {
+            if (ids_loose.size() > 0)
+            {
+                n = ids_loose.size();
+            }
+
+            if (ids_tight.size() > 0)
+            {
+                n = ids_tight.size();
+            }
+        }
+    }
+
+    return n;
+}
+
+int nVetoElectron_looseORtight(
+    rvec_f Electron_pt, rvec_f Electron_cutBased,
+    rvec_f Electron_eta, rvec_b Electron_convVeto,
+    rvec_f Electron_promptMVA, rvec_f Electron_dxy,
+    rvec_f Electron_dz, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+{
+    int n = 0;
+    RVec<int> ids_loose;
+    RVec<int> ids_tight;
+
+    ids_loose = VetoElectron_idx(
+        Electron_pt, Electron_cutBased, Electron_eta,
+        Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets
+    );
+
+    ids_tight = VetoElectron_tight_idx(
+        Electron_pt, Electron_cutBased, Electron_eta,
+        Electron_convVeto, Electron_promptMVA,
+        Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets
+    );
+
+    if (ids_loose.size() > 0 || ids_tight.size() > 0)
+    {
+        if (ids_loose.size() > 0 && ids_tight.size() > 0)
+        {
+            n = ids_tight.size();
+
+            for (int i = 0; i < ids_loose.size(); ++i)
+            {
+                bool presente = false;
+
+                for (int j = 0; j < ids_tight.size(); ++j)
+                {
+                    if (ids_loose[i] == ids_tight[j])
+                    {
+                        presente = true;
+                        break;
+                    }
+                }
+
+                if (!presente)
+                {
+                    n += 1;
+                }
+            }
+        }
+        else
+        {
+            if (ids_loose.size() > 0)
+            {
+                n = ids_loose.size();
+            }
+
+            if (ids_tight.size() > 0)
+            {
+                n = ids_tight.size();
+            }
+        }
+    }
+
+    return n;
+}
+
+
+//fine
 bool LepVeto(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80, rvec_f Muon_pt, rvec_f Muon_eta, rvec_b Muon_looseId, rvec_i Muon_pfIsoId)
 {
   int EleVetoPassed = 0;
