@@ -1,6 +1,6 @@
 import math
 import numpy as np
-class variable(object):
+class variable(object): #La classe variable descrive cosa vuoi istogrammare, RDataFrame deve avere davvero una colonna con quel nome
     def __init__(self, name, title, taglio=None, nbins=None, xmin=None, xmax=None, xarray=None, MConly = False, noUnOvFlowbin = False):
         self._name = name
         self._title = title
@@ -38,6 +38,11 @@ class variable2D(object):
 ### Definition of requeriments for plots (cut), variables and regions
 
 requirements = ""#"leptonveto" #"leptonveto && MET_pt>150 && MinDelta_phi>0.6"
+
+#Sia requirements sia le condizioni associate alle signal/control regions sono stringhe Python, che poi ROOT interpreta come espressioni C++ quando vengono passate a RDataFrame.Filter()
+#A quel punto RDataFrame interpreta la stringa come una condizione di selezione evento per evento.
+#stringa Python → regions["SR"] → df.Filter(stringa) → ROOT interpreta la stringa → selezione degli eventi → istogramma della regione
+#le variabili che compaiono come stringhe sono definite sotto 
 
 ######## 1D variables for histos
 

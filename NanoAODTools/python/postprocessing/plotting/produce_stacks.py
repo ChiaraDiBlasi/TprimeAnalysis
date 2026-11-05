@@ -69,6 +69,9 @@ lumi_dict                           = config["plotting"]["lumi_dict"]
 #lumi_dict["Full2022"]               = lumi_dict["2022"] + lumi_dict["2022EE"]
 #lumi_dict["Full2023"]               = lumi_dict["2023"] + lumi_dict["2023postBPix"]
 #lumi_dict["Full2022_Full2023"]      = lumi_dict["Full2022"] + lumi_dict["Full2023"]
+#lumi_dict["Full2022"]               = lumi_dict["2022"] + lumi_dict["2022EE"]
+#lumi_dict["Full2023"]               = lumi_dict["2023"] + lumi_dict["2023postBPix"]
+#lumi_dict["Full2022_Full2023"]      = lumi_dict["Full2022"] + lumi_dict["Full2023"]
 
 
 folder_dict                         = config["plotting"]["folder_dict"]
@@ -79,97 +82,96 @@ datasets_dict                       = config["plotting"]["datasets_to_plot"]
 #datasets_dict["Full2022"]           = datasets_dict["2022"] + datasets_dict["2022EE"]
 #datasets_dict["Full2023"]           = datasets_dict["2023"] + datasets_dict["2023postBPix"]
 #datasets_dict["Full2022_Full2023"]  = datasets_dict["Full2022"] + datasets_dict["Full2023"]
+#datasets_dict["Full2022"]           = datasets_dict["2022"] + datasets_dict["2022EE"]
+#datasets_dict["Full2023"]           = datasets_dict["2023"] + datasets_dict["2023postBPix"]
+#datasets_dict["Full2022_Full2023"]  = datasets_dict["Full2022"] + datasets_dict["Full2023"]
 
 json_file_dict                      = config["dict_samples"]
+#json_file_dict["2022EE"]            = json_file_dict["2022"]
+#json_file_dict["2023postBPix"]      = json_file_dict["2023"]
 
-colors_bkg                          = ["#ffcc00", "#bebdb8" "#e42536",  "#86c8dd", "#caeba5"]
+#colors_bkg                          = ["#e42536", "#ffcc00", "#bebdb8", "#86c8dd", "#caeba5"]
 colors_bkg                          = ["#ffcc00", "#bebdb8", "#e42536", "#86c8dd", "#caeba5"]
+
 #MODIFICA EFFETTUATA QUI
 #masses = [10, 50, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 1000]
 masses = [10, 200, 300, 500, 1000]
+
+skip_missing_regions = True #AGGIUNTO
 signal_types = ["TBDM_s", "TBDM_ps", "TTDM_ps",  "TTDM_s", "TTto2LDM_s", "TTto2LDM_ps", "TWto2LDM_s", "TWto2LDM_ps", "TWDM_s", "TWDM_ps"] 
-signals = {}
-
-for sig in signal_types:
-    signals[sig] = {}
-
-    for mphi in masses:
-        signals[sig][mphi] = (
-            f"{sig}_mPhi{mphi}_mChi1_2024"
-        )
-
-
-
-labels_dict_signal = {}
-
-for sig in signal_types:
-    labels_dict_signal[sig] = sig
-    for mphi in masses:
-        labels_dict_signal[f"{sig}_mPhi{mphi}"] = (
-            f"{sig} (m_{{#phi}}={mphi} GeV, m_{{#chi}}=1 GeV)"
-        )
-labels_dict                         = {
-                                        "TT":               "t#bar{t}",
-                                        "TW":               "tW",
-                                        "QCD":              "QCD",
-                                        "ZJetsToNuNu":      "Z (#nu#nu) + Jets",
-                                        "WJets":            "W (#it{l}#nu) + Jets"
-
-                                    }
-labels_dict.update(labels_dict_signal)
-
-
-style_signals_dict                  = {
-                                        
-                                        "tDM (m_{#phi}=50 GeV, m_{#chi}=1 GeV)":    {"style": "hist",   "msize": 0,    "lcolor": ROOT.kMagenta,    "lwidth": 2, "fstyle": 0, "lstyle": ROOT.kSolid},
-                                        "tDM (m_{#phi}=200 GeV, m_{#chi}=1 GeV)":   {"style": "hist",   "msize": 0,    "lcolor": ROOT.kMagenta+1,  "lwidth": 2, "fstyle": 0, "lstyle": ROOT.kDashed},
-                                        "tDM (m_{#phi}=500 GeV, m_{#chi}=1 GeV)":   {"style": "hist",   "msize": 0,    "lcolor": ROOT.kMagenta+2,  "lwidth": 2, "fstyle": 0, "lstyle": ROOT.kDotted},
-                                        "tDM (m_{#phi}=1000 GeV, m_{#chi}=1 GeV)":  {"style": "hist",   "msize": 0,    "lcolor": ROOT.kMagenta+3,  "lwidth": 2, "fstyle": 0, "lstyle": ROOT.kDashDotted},
-                                    }
-style_signals_dict  = {}
-#color =["#542788", "#7B3294", "#A34AA2", "#C65A8E", "#3546A6", "#235AB8", "#1878B4", "#087E8B", "#006D77", "#19764B", "#477A26", "#786A19", "#99551E", "#643C35"   ]
-"""
-color = [
-
-
+'''
+signal_colour = [
     "#BFFF00",  # 10 GeV
-    #"#7B3294",  # 50 GeV
-    #"#A34AA2",  # 100 GeV
-    #"#C65A8E",  # 150 GeV
     "#FF00FF",  # 200 GeV
-    #"#235AB8",  # 250 GeV
     "#1878B4",  # 300 GeV
-    #"#087E8B",  # 350 GeV
-    #"#006D77",  # 400 GeV
-    "#19764B",  # 500 GeV
-    #"#477A26",  # 600 GeV
-    #"#786A19",  # 700 GeV
-    #"#99551E",  # 800 GeV
     "#FF7F00",  # 1000 GeV
 ]
-"""
+'''
 
-color = [
+signal_colour = [
     "#004D40",  # 10 GeV
     "#FF00FF",  # 200 GeV
     "#0080FF",  # 300 GeV
     "#BFFF00",  # 500 GeV
     "#FF6600",  # 1000 GeV
 ]
-if len(masses) != len(color):
-    raise ValueError("Define one signal color for each mass in masses")
+
+'''
+signal_colour = [
+    "#542788",  # 10 GeV
+    "#7B3294",  # 50 GeV
+    "#A34AA2",  # 100 GeV
+    "#C65A8E",  # 150 GeV
+    "#3546A6",  # 200 GeV
+    "#235AB8",  # 250 GeV
+    "#1878B4",  # 300 GeV
+    "#087E8B",  # 350 GeV
+    "#006D77",  # 400 GeV
+    "#19764B",  # 500 GeV
+    "#477A26",  # 600 GeV
+    "#786A19",  # 700 GeV
+    "#99551E",  # 800 GeV
+    "#643C35",  # 1000 GeV
+]
+'''
+
+style_signals_dict = {}
 for sig in signal_types:
-    for mphi, col in zip(masses, color):
+    for mphi, colour in zip(masses, signal_colour):
         style_signals_dict[
-            f"{sig} (m_{{#phi}}={mphi} GeV, m_{{#chi}}=1 GeV)"
+            f"{sig} (m_{{#phi}}= {mphi} GeV, m_{{#chi}}=1 GeV)"
         ] = {
             "style": "hist",
             "msize": 0,
-            "lcolor": ROOT.TColor.GetColor(col),
+            "lcolor": ROOT.TColor.GetColor(colour),
             "lwidth": 2,
             "fstyle": 0,
-            "lstyle": ROOT.kSolid,
+            "lstyle": ROOT.kSolid
         }
+                                   
+
+
+labels_dict                         = {
+                                        "TT":               "t#bar{t}",
+                                        "TW":               "tW",
+                                        "QCD":              "QCD",
+                                        "ZJetsToNuNu":      "Z (#nu#nu) + Jets",
+                                        "WJets":            "W (#it{l}#nu) + Jets",
+                                    }
+
+
+labels_dict_signal = {}
+
+for sig in signal_types:
+    for mphi in masses:
+        labels_dict_signal[f"{sig}_mPhi{mphi}"] = (
+            f"{sig} (m_{{#phi}}= {mphi} GeV, m_{{#chi}}=1 GeV)"
+        )
+
+
+labels_dict.update(labels_dict_signal)
+
+
 
 systematics_dict                        = config["plotting"]["systematics"]
 systematics_dict["Full2022"]            = list(set(systematics_dict["2022"]) & set(systematics_dict["2022EE"]))
@@ -270,6 +272,7 @@ inFilePath          = {"Data": [], "signal": [], "bkg": []}
 inFile              = {"Data": [], "signal": [], "bkg": []}
 inSample            = {"Data": [], "signal": [], "bkg": []}
 
+
 cut_tag             = cut_string(cut)
 
 for dat in datasets:
@@ -289,8 +292,8 @@ for dat in datasets:
             inSample["Data"].append(s)
         #MODIFICA EFFETTUATA QUI
         elif any(sig in s.label for sig in signal_types):
-            mphi = int(s.label.split("_mPhi")[1].split("_")[0])
-            if mphi not in masses:
+            signal_key = "_".join(s.label.split("_")[:3])
+            if signal_key not in labels_dict_signal:
                 continue
             print("signals:", s.label)
             inFilePath["signal"].append(repohisto_tmp + s.label + ".root")
@@ -314,6 +317,17 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
 # for v in [var for var in vars if var._name in ["LeadingFatJetPt_msoftdrop", "FatJet_msoftdrop_nominal"]]:
 # for v in [var for var in vars if var._name in ["MT_T", "PuppiMET_T1_pt_nominal"]]:
     for r in regions.keys():
+        if skip_missing_regions: #AGGIUNTO
+            missing = False #AGGIUNTO
+            for f in inFile["signal"] + inFile["bkg"]: #AGGIUNTO
+                if not f.Get(f"{v._name}_{r}"): #AGGIUNTO
+                    missing = True #AGGIUNTO
+                    break #AGGIUNTO
+
+            if missing:
+                print(f"Salto {v._name}, regione {r}: istogramma assente")
+                continue
+        
     # for r in ["SRTop"]:
     # for r in ["AH"]:
     # for r in ["SL"]:
@@ -325,9 +339,11 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
         ###############################################
         ROOT.TH1.SetDefaultSumw2()
         histo_bkg_dict                  = {}
+        #ho provato a cambiare qui l'ordine degli stack
         histo_bkg_dict["nominal"]       = {
                                             "tW":                       None,
                                             "QCD":                      None,
+                                            "t#bar{t}":                 None,
                                             "t#bar{t}":                 None,
                                             "Z (#nu#nu) + Jets":        None,
                                             "W (#it{l}#nu) + Jets":     None
@@ -337,14 +353,20 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
         #MODIFICA EFFETTUATA QUI
         #histo_signals_dict              = {}
         histo_signals_dict = {sig: {} for sig in signal_types}
+        #MODIFICA EFFETTUATA QUI
+        #histo_signals_dict              = {}
+
+        histo_signals_dict = {sig: {} for sig in signal_types}
 
         # print(f"Processing variable {v._name} in region {r}")
 
         ##### Normalize Signals (Lumi) ######
         # print("Processing Signals")
         for i, (f,s) in enumerate(zip(inFile["signal"], inSample["signal"])):
-            histo_name                          = v._name+"_"+r+"_"+"nominal"
+            #histo_name                          = v._name+"_"+r+"_"+"nominal"
+            histo_name                          = v._name+"_"+r
             tmp                                 = None
+            print(f"File: {f.GetName()} | Istogramma: {histo_name}", flush=True)
             tmp                                 = copy.deepcopy(ROOT.TH1D(f.Get(histo_name)))
             era                                 = s.label.split("_")[-1]
 
@@ -366,6 +388,10 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
             sig_sample = "_".join(s.label.split("_")[:2]) #questo prende ad esempio solo TT_s
             leg_label = labels_dict["_".join(s.label.split("_")[:3])] # così la label contiene anche la massa. NB il nome deve essere lo stesso che sta in labels_dict. Questo ad esempio prende TT_s_mPhi200
             #leg_label                           = labels_dict["_".join(s.label.split("_")[:2])]
+            #MODIFICA EFFETTUATA QUI
+            sig_sample = "_".join(s.label.split("_")[:2]) #questo prende ad esempio solo TT_s
+            leg_label = labels_dict["_".join(s.label.split("_")[:3])] # così la label contiene anche la massa. NB il nome deve essere lo stesso che sta in labels_dict. Questo ad esempio prende TT_s_mPhi200
+            #leg_label                           = labels_dict["_".join(s.label.split("_")[:2])]
             if scale_signals != 1:
                 tmp.Scale(scale_signals)                                        # scale signals for better visibility in the stack plots
             
@@ -381,7 +407,8 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
         # NOMINAL #
         err_dict_SystSampleBin              = {syst: {} for syst in systematics}
         for i, (f,s) in enumerate(zip(inFile["bkg"], inSample["bkg"])):
-            histo_name                      = v._name+"_"+r+"_"+"nominal"
+            #histo_name                      = v._name+"_"+r+"_"+"nominal"
+            histo_name                      = v._name+"_"+r
             tmp                             = copy.deepcopy(ROOT.TH1D(f.Get(histo_name)))
             era                             = s.label.split("_")[-1]
             lumi                            = tot_lumi if subera else lumi_dict[era]
@@ -473,7 +500,8 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
         ##### Data #####
         # print("Processing Data")
         #if (not blind) and ((not ("SR" in r) or ("Loose" in r)) or (("SR" in r) and not ("SRTop" in r))):
-        if not blind:
+        #if not blind:
+        if (not blind) and (not r.startswith("SRTop")):
             if not v._MConly:
                 histo_name                          = v._name+"_"+r
                 for f, s in zip(inFile["Data"], inSample["Data"]):
@@ -528,7 +556,7 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
         yTitle              = "Events"
         # if (not blind) and not ("SR" in r) and (not v._MConly):
         #if (not blind) and ((not ("SR" in r) or ("SRTopLoose" in r)) or (("SR" in r) and not ("SRTop" in r))) and (not v._MConly):
-        
+
         if (not blind) and (not v._MConly):
             if histo_data is not None:
                 yMax = max(
@@ -544,14 +572,41 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
                 h.GetMaximum() for h in histo_bkg_dict["nominal"].values()
             )
         
-
-            
+        '''
+        if (not blind) and (not v._MConly):
+            if histo_data is not None:
+                yMax = max(
+                    sum(h.GetMaximum() for h in histo_bkg_dict["nominal"].values()),
+                    histo_data.GetMaximum()
+                )
+            else:
+                yMax            = sum([histo_bkg_dict["nominal"][process].GetMaximum() for process in histo_bkg_dict["nominal"]])
+            if len(histo_signals_dict) != 0:
+                yMin        = min([h.GetMinimum() for label,h in histo_signals_dict.items()])
+            else:
+                if logy:
+                    yMin    = 1e-1
+                else:
+                    yMin    = 0
+        
+        else:
+            yMax            = sum([histo_bkg_dict["nominal"][process].GetMaximum() for process in histo_bkg_dict["nominal"]])
+            if len(histo_signals_dict) != 0:
+                yMin        = min([h.GetMinimum() for label,h in histo_signals_dict.items()])
+            else:
+                if logy:
+                    yMin    = 1e-1
+                else:
+                    yMin    = 0
+        '''
 
         if logy:
             yMax            = yMax*100
             #yMin            = yMin
+            #yMin            = yMin
         else:
             yMax            = yMax*1.6
+            #yMin            = yMin*0.5
             #yMin            = yMin*0.5
         
         if v._name in ["LeadingFatJetPt_msoftdrop", "FatJet_msoftdrop_nominal"]:
@@ -577,9 +632,14 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
         ##### Drawing Stacks ######
 
         for sig in signal_types:
-            repostack_www = f"{folder_www}/{r}/{sig}/"
+            if not histo_signals_dict[sig]:
+                continue
+
+
+            repostack_www = f"{folder_www}stacks/{r}/{sig}/"
             os.makedirs(repostack_www, exist_ok=True)
-            canv_name = f"canvas_{sig}_{v._name}_{r}_nominal"
+            
+            canv_name       = "canvas_"+sig+"_"+v._name+"_"+r+"_"+"nominal"
             dicanv          = make_stack_with_ratio(
                                                     canv_name           = canv_name,
                                                     histo_bkg_dict      = histo_bkg_dict,

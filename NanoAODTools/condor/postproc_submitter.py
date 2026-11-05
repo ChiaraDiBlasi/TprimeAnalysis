@@ -28,7 +28,7 @@ where_to_write = opt.tier
 delete_files = opt.delete_files
 
 if where_to_write.lower() =='pisa':
-    redirector = "davs://stwebdav.pi.infn.it:8443/cms"
+    redirector = "davs://stwebdav.pi.infn.it:8443/cms" #redirector identifica lo storage scelto, quindi quello su cui salvare oi dati
 elif where_to_write.lower() =='bari':
     redirector = "davs://webdav.recas.ba.infn.it:8443/cms"
 elif where_to_write.lower() == 'legnaro':
@@ -60,7 +60,7 @@ print("Launching crab script for dataset: ", opt.dat)
 
 if submit:
     print("\nRemote folder name (tier): ", remote_folder_name)
-    if not debug: os.popen("davix-mkdir {}/store/user/{}/{}/ -E /tmp/x509up_u{} --capath /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/".format(redirector, username, remote_folder_name, str(uid)))
+    if not debug: os.popen("davix-mkdir {}/store/user/{}/{}/ -E /tmp/x509up_u{} --capath /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/".format(redirector, username, remote_folder_name, str(uid))) # equivalente concettuale di mkdir, ma su uno storage remoto. DAVIX è il meccanismo con cui questi script interagiscono con lo storage remoto. E' un modo per prendere i file come xrootd
     print("          {}/store/user/{}/{} CREATED".format(redirector, username, remote_folder_name))
 
 def write_crab_script(sample, file, modules, run_folder, calculate_systematics, year, debug):
@@ -129,7 +129,7 @@ def write_crab_script(sample, file, modules, run_folder, calculate_systematics, 
     f.write("print('DONE')\n")
     f.close()
 
-def sub_writer(run_folder, log_folder, label, sample_label):
+def sub_writer(run_folder, log_folder, label, sample_label): #fa un condor.sub per ogni file
     f = open(run_folder+"/condor.sub", "w")
     f.write("Proxy_filename          = x509up\n")
     f.write("Proxy_path              = /afs/cern.ch/user/" + inituser + "/" + username + "/private/$(Proxy_filename)\n")
@@ -163,10 +163,10 @@ def runner_writer(folder, i, remote_folder_name, sample_folder, launchtime, outf
     f.write("pwd\n")
     f.write("hadd -f tree_hadd_"+str(i)+".root tree.root hist.root\n")
     f.write("pwd\n")
-    f.write("davix-put tree_hadd_{}.root {}/store/user/{}/{}/{}/{}/tree_hadd_{}.root -E $1 --capath /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/\n".format(str(i), redirector, username, remote_folder_name, sample_folder, launchtime, str(i)))
+    f.write("davix-put tree_hadd_{}.root {}/store/user/{}/{}/{}/{}/tree_hadd_{}.root -E $1 --capath /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/\n".format(str(i), redirector, username, remote_folder_name, sample_folder, launchtime, str(i))) #davix-put significa sostanzialmente copia/carica un file locale verso uno storage remoto attraverso DAVIX.
     f.close()
 
-dataset_to_run = opt.dat
+dataset_to_run = opt.dat #NB il dataset lo vuole con la chiave che sta in sample.py
 
 if dataset_to_run == '':
     print("Please enter a dataset name")
@@ -174,7 +174,7 @@ if dataset_to_run == '':
 elif dataset_to_run not in sample_dict.keys():
     print("Dataset not found")
     exit()
-elif dataset_to_run in sample_dict.keys():
+elif dataset_to_run in sample_dict.keys(): 
     if hasattr(sample_dict[dataset_to_run], "components"):
         print("---------- Running dataset: ", dataset_to_run)
         print("Components: ", [s.label for s in sample_dict[dataset_to_run].components])
@@ -210,7 +210,7 @@ if submit:
 
         sample_folder = sample.label
         if not debug: 
-            command1 = os.popen("davix-mkdir {}/store/user/{}/{}/{}/ -E /tmp/x509up_u{} --capath /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/".format(redirector, username, remote_folder_name, sample_folder, str(uid)))
+            command1 = os.popen("davix-mkdir {}/store/user/{}/{}/{}/ -E /tmp/x509up_u{} --capath /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/".format(redirector, username, remote_folder_name, sample_folder, str(uid))) # crea la cartella permanente del dataset
             res1 = command1.read()
             if "Error:" in res1:
                 print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CREATE THIS FOLDER MANUALLY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!") 
@@ -218,7 +218,7 @@ if submit:
                 print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!") 
             else:
                 print("Folder : {}/store/user/{}/{}/{}/ created".format(redirector, username, remote_folder_name, sample_folder))
-            command2 = os.popen("davix-mkdir {}/store/user/{}/{}/{}/{}/ -E /tmp/x509up_u{} --capath /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/".format(redirector, username, remote_folder_name, sample_folder, launchtime, str(uid)))
+            command2 = os.popen("davix-mkdir {}/store/user/{}/{}/{}/{}/ -E /tmp/x509up_u{} --capath /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates/".format(redirector, username, remote_folder_name, sample_folder, launchtime, str(uid))) #crea la sottocartella della specifica produzione, con launchtime con una sensiblità del secondo, quindi sotto al secondo non le distingue
             res2 = command2.read()
             if "Error:" in res2:
                 print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CREATE THIS FOLDER MANUALLY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!") 
@@ -235,7 +235,7 @@ if submit:
         else:
             isMC = True
 
-        modelMix_path = models["TopMixed_"+str(sample.year)]
+        modelMix_path = models["TopMixed_"+str(sample.year)] #modello di trota diverso a seconda dell'anno
         modelRes_path = models["TopResolved_"+str(sample.year)]
         if isMC:
             if sample.year == 2018:
@@ -274,18 +274,21 @@ if submit:
                 modules_list.append(f'MET_Filter(year={sample.year})')
                 modules_list.append(f'JetVetoMaps_run3(year={sample.year},EE={sample.EE})')
                 modules_list.append(f'preselection()')
-                if calculate_systematics:
+                if calculate_systematics: 
                     modules_list.append(f'CMSJMECalculators(configcreate(isMC={isMC},year={sample.year},EE={sample.EE},runPeriod="{sample.runP}",jetType="AK4PFPuppi",forMET=False,doJer=True),jetType="AK4PFPuppi",isMC={isMC},forMET=False,PuppiMET=False,addHEM2018Issue=False,NanoAODv={nanoaod_version})')
                     modules_list.append(f'CMSJMECalculators(configcreate(isMC={isMC},year={sample.year},EE={sample.EE},runPeriod="{sample.runP}",jetType="AK8PFPuppi",forMET=False,doJer=True),jetType="AK8PFPuppi",isMC={isMC},forMET=False,PuppiMET=False,addHEM2018Issue=False,NanoAODv={nanoaod_version})')
                     modules_list.append(f'CMSJMECalculators(configcreate(isMC={isMC},year={sample.year},EE={sample.EE},runPeriod="{sample.runP}",jetType="AK4PFPuppi",forMET=True,doJer=True),jetType="AK4PFPuppi",isMC={isMC},forMET=True,PuppiMET=True,addHEM2018Issue=False,NanoAODv={nanoaod_version})')
-                modules_list.append(f'nanoTopcand(isMC={isMC})')
+                modules_list.append(f'nanoTopcand(isMC={isMC})') #CMSJMECalculators: AK4PFPuppi jets AK8PFPuppi fat jets; AK4PFPuppi + PuppiMET
                 modules_list.append(f'globalvar()')
                 modules_list.append(f'nanoTopevaluate_MultiScore(isMC={isMC},year={sample.year},modelMix_path="{modelMix_path}",modelRes_path="{modelRes_path}")')
 
         if sample.year in [2022,2023,2024]:
             modules = ", ".join(modules_list)
         files = get_files_string(sample)
-        if debug: files = files[:1] 
+        if debug:
+            files = files[:1] 
+        #else:
+            #files=  files[:1]
         print(len(files))
 
         for i, f in enumerate(files):

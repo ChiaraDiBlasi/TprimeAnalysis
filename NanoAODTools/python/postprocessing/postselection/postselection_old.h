@@ -14,14 +14,22 @@
 #include "correction.h"
 
 #include "TDavixFile.h"
+<<<<<<< HEAD
 #include <tuple>
+=======
+
+>>>>>>> tdm-chiara
 using namespace ROOT::VecOps;
 using RNode = ROOT::RDF::RNode;
 using rvec_f = const RVec<float> &;
 using rvec_i = const RVec<int> &;
 using rvec_b = const RVec<bool> &;
 using rvec_rvec_i = const RVec<RVec<int>> &;
+<<<<<<< HEAD
 using rvec_uc = const RVec<UChar_t> &;
+=======
+using rvec_uc = const RVec<unsigned char> &;
+>>>>>>> tdm-chiara
 
 const float TopRes_trs_5fpr  = 0.625; // tight
 const float TopMix_trs_5fpr  = 0.950; // tight
@@ -573,6 +581,11 @@ RVec<int> CalculateToptruth1(rvec_i TopMixed_idxJet0, rvec_i TopMixed_idxJet1, r
 // ########################################################
 // ########## PRESELECTION ################################
 // ########################################################
+<<<<<<< HEAD
+=======
+
+//Conta quanti elettroni “tight” ci sono nell’evento: Electron_cutBased >= 4; Electron_pt > 50; |Electron_eta| < 2.5; Electron_mvaIso_WP80 == 1
+>>>>>>> tdm-chiara
 int nTightElectron(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80)
 {
   int n=0;
@@ -593,6 +606,10 @@ RVec<int> TightElectron_idx(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Elec
   return ids;
 }
 
+<<<<<<< HEAD
+=======
+//Conta quanti elettroni “loose” ci sono nell’evento: Electron_cutBased >= 1; Electron_pt > 50; |Electron_eta| < 2.5; Electron_mvaIso_WP80 == 1
+>>>>>>> tdm-chiara
 int nLooseElectron(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80)
 {
   int n=0;
@@ -653,8 +670,127 @@ RVec<int> LooseMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rv
   return ids;
 }
 
+<<<<<<< HEAD
 
 
+=======
+//questa era la vecchia definizione di leptoni veto, che ora diventa la definizione di elettroni loose
+int nVetoElectron(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80)
+{
+  int n=0;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) n+=1;
+  }
+  return n;
+}
+
+
+int nVetoElectron_loose(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80)
+{
+  int n=0;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) n+=1;
+  }
+  return n;
+}
+
+RVec<int> VetoElectron_loose_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+
+int nVetoElectron_tight(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz)
+{
+  int n=0;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=3 && abs(Electron_eta[i])<2.5 && Electron_convVeto[i]==1 && Electron_promptMVA[i]>0.90 && Electron_pt[i]>25) 
+    {
+      if(abs(Electron_eta[i])<=1.479) //barrel
+      {
+        if(abs(Electron_dxy[i])<0.05 && abs(Electron_dz[i])<0.1) n+=1;       
+      }  
+      else if(abs(Electron_eta[i])>1.479) //endcap
+      {
+        if(abs(Electron_dxy[i])<0.1 && abs(Electron_dz[i])<0.2) n+=1;
+      }
+    }
+  }
+  return n;
+}
+
+RVec<int> VetoElectron_tight_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=3 && abs(Electron_eta[i])<2.5 && Electron_convVeto[i]==1 && Electron_promptMVA[i]>0.90 && Electron_pt[i]>25) 
+    {
+      if(abs(Electron_eta[i])<=1.479) //barrel
+      {
+        if(abs(Electron_dxy[i])<0.05 && abs(Electron_dz[i])<0.1) ids.emplace_back(i);       
+      }  
+      else if(abs(Electron_eta[i])>1.479) //endcap
+      {
+        if(abs(Electron_dxy[i])<0.1 && abs(Electron_dz[i])<0.2) ids.emplace_back(i);
+      }
+    }
+  }
+  return ids;
+}
+
+
+RVec<int> VetoElectron_looseORtight_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz)
+{
+    RVec<int> loose_ids = VetoElectron_loose_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80);
+
+    RVec<int> tight_ids = VetoElectron_tight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz);
+
+    RVec<int> ids;
+
+    for (int i = 0; i < Electron_pt.size(); i++)
+    {
+        bool isLoose = false;
+        bool isTight = false;
+
+        for (int idx : loose_ids)
+        {
+            if (idx == i)
+                isLoose = true;
+        }
+
+        for (int idx : tight_ids)
+        {
+            if (idx == i)
+                isTight = true;
+        }
+
+        if (isLoose || isTight)
+            ids.emplace_back(i);
+    }
+
+    return ids;
+}
+
+int nVetoElectron_looseORtight(rvec_f Electron_pt, rvec_uc Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz)
+{
+    RVec<int> ids =
+        VetoElectron_looseORtight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz);
+
+    return ids.size();
+}
+
+
+//questa era la vecchia definizione dei muoni di veto, che ora diventa la definizione di muoni loose
+>>>>>>> tdm-chiara
 int nVetoMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId)
 {
   int n=0;
@@ -665,8 +801,11 @@ int nVetoMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_
   return n;
 }
 
+<<<<<<< HEAD
 //very tight. Nuove definizioni di veto.
 
+=======
+>>>>>>> tdm-chiara
 int nVetoMuon_loose(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId)
 {
   int n=0;
@@ -677,6 +816,7 @@ int nVetoMuon_loose(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i
   return n;
 }
 
+<<<<<<< HEAD
 
 int nVetoElectron_tight(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA,rvec_f Electron_dxy, rvec_f Electron_dz)
 {
@@ -706,11 +846,25 @@ int nVetoElectron_tight(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Ele
   
   return n;
 }
+=======
+RVec<int> VetoMuon_loose_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+
+>>>>>>> tdm-chiara
 int nVetoMuon_tight(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz)
 {
   int n=0;
   for(int i = 0; i<Muon_pt.size(); i++)
   {
+<<<<<<< HEAD
     if(Muon_tightId[i]==1 && Muon_promptMVA[i]>0.67 && Muon_pt[i] > 25 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=2 && abs(Muon_dz[i])<0.1 && abs(Muon_dxy[i])<0.02)
     {
       
@@ -718,6 +872,9 @@ int nVetoMuon_tight(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i
         n+=1;
       
     }
+=======
+    if(Muon_tightId[i]==1 && Muon_promptMVA[i]>0.67 && Muon_pt[i] > 25 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=2 && abs(Muon_dz[i])<0.1 && abs(Muon_dxy[i])<0.02) n+=1;
+>>>>>>> tdm-chiara
 
   }
   return n;
@@ -733,6 +890,7 @@ RVec<int> VetoMuon_tight_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightI
   return ids;
 }
 
+<<<<<<< HEAD
 RVec<int> VetoElectron_tight_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA,rvec_f Electron_dxy, rvec_f Electron_dz)
 {
   RVec<int> ids;
@@ -1054,6 +1212,44 @@ int nVetoElectron(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_
   return n;
 }
 
+=======
+
+RVec<int> VetoMuon_looseORtight_idx (rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_tightId, rvec_f Muon_promptMVA, rvec_f Muon_dxy,rvec_f Muon_dz)
+{
+  RVec<int> loose_ids = VetoMuon_loose_idx(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId);
+  RVec<int> tight_ids = VetoMuon_tight_idx(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz);
+  RVec<int> ids;
+  for (int i=0; i<Muon_pt.size(); i++)
+  {
+    bool isLoose=false;
+    bool isTight=false; 
+
+    for(int idx=0; idx<loose_ids.size(); idx++)
+    {
+      if(i==loose_ids[idx])
+      isLoose=true;
+    }
+      
+    for(int idx=0; idx<tight_ids.size(); idx++)
+    {
+      if(i==tight_ids[idx])
+      isTight=true;
+    }
+      if(isLoose || isTight) ids.emplace_back(i);
+    }
+  return ids;
+}
+
+int nVetoMuon_looseORtight(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_tightId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz)
+{
+  RVec<int> ids = VetoMuon_looseORtight_idx (Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_tightId, Muon_promptMVA, Muon_dxy, Muon_dz);
+  int n=ids.size();
+  return n;
+
+}
+
+
+>>>>>>> tdm-chiara
 bool LepVeto(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80, rvec_f Muon_pt, rvec_f Muon_eta, rvec_b Muon_looseId, rvec_i Muon_pfIsoId)
 {
   int EleVetoPassed = 0;
@@ -1115,6 +1311,11 @@ RVec<bool> Jet_passJetIdTightLepVeto(rvec_f Jet_eta, rvec_b Jet_passJetIdTight, 
   return passJetIdTightLepVeto;
 }
 
+<<<<<<< HEAD
+=======
+//seleziona i jet che soddisfano determinati criteri di qualità e cinematici e restituisce gli indici di questi jet
+//pt>30, |eta|<2.4, jetID==6
+>>>>>>> tdm-chiara
 RVec<int> GetGoodJet(rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_jetId)
 {
   RVec<int> ids;
@@ -1129,6 +1330,12 @@ RVec<int> GetGoodJet(rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_jetId)
   return ids;
 }
 
+<<<<<<< HEAD
+=======
+//seleziona i fat jet che soddisfano determinati criteri di qualità e cinematici e restituisce gli indici di questi jet
+//pt>200, |eta|<2.4, jetID==6
+
+>>>>>>> tdm-chiara
 RVec<int> GetGoodFatJet(rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_jetId)
 {
   RVec<int> ids;
@@ -1178,6 +1385,10 @@ bool atLeast1verygoodfatjet(rvec_f FatJet_pt, rvec_f FatJet_msoftdrop)
 // ######## Event variables (deltaphi, etajet) ############
 // ########################################################
 
+<<<<<<< HEAD
+=======
+//calcola delta_phi_min tra MET e goodjets
+>>>>>>> tdm-chiara
 float min_DeltaPhi(float MET_phi, rvec_f Jet_phi, rvec_i GoodJet_idx)
 {
   float min_dphi = 4;
@@ -1462,7 +1673,11 @@ bool check_same_top_type2(int idx_fj_1, int idx_j0_1, int idx_j1_1, int idx_j2_1
   return sametop;   
 }
 
+<<<<<<< HEAD
 // Top Mixed, candidates over threshold of TopScore and candidates not overlapping (do not share any abject)
+=======
+// Top Mixed, candidates over threshold of TopScore and candidates not overlapping (do not share any object)
+>>>>>>> tdm-chiara
 RVec<int> select_TopMix(rvec_f TopMixed_TopScore, rvec_f TopMixed_idxFatJet, rvec_f TopMixed_idxJet0, rvec_f TopMixed_idxJet1, rvec_f TopMixed_idxJet2, rvec_i GoodJet_idx, rvec_i GoodFatJet_idx, float wp)
 {
   RVec<int> ids;
@@ -1600,6 +1815,7 @@ Int_t select_TopCategory(rvec_i TightTopMer_idx, rvec_i TightTopMix_idx, rvec_i 
   }
 }
 
+<<<<<<< HEAD
 // dobbiamo fare:
 //else{... return 8};else{...return 9};else{...return 10}
 // nMer>=2 
@@ -1608,6 +1824,8 @@ Int_t select_TopCategory(rvec_i TightTopMer_idx, rvec_i TightTopMix_idx, rvec_i 
 // da qua vanno sviluppate le CR quindi vanno definite 4,5,6 dove si chiedono 0 top tight ma ne esistono di loose 
 
 
+=======
+>>>>>>> tdm-chiara
 Int_t select_bestTop(int EventTopCategory, rvec_f FatJet_particleNet_TvsQCD, rvec_f TopMixed_TopScore, rvec_f TopResolved_TopScore){
   //RVec<int> topselect ;
   //int bestTop_idx;
@@ -2058,6 +2276,10 @@ int BJetTopLep_MCtag(rvec_i Jet_matched, rvec_i Jet_pdgId, rvec_i Jet_topMother,
 }
 
 //////
+<<<<<<< HEAD
+=======
+//Questa funzione cerca il \(p_T\) di un quark leggero (u, d, s, c, b) proveniente dalla catena di decadimento di un top tramite un bosone W.
+>>>>>>> tdm-chiara
 float genpartTopPt(rvec_f GenPart_pt, rvec_i GenPart_pdgId, rvec_i GenPart_genPartIdxMother, rvec_i GenPart_genPartIdxMother_prompt)
 {
   float top_pt = -1;
@@ -2080,6 +2302,10 @@ float genpartTopPt(rvec_f GenPart_pt, rvec_i GenPart_pdgId, rvec_i GenPart_genPa
 // ################################################
 // ############## Top pT reweighting ##############
 // ################################################
+<<<<<<< HEAD
+=======
+//conta quanti decadimenti di top leptonici trova nell'evento
+>>>>>>> tdm-chiara
 int countTopGenLep(rvec_i pdgId, rvec_i motherIdx, rvec_i motherIdx_prompt, rvec_i statusFlags)
 {
   int nLeptonicTops = 0;
@@ -2087,9 +2313,15 @@ int countTopGenLep(rvec_i pdgId, rvec_i motherIdx, rvec_i motherIdx_prompt, rvec
   {
     if (abs(pdgId[i]) == 11 || abs(pdgId[i]) == 13 || abs(pdgId[i]) == 15) // ele, mu, tau
     {
+<<<<<<< HEAD
       if ((abs(pdgId[motherIdx[i]]) == 24) && (statusFlags[motherIdx[i]] & (1 << 13))) // the mother of the lepton is a W boson
       {
         if ((abs(pdgId[motherIdx_prompt[motherIdx[i]]]) == 6) && (statusFlags[motherIdx_prompt[motherIdx[i]]] & (1 << 13))) // the mother of the W boson is a top quark (last copy)
+=======
+      if ((abs(pdgId[motherIdx[i]]) == 24) && (statusFlags[motherIdx[i]] & (1 << 13))) // the mother of the lepton is a W boson 
+      {
+        if ((abs(pdgId[motherIdx_prompt[motherIdx[i]]]) == 6) && (statusFlags[motherIdx_prompt[motherIdx[i]]] & (1 << 13))) // the mother of the W boson is a top quark (last copy) è anche la sua last copy nella catena generator-level.
+>>>>>>> tdm-chiara
         {
           nLeptonicTops++;
         }
@@ -2099,6 +2331,10 @@ int countTopGenLep(rvec_i pdgId, rvec_i motherIdx, rvec_i motherIdx_prompt, rvec
   return nLeptonicTops;
 }
 
+<<<<<<< HEAD
+=======
+//restituisce gli indici GenPart dei top che decadono leptonicamente
+>>>>>>> tdm-chiara
 RVec<int> TopGenLep_genPartIdx(rvec_i pdgId, rvec_i motherIdx, rvec_i motherIdx_prompt, rvec_i statusFlags)
 {
   RVec<int> idx = {};
@@ -2118,6 +2354,10 @@ RVec<int> TopGenLep_genPartIdx(rvec_i pdgId, rvec_i motherIdx, rvec_i motherIdx_
   return idx;
 }
 
+<<<<<<< HEAD
+=======
+//prende gli indici dei top leptonici trovati da TopGenLep_genPartIdx (funzione precedente) e usa quegli indici per estrarre una certa variabile da GenPart
+>>>>>>> tdm-chiara
 RVec<float> TopGenLep_var(rvec_i TopGenLep_idx, rvec_f GenPart_var)
 {
   RVec<float> var;
