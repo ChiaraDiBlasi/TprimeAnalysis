@@ -10,7 +10,6 @@ import importlib.util
 import copy
 import json
 import numpy as np
-import shutil
 import cmsstyle as CMS
 import array
 ROOT.gROOT.SetBatch()
@@ -37,8 +36,6 @@ parser.add_option("--era",          dest="era",         type="string",          
 parser.add_option("--subera",       dest="subera",      type="string",  default="",                                     help="Sub-era tag: C, D, E, ...")
 parser.add_option('--varfile',      dest='varfile',     type=str,       default="../variables.py",                      help='Path to the variable file')
 (opt, args)             = parser.parse_args()
-if opt.year_tag is None:
-    parser.error("--year_tag is required; choose one of: " + ", ".join(year_tags))
 ################## input parameters
 extraText                           = "Work in Progress"
 extraSpace                          = 0.1
@@ -174,9 +171,9 @@ labels_dict.update(labels_dict_signal)
 
 
 systematics_dict                        = config["plotting"]["systematics"]
-systematics_dict["Full2022"]            = list(set(systematics_dict["2022"]) & set(systematics_dict["2022EE"]))
-systematics_dict["Full2023"]            = list(set(systematics_dict["2023"]) & set(systematics_dict["2023postBPix"]))
-systematics_dict["Full2022_Full2023"]   = list(set(systematics_dict["Full2022"]) & set(systematics_dict["Full2023"]))
+#systematics_dict["Full2022"]            = list(set(systematics_dict["2022"]) & set(systematics_dict["2022EE"]))
+#systematics_dict["Full2023"]            = list(set(systematics_dict["2023"]) & set(systematics_dict["2023postBPix"]))
+#systematics_dict["Full2022_Full2023"]   = list(set(systematics_dict["Full2022"]) & set(systematics_dict["Full2023"]))
 systematics                             = [f"{syst}_{variation}" for syst in systematics_dict[era] for variation in ["up", "down"]]
 if len(systematics) == 0:
     systErr     = False
@@ -320,7 +317,7 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
         if skip_missing_regions: #AGGIUNTO
             missing = False #AGGIUNTO
             for f in inFile["signal"] + inFile["bkg"]: #AGGIUNTO
-                if not f.Get(f"{v._name}_{r}"): #AGGIUNTO
+                if not f.Get(f"{v._name}_{r}_nominal"): #AGGIUNTO
                     missing = True #AGGIUNTO
                     break #AGGIUNTO
 
@@ -363,8 +360,8 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
         ##### Normalize Signals (Lumi) ######
         # print("Processing Signals")
         for i, (f,s) in enumerate(zip(inFile["signal"], inSample["signal"])):
-            #histo_name                          = v._name+"_"+r+"_"+"nominal"
-            histo_name                          = v._name+"_"+r
+            histo_name                          = v._name+"_"+r+"_"+"nominal"
+            #histo_name                          = v._name+"_"+r
             tmp                                 = None
             print(f"File: {f.GetName()} | Istogramma: {histo_name}", flush=True)
             tmp                                 = copy.deepcopy(ROOT.TH1D(f.Get(histo_name)))
@@ -407,8 +404,8 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
         # NOMINAL #
         err_dict_SystSampleBin              = {syst: {} for syst in systematics}
         for i, (f,s) in enumerate(zip(inFile["bkg"], inSample["bkg"])):
-            #histo_name                      = v._name+"_"+r+"_"+"nominal"
-            histo_name                      = v._name+"_"+r
+            histo_name                      = v._name+"_"+r+"_"+"nominal"
+            #histo_name                      = v._name+"_"+r
             tmp                             = copy.deepcopy(ROOT.TH1D(f.Get(histo_name)))
             era                             = s.label.split("_")[-1]
             lumi                            = tot_lumi if subera else lumi_dict[era]

@@ -31,8 +31,6 @@ parser.add_option(      '--noTopPtWeight',          dest='noTopPtWeight',       
 parser.add_option(      '--noTrotaSF',              dest='noTrotaSF',           action='store_true',    default = False,                                        help='remove Trota SF')
 parser.add_option(      '--printcutflow',           dest='printcutflow',        action='store_true',    default = False,                                        help='print cutflow')
 parser.add_option(      '--suffix',                 dest='suffix',              type=str,               default = None,                                         help='suffix to add to condor folder name')
-parser.add_option(      '--printcutflow',           dest='printcutflow',        action='store_true',    default = False,                                        help='print cutflow')
-parser.add_option(      '--suffix',                 dest='suffix',              type=str,               default = None,                                         help='suffix to add to condor folder name')
 
 (opt, args)         = parser.parse_args()
 dataset_to_run      = opt.dat
@@ -40,8 +38,7 @@ syst                = opt.syst
 dryrun              = opt.dryrun
 nfiles_max          = 10000
 # nfiles_max          = 10000 if not dryrun else 1
-nfiles_max          = 10000
-# nfiles_max          = 10000 if not dryrun else 1
+
 noSFbtag            = opt.noSFbtag
 noPuWeight          = opt.noPuWeight
 noTopPtWeight       = opt.noTopPtWeight
@@ -65,8 +62,7 @@ elif "2023" in period:
     year            = "2023"
 elif "2024" in period:
     year            = "2024"
-elif "2024" in period:
-    year            = "2024"
+
 
 dict_samples_file   = config["dict_samples"][year]
 varfile             = config["variables_file"]
@@ -92,7 +88,7 @@ workdir         = "user" if "user" in os.environ.get('PWD') else "work"
 os.popen("cp /tmp/x509up_u" + str(uid) + " /afs/cern.ch/user/" + inituser + "/" + username + "/private/x509up")
 
 def sub_writer(run_folder, log_folder, dataset, suffix):
-def sub_writer(run_folder, log_folder, dataset, suffix):
+
     f = open(run_folder+"condor.sub", "w")
     f.write("Proxy_filename          = x509up\n")
     f.write("Proxy_path              = /afs/cern.ch/user/" + inituser + "/" + username + "/private/$(Proxy_filename)\n")
@@ -106,7 +102,7 @@ def sub_writer(run_folder, log_folder, dataset, suffix):
     # f.write('requirements            = (TARGET.OpSysAndVer =?= "CentOS7")\n')
     f.write("+JobFlavour             = \"nextweek\"\n") # options are espresso = 20 minutes, microcentury = 1 hour, longlunch = 2 hours, workday = 8 hours, tomorrow = 1 day, testmatch = 3 days, nextweek = 1 week
     f.write('+JobTag                 = "'+dataset+suffix+'"\n')
-    f.write('+JobTag                 = "'+dataset+suffix+'"\n')
+    
     f.write("executable              = "+run_folder+"runner.sh\n")
     f.write("arguments               = \n")
     #f.write("input                   = input.txt\n")
@@ -122,7 +118,6 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
     dest_dir    = hist_folder.rstrip("/") + "/plots"
     base_tmp    = "/tmp/" + username
 
-    base_tmp    = "/tmp/" + username
 
     pycommand = (
         "python3 postSelector.py "
@@ -158,7 +153,7 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
 
         f.write("cd /afs/cern.ch/user/" + inituser + "/" + username + "/\n")
         f.write("source tDM.sh\n")
-        f.write("source tDM.sh\n")
+
         f.write("cd python/postprocessing/postselection/\n\n")
 
         f.write(f'base_tmp="{base_tmp}"\n')
@@ -203,22 +198,6 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
         f.write('    exit "${postselector_status}"\n')
         f.write("fi\n\n")
 
-        # ------------------------------------------------------------
-        # Check output file
-        # ------------------------------------------------------------
-
-        f.write("postselector_status=$?\n\n")
-
-        f.write('echo "postSelector.py exit code: ${postselector_status}"\n\n')
-
-        # ------------------------------------------------------------
-        # Check postSelector exit code
-        # ------------------------------------------------------------
-
-        f.write('if [ "${postselector_status}" -ne 0 ]; then\n')
-        f.write('    echo "ERROR: postSelector.py failed with exit code ${postselector_status}" >&2\n')
-        f.write('    exit "${postselector_status}"\n')
-        f.write("fi\n\n")
 
         # ------------------------------------------------------------
         # Check output file
@@ -262,13 +241,7 @@ def runner_writer(run_folder, dataset, dict_samples_file, hist_folder, nfiles_ma
         # ------------------------------------------------------------
 
         f.write('echo "Copying output to ${destdir}"\n')
-        f.write('cp "${outfile}" "${destdir}/"\n')
-        f.write("cp_status=$?\n\n")
 
-        f.write('if [ "${cp_status}" -ne 0 ]; then\n')
-        f.write('    echo "ERROR: failed to copy output to ${destdir}" >&2\n')
-        f.write('    exit "${cp_status}"\n')
-        f.write("fi\n\n")
 
         # ------------------------------------------------------------
         # Final check
@@ -348,8 +321,7 @@ print("Samples to run: ", [s.label for s in samples])
 for sample in samples:
     condor_folder           = os.environ.get('PWD') + "/condor" + suffix + "/"
     condor_subfolder        = condor_folder + sample.label + suffix + "/"
-    condor_folder           = os.environ.get('PWD') + "/condor" + suffix + "/"
-    condor_subfolder        = condor_folder + sample.label + suffix + "/"
+
     log_folder              = condor_subfolder + "condor/"
     if not os.path.exists(condor_folder):
         os.makedirs(condor_folder)
@@ -380,7 +352,7 @@ for sample in samples:
 
     runner_writer(run_folder, sample.label, dict_samples_file, outFolder_path, nfiles_max, syst)
     sub_writer(run_folder, log_folder, sample.label, suffix)
-    sub_writer(run_folder, log_folder, sample.label, suffix)
+    
     if not dryrun:
         os.system("condor_submit " + run_folder + "condor.sub")
     time.sleep(2)
