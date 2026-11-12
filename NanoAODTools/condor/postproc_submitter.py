@@ -7,7 +7,7 @@ from PhysicsTools.NanoAODTools.postprocessing.get_file_fromdas import *
 from checkjobs import get_file_sizes, find_folder, check_status_submission
 from config import models # import machine learning models dictionary from config.py
 
-usage = 'python3 postproc_submitter.py -d dataset_name'
+usage = 'python3 postproc_submitter.py -d dataset_name --syst'
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
 parser.add_option('--tier', dest='tier', type=str, default = 'pisa', help='Please enter location where to write the output file (tier pisa or bari)')
@@ -53,7 +53,7 @@ os.popen("cp /tmp/x509up_u" + str(uid) + " /afs/cern.ch/user/" + inituser + "/" 
 
 
 # insert here the name of output folder
-remote_folder_name = "Run3Analysis_tDM"
+remote_folder_name = "Run3Analysis_Tprime"
 
 print("\033[92m\n\n######################## POSTPROC SUBMITTER ########################\033[0m")
 print("Launching crab script for dataset: ", opt.dat)
