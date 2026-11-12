@@ -12,9 +12,9 @@ source tDM.sh
 cd condor/
 
 echo "Running command:"
-echo "python3 getoutputs.py -d TTDM_ps_mPhi1000_mChi1_2024 -o dict_samples_DM_2024.json --tier legnaro"
+echo "python3 getoutputs.py -d TTDM_ps_mPhi1000_mChi1_2024 -o dict_samples_2024_syst.json --tier legnaro"
 
-python3 getoutputs.py -d TTDM_ps_mPhi1000_mChi1_2024 -o dict_samples_DM_2024.json --tier legnaro
+python3 getoutputs.py -d TTDM_ps_mPhi1000_mChi1_2024 -o dict_samples_2024_syst.json --tier legnaro
 
 echo "===== Job finished ====="
 echo "Date: $(date)"

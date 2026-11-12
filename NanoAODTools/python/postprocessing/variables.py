@@ -50,19 +50,19 @@ vars = []
 
 # vars.append(variable(name = "SFbtag_nominal", title= "#omega_{b-tag SF}", nbins = 100, xmin = 0, xmax=2, MConly = True))
 
-# vars.append(variable(name = "MET_pt", title= "p_{T}^{miss} [GeV]", nbins = 6, xmin = 200, xmax=800))
-# vars.append(variable(name = "MET_phi", title= "MET #phi", nbins = 6, xmin = -math.pi, xmax=math.pi))
-# vars.append(variable(name = "PuppiMET_pt", title= "p_{T}^{miss}(Puppi) [GeV]", nbins = 12, xmin = 200, xmax=800))
-# vars.append(variable(name = "PuppiMET_phi", title= "MET #phi (Puppi) [GeV]", nbins = 6, xmin = -math.pi, xmax=math.pi))
+#vars.append(variable(name = "MET_pt", title= "p_{T}^{miss} [GeV]", nbins = 6, xmin = 200, xmax=800))
+#vars.append(variable(name = "MET_phi", title= "MET #phi", nbins = 6, xmin = -math.pi, xmax=math.pi))
+vars.append(variable(name = "PuppiMET_pt", title= "p_{T}^{miss}(Puppi) [GeV]", nbins = 12, xmin = 200, xmax=800))
+vars.append(variable(name = "PuppiMET_phi", title= "MET #phi (Puppi) [GeV]", nbins = 6, xmin = -math.pi, xmax=math.pi))
 vars.append(variable(name = "PuppiMET_T1_pt_nominal", title= "p_{T}^{miss}(Puppi) nominal [GeV]", nbins = 12, xmin = 250, xmax=850))
 vars.append(variable(name = "PuppiMET_T1_phi_nominal", title= "Puppi MET #phi nominal", nbins = 6, xmin = -math.pi, xmax=math.pi))
 
-vars.append(variable(name = "LeadingJetPt_pt", title= "Leading Jet p_{T} [GeV]", nbins = 8, xmin = 50, xmax=850))
+#vars.append(variable(name = "LeadingJetPt_pt", title= "Leading Jet p_{T} [GeV]", nbins = 8, xmin = 50, xmax=850))
 # vars.append(variable(name = "LeadingJetPt_eta", title= "Leading Jet #eta", nbins = 8, xmin = -4, xmax=4))
 # vars.append(variable(name = "LeadingJetPt_phi", title= "Leading Jet #phi", nbins = 6, xmin = -math.pi, xmax=math.pi))
 # vars.append(variable(name = "LeadingJetPt_mass", title= "Leading Jet mass [GeV]", nbins = 10, xmin = 50, xmax=550))
 
-vars.append(variable(name = "LeadingFatJetPt_pt", title= "Leading FatJet p_{T} [GeV]", nbins = 8, xmin = 50, xmax=850))
+#vars.append(variable(name = "LeadingFatJetPt_pt", title= "Leading FatJet p_{T} [GeV]", nbins = 8, xmin = 50, xmax=850))
 # vars.append(variable(name = "LeadingFatJetPt_eta", title= "Leading FatJet #eta", nbins = 8, xmin = -4, xmax=4))
 # vars.append(variable(name = "LeadingFatJetPt_phi", title= "Leading FatJet #phi", nbins = 6, xmin = -math.pi, xmax=math.pi))
 # vars.append(variable(name = "LeadingFatJetPt_mass", title= "Leading FatJet mass [GeV]", nbins = 10, xmin = 50, xmax=550))
@@ -77,34 +77,34 @@ vars.append(variable(name = "LeadingFatJetPt_pt", title= "Leading FatJet p_{T} [
 # vars.append(variable(name = "nTightTopMerged",      title= "# Top Candidate Merged",    nbins = 40, xmin = -0.5, xmax=80.5))
 # vars.append(variable(name = "nTightTopMixed",       title= "# Top Candidate Mixed",     nbins = 40, xmin = -0.5, xmax=80.5))
 # vars.append(variable(name = "nTightTopResolved",    title= "# Top Candidate Resolved",  nbins = 25, xmin = -0.5, xmax=49.5))
-vars.append(variable(name = "nJet",                 title = "# Jet",                    nbins = 10, xmin = -0.5, xmax=9.5))
-vars.append(variable(name = "nFatJet",              title = "# FatJet",                 nbins = 5,  xmin = -0.5, xmax=4.5))
-vars.append(variable(name = "nGoodJet",             title = "# Good Jet",               nbins = 10, xmin = -0.5, xmax=9.5))
-vars.append(variable(name = "nGoodFatJet",          title = "# Good FatJet",            nbins = 5,  xmin = -0.5, xmax=4.5))
-vars.append(variable(name = "JetBTagScore",         title = "b-Jet Score",              nbins = 40, xmin = 0,    xmax=1, noUnOvFlowbin = True))
-vars.append(variable(name = "nJetBtagLoose",        title = "# b-Jet (L) ",             nbins = 5,  xmin = -0.5, xmax = 4.5))
-vars.append(variable(name = "nJetBtagMedium",       title = "# b-Jet (M)",              nbins = 5,  xmin = -0.5, xmax = 4.5))
-vars.append(variable(name = "nJetBtagTight",        title = "# b-Jet (T)",              nbins = 5,  xmin = -0.5, xmax = 4.5))
-vars.append(variable(name = "MinDelta_phi", title= "min #Delta #phi", nbins = 18, xmin = 0, xmax = math.pi))
+#vars.append(variable(name = "nJet",                 title = "# Jet",                    nbins = 10, xmin = -0.5, xmax=9.5))
+#vars.append(variable(name = "nFatJet",              title = "# FatJet",                 nbins = 5,  xmin = -0.5, xmax=4.5))
+#vars.append(variable(name = "nGoodJet",             title = "# Good Jet",               nbins = 10, xmin = -0.5, xmax=9.5))
+#vars.append(variable(name = "nGoodFatJet",          title = "# Good FatJet",            nbins = 5,  xmin = -0.5, xmax=4.5))
+#vars.append(variable(name = "JetBTagScore",         title = "b-Jet Score",              nbins = 40, xmin = 0,    xmax=1, noUnOvFlowbin = True))
+#vars.append(variable(name = "nJetBtagLoose",        title = "# b-Jet (L) ",             nbins = 5,  xmin = -0.5, xmax = 4.5))
+#vars.append(variable(name = "nJetBtagMedium",       title = "# b-Jet (M)",              nbins = 5,  xmin = -0.5, xmax = 4.5))
+#vars.append(variable(name = "nJetBtagTight",        title = "# b-Jet (T)",              nbins = 5,  xmin = -0.5, xmax = 4.5))
+#vars.append(variable(name = "MinDelta_phi", title= "min #Delta #phi", nbins = 18, xmin = 0, xmax = math.pi))
 # vars.append(variable(name = "MaxEta_jet", title= "max #eta jet", nbins = 5, xmin = 0, xmax = 5, noUnOvFlowbin=True))
-vars.append(variable(name = "HT_eventHT", title= "event HT", nbins = 20, xmin = 0, xmax = 2000))
+#vars.append(variable(name = "HT_eventHT", title= "event HT", nbins = 20, xmin = 0, xmax = 2000))
 # vars.append(variable(name = "run", title= "Run Number", nbins = 5142, xmin = 315251.5, xmax = 320393.5))
 
-vars.append(variable(name = "MHT", title= "event HT", nbins = 20, xmin = 0, xmax = 2000))
-vars.append(variable(name = "PV_npvsGood", title= "Number of PV", nbins = 25, xmin = -0.5, xmax = 49.5))
+#vars.append(variable(name = "MHT", title= "event HT", nbins = 20, xmin = 0, xmax = 2000))
+#vars.append(variable(name = "PV_npvsGood", title= "Number of PV", nbins = 25, xmin = -0.5, xmax = 49.5))
 
-vars.append(variable(name = "TopResolved_TopScore_nominal",     title= "Top Resolved Score",    nbins = 40, xmin = 0, xmax=1, noUnOvFlowbin = True))
-vars.append(variable(name = "TopMixed_TopScore_nominal",        title= "Top Mixed Score",       nbins = 40, xmin = 0, xmax=1, noUnOvFlowbin = True))
-vars.append(variable(name = "TopMerged_TopScore_nominal",       title= "Top Merged Score",      nbins = 40, xmin = 0, xmax=1, noUnOvFlowbin = True))
+#vars.append(variable(name = "TopResolved_TopScore_nominal",     title= "Top Resolved Score",    nbins = 40, xmin = 0, xmax=1, noUnOvFlowbin = True))
+#vars.append(variable(name = "TopMixed_TopScore_nominal",        title= "Top Mixed Score",       nbins = 40, xmin = 0, xmax=1, noUnOvFlowbin = True))
+#vars.append(variable(name = "TopMerged_TopScore_nominal",       title= "Top Merged Score",      nbins = 40, xmin = 0, xmax=1, noUnOvFlowbin = True))
 
 
-vars.append(variable(name = "EventTopCategory", title= "Top Category", nbins = 7, xmin = 0.5, xmax = 7.5))
+vars.append(variable(name = "EventTopCategory", title= "Top Category", nbins = 10, xmin = 0.5, xmax = 10.5))
 # vars.append(variable(name = "Top_truth", title= "Top Truth", nbins = 4, xmin = -0.5, xmax = 3.5, MConly = True))
 # vars.append(variable(name = "EventTopCategoryWithTruth", title= "Top Category (only true)", nbins = 4, xmin = 0.5, xmax = 4.5, MConly = True))
-vars.append(variable(name = "Top_mass",         title= "Top mass [GeV]", nbins = 30, xmin = 100, xmax=250, noUnOvFlowbin = True))
-vars.append(variable(name = "Top_pt",           title= "Top p_{T} [GeV]", nbins = 30, xmin = 100, xmax=1000, noUnOvFlowbin = True))
-vars.append(variable(name = "Top_score",        title= "Top Score", nbins = 40, xmin = 0, xmax=1, noUnOvFlowbin = True))
-vars.append(variable(name = "MT_T",             title= "M_{T} [GeV]", nbins = 30, xmin = 500, xmax=2000, noUnOvFlowbin = True))
+#vars.append(variable(name = "Top_mass",         title= "Top mass [GeV]", nbins = 30, xmin = 100, xmax=250, noUnOvFlowbin = True))
+#vars.append(variable(name = "Top_pt",           title= "Top p_{T} [GeV]", nbins = 30, xmin = 100, xmax=1000, noUnOvFlowbin = True))
+#vars.append(variable(name = "Top_score",        title= "Top Score", nbins = 40, xmin = 0, xmax=1, noUnOvFlowbin = True))
+#vars.append(variable(name = "MT_T",             title= "M_{T} [GeV]", nbins = 30, xmin = 500, xmax=2000, noUnOvFlowbin = True))
 # vars.append(variable(name = "FatJet_msoftdrop_nominal", title= "FatJet m_{SD} [GeV]", nbins = 20, xmin = 70, xmax=110))
 
 
@@ -229,120 +229,158 @@ SRregions = {
 
 
     # --------------------------------------------------------
-    # Tight Top - Resolved (category 1)
+    # # Tight non XT Top - Resolved (category 4)
     # --------------------------------------------------------
 
     "SRTopRes":
-        SRBase + " && EventTopCategory==1",
+    SRBase + " && EventTopCategory==4",
 
     "SRTopRes0fjets":
-        SRBase + " && EventTopCategory==1 && nForwardJet==0",
+    SRBase + " && EventTopCategory==4 && nForwardJet==0",
 
     "SRTopResatleast1fjets":
-        SRBase + " && EventTopCategory==1 && nForwardJet>0",
-
+    SRBase + " && EventTopCategory==4 && nForwardJet>0",
 
     # --------------------------------------------------------
-    # Tight Top - Mixed (category 2)
+    # Tight non XT Top - Mixed (category 5)
     # --------------------------------------------------------
 
     "SRTopMix":
-        SRBase + " && EventTopCategory==2",
+        SRBase + " && EventTopCategory==5",
 
     "SRTopMix0fjets":
-        SRBase + " && EventTopCategory==2 && nForwardJet==0",
+        SRBase + " && EventTopCategory==5 && nForwardJet==0",
 
     "SRTopMixatleast1fjets":
-        SRBase + " && EventTopCategory==2 && nForwardJet>0",
-
+        SRBase + " && EventTopCategory==5 && nForwardJet>0",
 
     # --------------------------------------------------------
-    # Tight Top - Merged (category 3)
+    # Tight non XT Top - Merged (category 6)
     # --------------------------------------------------------
 
     "SRTopMer":
-        SRBase + " && EventTopCategory==3",
+        SRBase + " && EventTopCategory==6",
 
     "SRTopMer0fjets":
-        SRBase + " && EventTopCategory==3 && nForwardJet==0",
+        SRBase + " && EventTopCategory==6 && nForwardJet==0",
 
     "SRTopMeratleast1fjets":
-        SRBase + " && EventTopCategory==3 && nForwardJet>0",
-
+        SRBase + " && EventTopCategory==6 && nForwardJet>0",
 
     # --------------------------------------------------------
-    # Inclusive Tight Top (categories 1, 2, 3)
+    # Inclusive Tight non XT Top (categories 4, 5, 6)
     # --------------------------------------------------------
 
     "SRTop":
-        SRBase + " && EventTopCategory>=1 && EventTopCategory<=3",
-
-    "SRTop0fjets":
-        SRBase + " && EventTopCategory>=1 && EventTopCategory<=3 && nForwardJet==0",
-
-    "SRTopatleast1fjets":
-        SRBase + " && EventTopCategory>=1 && EventTopCategory<=3 && nForwardJet>0",
-
-
-    # --------------------------------------------------------
-    # Inclusive Loose Top (categories 4, 5, 6)
-    # --------------------------------------------------------
-
-    "SRTopLoose":
         SRBase + " && EventTopCategory>=4 && EventTopCategory<=6",
 
-    "SRTop0fjetsLoose":
+    "SRTop0fjets":
         SRBase + " && EventTopCategory>=4 && EventTopCategory<=6 && nForwardJet==0",
 
-    "SRTopatleast1fjetsLoose":
+    "SRTopatleast1fjets":
         SRBase + " && EventTopCategory>=4 && EventTopCategory<=6 && nForwardJet>0",
 
 
     # --------------------------------------------------------
-    # Loose Top - Resolved (category 4)
+    # # Inclusive Loose non Tight Top (categories 7, 8, 9)
+    # --------------------------------------------------------
+
+    "SRTopLoose":
+        SRBase + " && EventTopCategory>=7 && EventTopCategory<=9",
+
+    "SRTop0fjetsLoose":
+        SRBase + " && EventTopCategory>=7 && EventTopCategory<=9 && nForwardJet==0",
+
+    "SRTopatleast1fjetsLoose":
+        SRBase + " && EventTopCategory>=7 && EventTopCategory<=9 && nForwardJet>0",
+
+    # --------------------------------------------------------
+    # Loose non Tight Top - Resolved (category 7)
     # --------------------------------------------------------
 
     "SRTopResLoose":
-        SRBase + " && EventTopCategory==4",
+        SRBase + " && EventTopCategory==7",
 
     "SRTop0fjetsResLoose":
-        SRBase + " && EventTopCategory==4 && nForwardJet==0",
+        SRBase + " && EventTopCategory==7 && nForwardJet==0",
 
     "SRTopatleast1fjetsResLoose":
-        SRBase + " && EventTopCategory==4 && nForwardJet>0",
+        SRBase + " && EventTopCategory==7 && nForwardJet>0",
 
 
     # --------------------------------------------------------
-    # Loose Top - Mixed (category 5)
+    # # Loose non Tight Top - Mixed (category 8)
     # --------------------------------------------------------
 
     "SRTopMixLoose":
-        SRBase + " && EventTopCategory==5",
+        SRBase + " && EventTopCategory==8",
 
     "SRTop0fjetsMixLoose":
-        SRBase + " && EventTopCategory==5 && nForwardJet==0",
+        SRBase + " && EventTopCategory==8 && nForwardJet==0",
 
     "SRTopatleast1fjetsMixLoose":
-        SRBase + " && EventTopCategory==5 && nForwardJet>0",
+        SRBase + " && EventTopCategory==8 && nForwardJet>0",
 
 
     # --------------------------------------------------------
-    # Loose Top - Merged (category 6)
+    # # Loose non Tight Top - Merged (category 9)
     # --------------------------------------------------------
 
     "SRTopMerLoose":
-        SRBase + " && EventTopCategory==6",
+        SRBase + " && EventTopCategory==9",
 
     "SRTop0fjetsMerLoose":
-        SRBase + " && EventTopCategory==6 && nForwardJet==0",
+        SRBase + " && EventTopCategory==9 && nForwardJet==0",
 
     "SRTopatleast1fjetsMerLoose":
-        SRBase + " && EventTopCategory==6 && nForwardJet>0",
+        SRBase + " && EventTopCategory==9 && nForwardJet>0",
 
 
+    # Extra-tight Top - Resolved (category 1)
 
+    "SRTopResXT":
+        SRBase + " && EventTopCategory==1",
 
+    "SRTop0fjetsResXT":
+        SRBase + " && EventTopCategory==1 && nForwardJet==0",
+
+    "SRTopatleast1fjetsResXT":
+        SRBase + " && EventTopCategory==1 && nForwardJet>0",
     
+
+    # Extra-tight Top - Mixed (category 2)
+
+    "SRTopMixXT":
+        SRBase + " && EventTopCategory==2",
+
+    "SRTop0fjetsMixXT":
+        SRBase + " && EventTopCategory==2 && nForwardJet==0",
+
+    "SRTopatleast1fjetsMixXT":
+        SRBase + " && EventTopCategory==2 && nForwardJet>0",
+
+    # Extra-tight Top - Merged (category 3)
+
+    "SRTopMerXT":
+        SRBase + " && EventTopCategory==3",
+
+    "SRTop0fjetsMerXT":
+        SRBase + " && EventTopCategory==3 && nForwardJet==0",
+
+    "SRTopatleast1fjetsMerXT":
+        SRBase + " && EventTopCategory==3 && nForwardJet>0",
+    
+        # Inclusive Extra-tight Top (categories 1, 2, 3)
+
+    "SRTopXT":
+        SRBase + " && EventTopCategory>=1 && EventTopCategory<=3",
+
+    "SRTop0fjetsXT":
+        SRBase + " && EventTopCategory>=1 && EventTopCategory<=3 && nForwardJet==0",
+
+    "SRTopatleast1fjetsXT":
+        SRBase + " && EventTopCategory>=1 && EventTopCategory<=3 && nForwardJet>0",
+
     # --------------------------------------------------------
     # AH CONTROL REGION
     # --------------------------------------------------------
@@ -356,14 +394,19 @@ SRregions = {
         "PuppiMET_T1_pt_nominal>250 && "
         "MinDelta_phi<0.6 && "
         "nJetBtagMedium>0 && "
-        "EventTopCategory>=1 && EventTopCategory<=3",
+        "EventTopCategory>=4 && EventTopCategory<=6",
 
     "AHLoose":
         "PuppiMET_T1_pt_nominal>250 && "
         "MinDelta_phi<0.6 && "
         "nJetBtagMedium>0 && "
-        "EventTopCategory>=4 && EventTopCategory<=6",
+        "EventTopCategory>=7 && EventTopCategory<=9",
 
+    "AHXT":
+    "PuppiMET_T1_pt_nominal>250 && "
+    "MinDelta_phi<0.6 && "
+    "nJetBtagMedium>0 && "
+    "EventTopCategory>=1 && EventTopCategory<=3",
 
     # --------------------------------------------------------
     # SINGLE LEPTON CONTROL REGION
@@ -377,12 +420,17 @@ SRregions = {
     "SLTight":
         singleLep +
         " && nJetBtagMedium>0 && "
-        "EventTopCategory>=1 && EventTopCategory<=3",
+        "EventTopCategory>=4 && EventTopCategory<=6",
 
     "SLLoose":
         singleLep +
         " && nJetBtagMedium>0 && "
-        "EventTopCategory>=4 && EventTopCategory<=6",
+        "EventTopCategory>=7 && EventTopCategory<=9",
+
+    "SLXT":
+    singleLep +
+    " && nJetBtagMedium>0 && "
+    "EventTopCategory>=1 && EventTopCategory<=3",
 
 
     # --------------------------------------------------------
@@ -401,15 +449,21 @@ SRregions = {
         " && nGoodJet>=3 && "
         "MT<=140 && "
         "nJetBtagMedium==0 && "
-        "EventTopCategory>=1 && EventTopCategory<=3",
+        "EventTopCategory>=4 && EventTopCategory<=6",
 
     "AH1lWRLoose":
         singleLep +
         " && nGoodJet>=3 && "
         "MT<=140 && "
         "nJetBtagMedium==0 && "
-        "EventTopCategory>=4 && EventTopCategory<=6",
+        "EventTopCategory>=7 && EventTopCategory<=9",
 
+    "AH1lWRXT":
+    singleLep +
+    " && nGoodJet>=3 && "
+    "MT<=140 && "
+    "nJetBtagMedium==0 && "
+    "EventTopCategory>=1 && EventTopCategory<=3",
 
     # --------------------------------------------------------
     # Z CONTROL REGION
@@ -424,16 +478,21 @@ SRregions = {
         "PuppiMET_T1_pt_nominal>250 && "
         "MinDelta_phi>2.5 && "
         "nJetBtagLoose==0 && "
-        "EventTopCategory>=1 && EventTopCategory<=3",
+        "EventTopCategory>=4 && EventTopCategory<=6",
 
     "AH0lZRLoose":
         "PuppiMET_T1_pt_nominal>250 && "
         "MinDelta_phi>2.5 && "
         "nJetBtagLoose==0 && "
-        "EventTopCategory>=4 && EventTopCategory<=6",
+        "EventTopCategory>=7 && EventTopCategory<=9",
+
+
+    "AH0lZRXT":
+    "PuppiMET_T1_pt_nominal>250 && "
+    "MinDelta_phi>2.5 && "
+    "nJetBtagLoose==0 && "
+    "EventTopCategory>=1 && EventTopCategory<=3",
 }
-
-
 # ============================================================
 # CONTROL REGIONS
 # ============================================================
