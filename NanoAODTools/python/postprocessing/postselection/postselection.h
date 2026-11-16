@@ -597,95 +597,99 @@ RVec<int> CalculateToptruth1(rvec_i TopMixed_idxJet0, rvec_i TopMixed_idxJet1, r
 // ########################################################
 // ########## PRESELECTION ################################
 // ########################################################
-int nTightElectron(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+int nTightElectron(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80)
 {
   int n=0;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=4 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+    if(Electron_cutBased[i]>=4 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) n+=1;
   }
   return n;
 }
 
-RVec<int> TightElectron_idx(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+RVec<int> TightElectron_idx(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80)
 {
   RVec<int> ids;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=4 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
-    
+
+    if(Electron_cutBased[i]>=4 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) ids.emplace_back(i);
+
   }
   return ids;
 }
 
-int nLooseElectron(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+int nLooseElectron(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80)
 {
   int n=0;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) n+=1;
   }
   return n;
 }
 
-RVec<int> LooseElectron_idx(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+RVec<int> LooseElectron_idx(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_cutBased, rvec_i Electron_mvaIso_WP80)
 {
   RVec<int> ids;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 50 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) ids.emplace_back(i);
   }
   return ids;
 }
 
-int nVetoElectron(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+int nVetoElectron(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80)
 {
   int n=0;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) n+=1;
   }
   return n;
 }
 
-RVec<int> VetoElectron_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+RVec<int> VetoElectron_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80)
 {
   RVec<int> ids;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+
+//ho cambiato qui
+
+int nVetoElectron_loose(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80)
+{
+  int n=0;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) n+=1;
+  }
+  return n;
+}
+
+RVec<int> VetoElectron_loose_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Electron_pt.size(); i++)
+  {
+    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1) ids.emplace_back(i);
   }
   return ids;
 }
 
 //ho cambiato qui
 
-int nVetoElectron_loose(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
+int nVetoElectron_tight(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz)
 {
   int n=0;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
-  }
-  return n;
-}
-
-RVec<int> VetoElectron_loose_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_f Electron_minDeltaR_fromGoodJets)
-{
-  RVec<int> ids;
-  for(int i = 0; i<Electron_pt.size(); i++)
-  {
-    if(Electron_cutBased[i]>=1 && Electron_pt[i] > 30 && abs(Electron_eta[i])<2.5 && Electron_mvaIso_WP80[i]==1 && Electron_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
-  }
-  return ids;
-}
-
-int nVetoElectron_tight(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz, rvec_f Electron_minDeltaR_fromGoodJets)
-{
-  int n=0;
-  for(int i = 0; i<Electron_pt.size(); i++)
-  {
-    if(Electron_cutBased[i]>=3 && abs(Electron_eta[i])<2.5 && Electron_convVeto[i]==1 && Electron_promptMVA[i]>0.90 && Electron_pt[i]>25 && Electron_minDeltaR_fromGoodJets[i] > 0.3) 
+    if(Electron_cutBased[i]>=3 && abs(Electron_eta[i])<2.5 && Electron_convVeto[i]==1 && Electron_promptMVA[i]>0.90 && Electron_pt[i]>25) 
     {
       if(abs(Electron_eta[i])<=1.479) //barrel
       {
@@ -700,12 +704,12 @@ int nVetoElectron_tight(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Ele
   return n;
 }
 
-RVec<int> VetoElectron_tight_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz, rvec_f Electron_minDeltaR_fromGoodJets)
+RVec<int> VetoElectron_tight_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz)
 {
   RVec<int> ids;
   for(int i = 0; i<Electron_pt.size(); i++)
   {
-    if(Electron_cutBased[i]>=3 && abs(Electron_eta[i])<2.5 && Electron_convVeto[i]==1 && Electron_promptMVA[i]>0.90 && Electron_pt[i]>25 && Electron_minDeltaR_fromGoodJets[i] > 0.3) 
+    if(Electron_cutBased[i]>=3 && abs(Electron_eta[i])<2.5 && Electron_convVeto[i]==1 && Electron_promptMVA[i]>0.90 && Electron_pt[i]>25) 
     {
       if(abs(Electron_eta[i])<=1.479) //barrel
       {
@@ -721,11 +725,11 @@ RVec<int> VetoElectron_tight_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, r
 }
 
 
-RVec<int> VetoElectron_looseORtight_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz, rvec_f Electron_minDeltaR_fromGoodJets)
+RVec<int> VetoElectron_looseORtight_idx(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz)
 {
-    RVec<int> loose_ids = VetoElectron_loose_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets);
+    RVec<int> loose_ids = VetoElectron_loose_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80);
 
-    RVec<int> tight_ids = VetoElectron_tight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets);
+    RVec<int> tight_ids = VetoElectron_tight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz);
 
     RVec<int> ids;
 
@@ -753,53 +757,34 @@ RVec<int> VetoElectron_looseORtight_idx(rvec_f Electron_pt, rvec_f Electron_cutB
     return ids;
 }
 
-int nVetoElectron_looseORtight(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz, rvec_f Electron_minDeltaR_fromGoodJets)
+int nVetoElectron_looseORtight(rvec_f Electron_pt, rvec_f Electron_cutBased, rvec_f Electron_eta, rvec_i Electron_mvaIso_WP80, rvec_b Electron_convVeto, rvec_f Electron_promptMVA, rvec_f Electron_dxy, rvec_f Electron_dz)
 {
     RVec<int> ids =
-        VetoElectron_looseORtight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets);
+        VetoElectron_looseORtight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz);
 
     return ids.size();
 }
 
-int nTightMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+
+int nTightMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId)
+
 {
   int n=0;
   for(int i = 0; i<Muon_pt.size(); i++)
   {
-    if(Muon_tightId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
-    
+
+    if(Muon_tightId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3) n+=1;
+
   }
   return n;
 }
 
-RVec<int> TightMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+RVec<int> TightMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId)
 {
   RVec<int> ids;
   for(int i = 0; i<Muon_pt.size(); i++)
   {
-    if(Muon_tightId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
-  }
-  return ids;
-}
-
-
-int nLooseMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
-{
-  int n=0;
-  for(int i = 0; i<Muon_pt.size(); i++)
-  {
-    if(Muon_looseId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
-    
-  }
-  return n;
-}
-
-RVec<int> LooseMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
-{
-  RVec<int> ids;
-  for(int i = 0; i<Muon_pt.size(); i++)
-  {
-    if(Muon_looseId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+    if(Muon_tightId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3) ids.emplace_back(i);
   }
   return ids;
 }
@@ -808,75 +793,101 @@ RVec<int> LooseMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rv
 
 
 
-int nVetoMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+int nLooseMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId)
+
 {
   int n=0;
   for(int i = 0; i<Muon_pt.size(); i++)
   {
-    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3) n+=1;
+
   }
   return n;
 }
 
-RVec<int> VetoMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+RVec<int> LooseMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId)
 {
   RVec<int> ids;
   for(int i = 0; i<Muon_pt.size(); i++)
   {
-    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 50 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3) ids.emplace_back(i);
+  }
+  return ids;
+}
+
+
+
+int nVetoMuon(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId)
+
+{
+  int n=0;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3) n+=1;
+  }
+  return n;
+}
+
+RVec<int> VetoMuon_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId)
+{
+  RVec<int> ids;
+  for(int i = 0; i<Muon_pt.size(); i++)
+  {
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3) ids.emplace_back(i);
   }
   return ids;
 }
 
 //ho cambiato qui
 
-int nVetoMuon_loose(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+int nVetoMuon_loose(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId)
 {
   int n=0;
   for(int i = 0; i<Muon_pt.size(); i++)
   {
-    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) n+=1;
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3) n+=1;
   }
   return n;
 }
 
-RVec<int> VetoMuon_loose_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets)
+RVec<int> VetoMuon_loose_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId)
 {
   RVec<int> ids;
   for(int i = 0; i<Muon_pt.size(); i++)
   {
-    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3 && Muon_minDeltaR_fromGoodJets[i] > 0.4) ids.emplace_back(i);
+    if(Muon_looseId[i]==1 && Muon_pt[i] > 30 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=3) ids.emplace_back(i);
   }
   return ids;
 }
 
 
-int nVetoMuon_tight(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+int nVetoMuon_tight(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz)
 {
   int n=0;
   for(int i = 0; i<Muon_pt.size(); i++)
   {
-    if(Muon_tightId[i]==1 && Muon_promptMVA[i]>0.67 && Muon_pt[i] > 25 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=2 && abs(Muon_dz[i])<0.1 && abs(Muon_dxy[i])<0.02 && Muon_minDeltaR_fromGoodJets[i] > 0.3) n+=1;
+    if(Muon_tightId[i]==1 && Muon_promptMVA[i]>0.67 && Muon_pt[i] > 25 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=2 && abs(Muon_dz[i])<0.1 && abs(Muon_dxy[i])<0.02) n+=1;
 
   }
   return n;
 }
 
-RVec<int> VetoMuon_tight_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+RVec<int> VetoMuon_tight_idx(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz)
 {
   RVec<int> ids;
   for(int i = 0; i<Muon_pt.size(); i++)
   {
-    if(Muon_tightId[i]==1 && Muon_promptMVA[i]>0.67 && Muon_pt[i] > 25 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=2 && abs(Muon_dz[i])<0.1 && abs(Muon_dxy[i])<0.02 && Muon_minDeltaR_fromGoodJets[i] > 0.3) ids.emplace_back(i);
+    if(Muon_tightId[i]==1 && Muon_promptMVA[i]>0.67 && Muon_pt[i] > 25 && abs(Muon_eta[i])<2.4 && Muon_pfIsoId[i]>=2 && abs(Muon_dz[i])<0.1 && abs(Muon_dxy[i])<0.02) ids.emplace_back(i);
   }
   return ids;
 }
 
 
-RVec<int> VetoMuon_looseORtight_idx (rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_tightId, rvec_f Muon_promptMVA, rvec_f Muon_dxy,rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+RVec<int> VetoMuon_looseORtight_idx (rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_tightId, rvec_f Muon_promptMVA, rvec_f Muon_dxy,rvec_f Muon_dz)
 {
-  RVec<int> loose_ids = VetoMuon_loose_idx(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets);
-  RVec<int> tight_ids = VetoMuon_tight_idx(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets);
+  RVec<int> loose_ids = VetoMuon_loose_idx(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId);
+  RVec<int> tight_ids = VetoMuon_tight_idx(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz);
   RVec<int> ids;
   for (int i=0; i<Muon_pt.size(); i++)
   {
@@ -899,9 +910,9 @@ RVec<int> VetoMuon_looseORtight_idx (rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muo
   return ids;
 }
 
-int nVetoMuon_looseORtight(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_tightId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz, rvec_f Muon_minDeltaR_fromGoodJets)
+int nVetoMuon_looseORtight(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_looseId, rvec_i Muon_pfIsoId, rvec_f Muon_tightId, rvec_f Muon_promptMVA, rvec_f Muon_dxy, rvec_f Muon_dz)
 {
-  RVec<int> ids = VetoMuon_looseORtight_idx (Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_tightId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets);
+  RVec<int> ids = VetoMuon_looseORtight_idx (Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_tightId, Muon_promptMVA, Muon_dxy, Muon_dz);
   int n=ids.size();
   return n;
 
@@ -979,6 +990,28 @@ RVec<int> GetGoodJet(rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_jetId)
       {
         ids.emplace_back(i);
       }
+  }
+  return ids;
+}
+
+// Remove from GoodJet_idx the jets within dR_thr of any veto electron or veto muon (lepton-jet cleaning)
+RVec<int> CleanGoodJets_fromVetoLeptons(rvec_i GoodJet_idx, rvec_f Jet_eta, rvec_f Jet_phi,
+                                        rvec_i VetoElectron_idx, rvec_f Electron_eta, rvec_f Electron_phi,
+                                        rvec_i VetoMuon_idx, rvec_f Muon_eta, rvec_f Muon_phi, float dR_thr)
+{
+  RVec<int> ids;
+  for (int j : GoodJet_idx)
+  {
+    bool isCloseToLepton = false;
+    for (int e : VetoElectron_idx)
+    {
+      if (deltaR(Jet_eta[j], Jet_phi[j], Electron_eta[e], Electron_phi[e]) < dR_thr) isCloseToLepton = true;
+    }
+    for (int m : VetoMuon_idx)
+    {
+      if (deltaR(Jet_eta[j], Jet_phi[j], Muon_eta[m], Muon_phi[m]) < dR_thr) isCloseToLepton = true;
+    }
+    if (!isCloseToLepton) ids.emplace_back(j);
   }
   return ids;
 }
@@ -1653,6 +1686,8 @@ Int_t select_bestTopInCategory(int EventTopCategory, rvec_i TightTopMer_idx, rve
 }
 
 
+
+
 // ########################################################
 // ######## Top categories with extra-tight (XT) tops #####
 // ########################################################
@@ -1680,6 +1715,16 @@ Int_t select_TopFlavourPattern(int nRes, int nMix, int nMer)
   else                                                                    return 0;
 }
 
+// 1 Resolved, 2 Mixed, 3 Merged, 0 if the numbers of candidates match none of the patterns
+Int_t select_2TopFlavourPattern(int nRes, int nMix, int nMer)
+{
+  if (nRes >= 2 && nMix < 2 && nMer < 2)                                      return 10;
+  else if (nRes<=2 && nMix>=2 && nMer<=2)                                 return 11;
+  else if (nRes<=2 && nMix<=2 && nMer>=2)  return 12;
+  else                                                                    return 0;
+}
+
+
 Int_t select_TopCategoryWithXT(rvec_i XTightTopMer_idx,         rvec_i XTightTopMix_idx,         rvec_i XTightTopRes_idx,
                                rvec_i TightNOTXTightTopMer_idx, rvec_i TightNOTXTightTopMix_idx, rvec_i TightNOTXTightTopRes_idx,
                                rvec_i LooseNOTTightTopMer_idx,  rvec_i LooseNOTTightTopMix_idx,  rvec_i LooseNOTTightTopRes_idx)
@@ -1688,10 +1733,15 @@ Int_t select_TopCategoryWithXT(rvec_i XTightTopMer_idx,         rvec_i XTightTop
   int flavourTight = select_TopFlavourPattern(TightNOTXTightTopRes_idx.size(), TightNOTXTightTopMix_idx.size(), TightNOTXTightTopMer_idx.size());
   int flavourLoose = select_TopFlavourPattern(LooseNOTTightTopRes_idx.size(),  LooseNOTTightTopMix_idx.size(),  LooseNOTTightTopMer_idx.size());
 
+  int flavour2XT    = select_2TopFlavourPattern(XTightTopRes_idx.size(),         XTightTopMix_idx.size(),         XTightTopMer_idx.size());
+
+
+
   if (flavourXT > 0)         return flavourXT;          // 1-3
   else if (flavourTight > 0) return 3 + flavourTight;   // 4-6
   else if (flavourLoose > 0) return 6 + flavourLoose;   // 7-9
-  else                       return 10;
+  else if (flavour2XT > 0)    return flavour2XT.         //10-11-12
+  else if (flavourXT < 0) and (flavourTight < 0) and (flavourLoose < 0)                      return 13;
 }
 
 // Flavour of the selected top for the categories with XT: 1 Resolved, 2 Mixed, 3 Merged (categories 1-9),
@@ -1706,7 +1756,7 @@ Int_t TopFlavourOfCategoryWithXT(int EventTopCategory)
 // Best top restricted to the candidates that define the EventTopCategory with XT:
 // XTight*_idx for categories 1-3, TightNOTXTight*_idx for 4-6, LooseNOTTight*_idx for 7-9.
 // Category 10 falls back to select_bestTop (old category 7).
-Int_t select_bestTopInCategoryWithXT(int EventTopCategory,
+RVec<int> select_bestTopInCategoryWithXT(int EventTopCategory,
                                      rvec_i XTightTopMer_idx,         rvec_i XTightTopMix_idx,         rvec_i XTightTopRes_idx,
                                      rvec_i TightNOTXTightTopMer_idx, rvec_i TightNOTXTightTopMix_idx, rvec_i TightNOTXTightTopRes_idx,
                                      rvec_i LooseNOTTightTopMer_idx,  rvec_i LooseNOTTightTopMix_idx,  rvec_i LooseNOTTightTopRes_idx,
@@ -1723,16 +1773,19 @@ Int_t select_bestTopInCategoryWithXT(int EventTopCategory,
   else if (EventTopCategory==7) { candidates = LooseNOTTightTopRes_idx;   scores = TopResolved_TopScore; }
   else if (EventTopCategory==8) { candidates = LooseNOTTightTopMix_idx;   scores = TopMixed_TopScore; }
   else if (EventTopCategory==9) { candidates = LooseNOTTightTopMer_idx;   scores = FatJet_particleNet_TvsQCD; }
+
   else
   {
     return select_bestTop(7, FatJet_particleNet_TvsQCD, TopMixed_TopScore, TopResolved_TopScore);
   }
-
+  
   int idx = -1;
   for (int i = 0; i < candidates.size(); i++)
   {
     if (idx == -1 || scores[candidates[i]] > scores[idx]) idx = candidates[i];
   }
+  
+    
   return idx;
 }
 
@@ -2311,10 +2364,10 @@ RVec<float> midx_bJets_to_GoodMuons_within_dRthr(rvec_i GoodMu_idx, rvec_f Muon_
 // #########################################
 // ############## Muon SF     ##############
 // #########################################
-float GetMuonSF(std::string json_file, rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, rvec_f Muon_minDeltaR_fromGoodJets, std::string unc){
+float GetMuonSF(std::string json_file, rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_tightId, rvec_i Muon_pfIsoId, std::string unc){
   auto cset = correction::CorrectionSet::from_file(json_file);
   auto MuonSF_corr = cset->at("NUM_HLT_DEN_TrkHighPtTightRelIsoProbes");
-  RVec<int> ids = TightMuon_idx(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets);
+  RVec<int> ids = TightMuon_idx(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId);
   float muon_eta = Muon_eta[ids[0]];
   float muon_pt = Muon_pt[ids[0]];
   float weight = 1.0;
