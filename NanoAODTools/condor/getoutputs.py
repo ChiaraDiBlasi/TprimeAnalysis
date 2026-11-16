@@ -149,14 +149,14 @@ for sample in samples:
         if not "Data" in sample.label:
             try:
                 rootfile = ROOT.TFile.Open(f)
-                out_strings.append(f)
                 runstree = rootfile.Get("Runs")
                 runstree.GetEntry(0)
                 geneventSumw = runstree.genEventSumw
                 tree = rootfile.Get("Events")
                 tree.GetEntry(0)
-                eventweight = abs(tree.Generator_weight) #ogni evento del tree ha un peso. Gli eventi dello stesso file hanno lo stesso peso in valore assoluto, ma possono cambiare di segno. Per file diversi questo valore assoluto può essere diverso, dipende dalla sezione d'urto
-                n = round(abs(geneventSumw/eventweight)) #questo mi dà un numero 'effettivo' di eventi generati
+                eventweight = abs(tree.Generator_weight)
+                n = round(abs(geneventSumw/eventweight))
+                out_strings.append(f)   # only after ntot is defined: a NaN genEventSumw makes round() raise -> file skipped, strings and ntot keep the same length
                 ntot.append(n)
             except:
                 print("Could not open file: ", f)

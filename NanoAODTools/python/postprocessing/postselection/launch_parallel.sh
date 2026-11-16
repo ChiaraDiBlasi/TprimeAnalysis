@@ -11,17 +11,31 @@
 # --mergepath is for MERGED files, i.e. the TRUE FOLDER you will use for plots 
 # --outpath is the path for SPLIT files, i.e. you DO NOT have to use it for plots
 #
-### ==> Sequence of operations:
-# first run it with -s, then with -r to resubmit failed jobs (usually after a few minutes the jobs that had to fail will fail
-# Both -r and -c options will tell you how many jobs are resubmitted / to resubmit.
-# 
+# ### ==> Sequence of operations:
+# s --> c (and r) until the queue is empty and "total to rerun: 0" --> h --> d
+# Use the SAME options in every mode, only OPT changes: e.g. -m h without the --noXXX/--weightset options
+# of the submission looks for the parts in another weightset folder and does not find them
+#
+# ### ==> Weightsets (which weights enter the event weight):
+# --noSFbtag, --noPuWeight, --noTopPtWeight, --noTrotaSF   remove that weight from every weightset
+# --weightset X (repeatable)                              adds one weightset, X = allWeights or the weights to remove
+#                                                         separated by commas, e.g. --weightset noSFbtag,noPuWeight
+# Each weightset has its own folder <OUTPATH>/<label>/, label = removed weights joined by _ (allWeights if none),
+# e.g. "--noTrotaSF --weightset allWeights --weightset noSFbtag" -> noTrotaSF/ and noSFbtag_noTrotaSF/
+# No --weightset and no --noXXX: a single weightset, allWeights/
+#
+# ### ==> Paths:
+# --outpath   folder of the job outputs (parts/ of the split samples)
+# --mergepath folder of the merged files (plots/), i.e. the one used for the stacks; same as --outpath if not given
+#
 # ### ==> Other options:
-# you can customize the config with the --config_paths option
-# you can just prepare the condor folders with the --dryrun option
-# the option --verbose (number) makes it so some extra printouts are shown
-# ### ==> Examples:
-# Below you find examples (with a semi-optimized partsize selection) for each file. Just be mindful of changing the paths! 
-# For simplicity, it's done with bash variables here - make your scripting however you want! 
+# --varfile    variables and regions (default ../variables.py)
+# --syst       systematic variations (MC only, not for data)
+# --config_paths, --dict_samples_file   other config / samples file
+# --dryrun     only prepares the condor folders;  --verbose N   extra printouts
+#
+# The standalone environment (standalone/env_standalone.sh) must already be sourced.
+# Below: an example for one year, change the variables at the top.
 ####################################################################################################
 
 export OPT=h
