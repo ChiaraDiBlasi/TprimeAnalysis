@@ -74,7 +74,7 @@ firstfile=opt.firstfile
 npart=opt.npart
 
 partname="" if partsize==-1 else "_part"+str(npart)
-partname="" if partsize==-1 else "_part"+str(npart)
+
 
 if do_variations == True:
     variations          = ["nominal", "pu", "jer", "jesTotal", "pdf_total", "QCDScale", "ISR", "FSR", "triggerSF"]
@@ -124,18 +124,12 @@ variables_path  = os.path.abspath(varfile)
 spec            = importlib.util.spec_from_file_location("variables", variables_path)
 variables       = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(variables)
-#### LOAD variables.py ####
-variables_path  = os.path.abspath(varfile)
-spec            = importlib.util.spec_from_file_location("variables", variables_path)
-variables       = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(variables)
+
 
 #### LOAD TopTagging_WorkingPoints.json ####
 with open(WorkDir+"/TopTagging_WorkingPoints.json", "r") as json_file:
     TopTagging_WorkingPoints = json.load(json_file)
-#### LOAD TopTagging_WorkingPoints.json ####
-with open(WorkDir+"/TopTagging_WorkingPoints.json", "r") as json_file:
-    TopTagging_WorkingPoints = json.load(json_file)
+
 
 if do_histos:
     print("You are producing histograms")
@@ -191,7 +185,7 @@ for in_d in in_dataset:
         print("Check the in_dataset string... ", sample_dict.keys())
     else: 
         print("Dataset is ", in_d, "sample is ", sample_dict[in_d])
-        print("Dataset is ", in_d, "sample is ", sample_dict[in_d])
+
         datasets.append(sample_dict[in_d])
 print("Datasets to process: ", [d.label for d in datasets])
 
@@ -325,18 +319,18 @@ def preselection(df, btagAlg, year, EE):
     df = df.Define("Lepton_flavour",                    "Lepton_flavour(nTightElectron, nTightMuon)").Define("Lep_pt", "Lepton_var(Lepton_flavour, Electron_pt, TightElectron_idx, Muon_pt, TightMuon_idx)").Define("Lep_phi", "Lepton_var(Lepton_flavour, Electron_phi, TightElectron_idx, Muon_phi, TightMuon_idx)")
     df = df.Define("MT",                                "sqrt(2 * Lep_pt * PuppiMET_T1_pt_nominal * (1 - cos(Lep_phi - PuppiMET_T1_phi_nominal)))")
 
-    df = df.Define("nVetoMuon_loose",                   "nVetoMuon_loose(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets)")\
-           .Define("VetoMuon_loose_idx",                "VetoMuon_loose_idx(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_minDeltaR_fromGoodJets)")\
-           .Define("nVetoMuon_tight",                   "nVetoMuon_tight(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")\
-           .Define("VetoMuon_tight_idx",                "VetoMuon_tight_idx(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")\
-           .Define("VetoMuon_looseORtight_idx",         "VetoMuon_looseORtight_idx (Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_tightId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")\
-           .Define("nVetoMuon_looseORtight",            "nVetoMuon_looseORtight(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_tightId, Muon_promptMVA, Muon_dxy, Muon_dz, Muon_minDeltaR_fromGoodJets)")
-    df = df.Define("nVetoElectron_loose",               "nVetoElectron_loose(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")\
-           .Define("VetoElectron_loose_idx",            "VetoElectron_loose_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_minDeltaR_fromGoodJets)")\
-           .Define("nVetoElectron_tight",               "nVetoElectron_tight(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets)")\
-           .Define("VetoElectron_tight_idx",            "VetoElectron_tight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets)")\
-           .Define("VetoElectron_looseORtight_idx",     "VetoElectron_looseORtight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets)")\
-           .Define("nVetoElectron_looseORtight",        "nVetoElectron_looseORtight(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz, Electron_minDeltaR_fromGoodJets)")
+    df = df.Define("nVetoMuon_loose",                   "nVetoMuon_loose(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId)")\
+           .Define("VetoMuon_loose_idx",                "VetoMuon_loose_idx(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId)")\
+           .Define("nVetoMuon_tight",                   "nVetoMuon_tight(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz)")\
+           .Define("VetoMuon_tight_idx",                "VetoMuon_tight_idx(Muon_pt, Muon_eta, Muon_tightId, Muon_pfIsoId, Muon_promptMVA, Muon_dxy, Muon_dz)")\
+           .Define("VetoMuon_looseORtight_idx",         "VetoMuon_looseORtight_idx (Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_tightId, Muon_promptMVA, Muon_dxy, Muon_dz)")\
+           .Define("nVetoMuon_looseORtight",            "nVetoMuon_looseORtight(Muon_pt, Muon_eta, Muon_looseId, Muon_pfIsoId, Muon_tightId, Muon_promptMVA, Muon_dxy, Muon_dz)")
+    df = df.Define("nVetoElectron_loose",               "nVetoElectron_loose(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80)")\
+           .Define("VetoElectron_loose_idx",            "VetoElectron_loose_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80)")\
+           .Define("nVetoElectron_tight",               "nVetoElectron_tight(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz)")\
+           .Define("VetoElectron_tight_idx",            "VetoElectron_tight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz)")\
+           .Define("VetoElectron_looseORtight_idx",     "VetoElectron_looseORtight_idx(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz)")\
+           .Define("nVetoElectron_looseORtight",        "nVetoElectron_looseORtight(Electron_pt, Electron_cutBased, Electron_eta, Electron_mvaIso_WP80, Electron_convVeto, Electron_promptMVA, Electron_dxy, Electron_dz)")
 
     
     df = df.Define("LeadingJetPt_idx",                  "GetLeadingPtJet(Jet_pt_nominal)")\
