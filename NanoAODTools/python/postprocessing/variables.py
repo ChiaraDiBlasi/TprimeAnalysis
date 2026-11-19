@@ -98,7 +98,7 @@ vars.append(variable(name = "PuppiMET_T1_phi_nominal", title= "Puppi MET #phi no
 #vars.append(variable(name = "TopMerged_TopScore_nominal",       title= "Top Merged Score",      nbins = 40, xmin = 0, xmax=1, noUnOvFlowbin = True))
 
 
-vars.append(variable(name = "EventTopCategory", title= "Top Category", nbins = 10, xmin = 0.5, xmax = 10.5))
+vars.append(variable(name = "EventTopCategory", title= "Top Category", nbins = 13, xmin = 0.5, xmax = 13.5))
 # vars.append(variable(name = "Top_truth", title= "Top Truth", nbins = 4, xmin = -0.5, xmax = 3.5, MConly = True))
 # vars.append(variable(name = "EventTopCategoryWithTruth", title= "Top Category (only true)", nbins = 4, xmin = 0.5, xmax = 4.5, MConly = True))
 #vars.append(variable(name = "Top_mass",         title= "Top mass [GeV]", nbins = 30, xmin = 100, xmax=250, noUnOvFlowbin = True))
@@ -381,6 +381,58 @@ SRregions = {
     "SRTopatleast1fjetsXT":
         SRBase + " && EventTopCategory>=1 && EventTopCategory<=3 && nForwardJet>0",
 
+
+   # --------------------------------------------------------
+    # # Extra tight 2 Top - Resolved (category 10)
+    # --------------------------------------------------------
+
+    "SR2TopResXT":
+        SRBase + " && EventTopCategory==10",
+
+    "SR2Top0fjetsResXT":
+        SRBase + " && EventTopCategory==10 && nForwardJet==0",
+
+    "SR2Topatleast1fjetsResXT":
+        SRBase + " && EventTopCategory==10 && nForwardJet>0",
+
+  # --------------------------------------------------------
+    # # Extra tight 2 Top - Mixed (category 11)
+    # --------------------------------------------------------
+    "SR2TopMixXT":
+        SRBase + " && EventTopCategory==11",
+
+    "SR2Top0fjetsMixXT":
+        SRBase + " && EventTopCategory==11 && nForwardJet==0",
+
+    "SR2Topatleast1fjetsMixXT":
+        SRBase + " && EventTopCategory==11 && nForwardJet>0",
+
+ # --------------------------------------------------------
+    # # Extra tight 2 Top - Merged (category 12)
+    # --------------------------------------------------------
+    "SR2TopMerXT":
+        SRBase + " && EventTopCategory==12",
+
+    "SR2Top0fjetsMerXT":
+        SRBase + " && EventTopCategory==12 && nForwardJet==0",
+
+    "SR2Topatleast1fjetsMerXT":
+        SRBase + " && EventTopCategory==12 && nForwardJet>0",
+
+ # --------------------------------------------------------
+    # # Extra tight 2 Top - Inclusive
+    # --------------------------------------------------------
+
+
+    "SR2TopXT":
+        SRBase + " && EventTopCategory>=10 && EventTopCategory<=12",
+
+    "SR2Top0fjetsXT":
+        SRBase + " && EventTopCategory>=10 && EventTopCategory<=12 && nForwardJet==0",
+
+    "SR2Topatleast1fjetsXT":
+        SRBase + " && EventTopCategory>=10 && EventTopCategory<=12 && nForwardJet>0",
+
     # --------------------------------------------------------
     # AH CONTROL REGION
     # --------------------------------------------------------
@@ -408,6 +460,14 @@ SRregions = {
     "nJetBtagMedium>0 && "
     "EventTopCategory>=1 && EventTopCategory<=3",
 
+    #2 Tops
+
+      "AH2TopXT":
+    "PuppiMET_T1_pt_nominal>250 && "
+    "MinDelta_phi<0.6 && "
+    "nJetBtagMedium>0 && "
+    "EventTopCategory>=10 && EventTopCategory<=12",
+
     # --------------------------------------------------------
     # SINGLE LEPTON CONTROL REGION
     # --------------------------------------------------------
@@ -431,6 +491,13 @@ SRregions = {
     singleLep +
     " && nJetBtagMedium>0 && "
     "EventTopCategory>=1 && EventTopCategory<=3",
+
+    #2 Top
+
+    "SL2TopXT":
+    singleLep +
+    " && nJetBtagMedium>0 && "
+    "EventTopCategory>=10 && EventTopCategory<=12",
 
 
     # --------------------------------------------------------
@@ -465,6 +532,15 @@ SRregions = {
     "nJetBtagMedium==0 && "
     "EventTopCategory>=1 && EventTopCategory<=3",
 
+    #2 Top
+
+    "AH1lWR2TopXT":
+    singleLep +
+    " && nGoodJet>=3 && "
+    "MT<=140 && "
+    "nJetBtagMedium==0 && "
+    "EventTopCategory>=10 && EventTopCategory<=12",
+
     # --------------------------------------------------------
     # Z CONTROL REGION
     # --------------------------------------------------------
@@ -492,6 +568,14 @@ SRregions = {
     "MinDelta_phi>2.5 && "
     "nJetBtagLoose==0 && "
     "EventTopCategory>=1 && EventTopCategory<=3",
+
+    #2 Top
+
+    "AH0lZR2TopXT":
+    "PuppiMET_T1_pt_nominal>250 && "
+    "MinDelta_phi>2.5 && "
+    "nJetBtagLoose==0 && "
+    "EventTopCategory>=10 && EventTopCategory<=12",
 }
 # ============================================================
 # CONTROL REGIONS
