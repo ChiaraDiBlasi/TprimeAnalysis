@@ -2189,6 +2189,91 @@ Float_t TopIsolation_NJets( int EventTopCategory, int Top_idx, rvec_i TopMixed_i
   return var_to_return;
 }
 
+/*
+RVec<float> TopIsolation_NJets( int EventTopFlavour, rvec_i Top_idx, rvec_i TopMixed_idxFatJet, rvec_i TopMixed_idxJet0, rvec_i TopMixed_idxJet1, rvec_i TopMixed_idxJet2, rvec_f TopMixed_pt, rvec_f TopMixed_phi, rvec_f TopMixed_eta, rvec_i TopResolved_idxJet0, rvec_i TopResolved_idxJet1, rvec_i TopResolved_idxJet2, rvec_f TopResolved_pt,  rvec_f TopResolved_phi, rvec_f TopResolved_eta, rvec_f FatJet_pt, rvec_f FatJet_eta, rvec_f FatJet_phi, rvec_i FatJet_jetId, rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_phi, rvec_f Jet_jetId, float valR, int b)
+{
+  RVec<float> njet_near(2, 0.0);
+  RVec<float> pt_near(2, 0.0);
+  RVec<float> pt_isolation(2, 0.0);
+
+
+  if(EventTopFlavour == 1) //resolved
+  {
+    for(int j=0; j<2; j++)
+    {
+      for(int i = 0; i<Jet_pt.size(); i++)
+        {
+        if((Jet_pt[i]>30 && Jet_jetId[i]==6) && deltaR(Jet_eta[i], Jet_phi[i], TopResolved_eta[Top_idx[j]], TopResolved_phi[Top_idx[j]])<valR)
+        {
+          if(i!=TopResolved_idxJet0[Top_idx[j]] && i!=TopResolved_idxJet1[Top_idx[j]] && i!=TopResolved_idxJet2[Top_idx[j]])
+          {
+            njet_near[j] += 1;
+            pt_near[j] += Jet_pt[i];
+          }
+        }
+      }
+    }
+    pt_isolation = static_cast<Float_t>(pt_near)/static_cast<Float_t>(TopResolved_pt[Top_idx]);
+  }
+  else if(EventTopFlavour == 2) //mixed
+  {
+    for(int i = 0; i<Jet_pt.size(); i++)
+    {
+      if((Jet_pt[i]>30 && Jet_jetId[i]==6) && deltaR(Jet_eta[i], Jet_phi[i], TopMixed_eta[Top_idx], TopMixed_phi[Top_idx])<valR)
+      {
+        if(i!=TopMixed_idxJet0[Top_idx] && i!=TopMixed_idxJet1[Top_idx] && i!=TopMixed_idxJet2[Top_idx])
+        {
+          njet_near += 1;
+          pt_near += Jet_pt[i];
+        }
+      }
+    }
+    for(int i = 0; i<FatJet_pt.size(); i++)
+    {
+      if((FatJet_pt[i]>30 && FatJet_jetId[i]==6) && deltaR(FatJet_eta[i], FatJet_phi[i], TopMixed_eta[Top_idx], TopMixed_phi[Top_idx])<valR)
+      {
+        if(i!=TopMixed_idxFatJet[Top_idx])
+        {
+          njet_near += 1;
+          pt_near += FatJet_pt[i];
+        }
+      }
+    }
+    pt_isolation = static_cast<Float_t>(pt_near)/static_cast<Float_t>(TopMixed_pt[Top_idx]);
+  }
+  else if(EventTopFlavour == 3) //merged
+  {
+    for(int i = 0; i<FatJet_pt.size(); i++)
+    {
+      if((FatJet_pt[i]>30 && FatJet_jetId[i]==6) && deltaR(FatJet_eta[i], FatJet_phi[i], FatJet_eta[Top_idx], FatJet_phi[Top_idx])<valR)
+      {
+        if(i!=TopMixed_idxFatJet[Top_idx])
+        {
+          njet_near += 1;
+          pt_near += FatJet_pt[i];
+        }
+      }
+    }
+    pt_isolation = static_cast<Float_t>(pt_near)/static_cast<Float_t>(FatJet_pt[Top_idx]);
+  }
+  else
+  {
+    pt_isolation = -1.;
+    njet_near = -1.;
+  }
+
+  Float<RVec> var_to_return;
+  if( b == 1)
+  {
+    var_to_return = static_cast<Float_t>(pt_isolation);
+  } 
+  else if( b== 0)
+  { 
+    var_to_return = njet_near;
+  }
+  return var_to_return;
+}
+*/
 // Leptonic
 int BJetTopLep_MCtag(rvec_i Jet_matched, rvec_i Jet_pdgId, rvec_i Jet_topMother, int BJetTopLep)
 {
