@@ -1719,12 +1719,41 @@ Int_t select_TopFlavourPattern(int nRes, int nMix, int nMer)
 Int_t select_2TopFlavourPattern(int nRes, int nMix, int nMer)
 {
   if (nRes >= 2 && nMix < 2 && nMer < 2)                                      return 10;
-  else if (nRes<=2 && nMix>=2 && nMer<2)                                 return 11;
-  else if (nRes<=2 && nMix<=2 && nMer>=2)  return 12;
+  else if (nRes<=nMix && nMix>=2 && nMer<2)                                 return 11;
+  else if (nRes<=nMix && nMix<=nMer && nMer>=2)  return 12;
   else                                                                    return 0;
 }
 
+/*
+Int_t select_TopCategoryWithXT(rvec_i XTightTopMer_idx,         rvec_i XTightTopMix_idx,         rvec_i XTightTopRes_idx,
+                               rvec_i TightNOTXTightTopMer_idx, rvec_i TightNOTXTightTopMix_idx, rvec_i TightNOTXTightTopRes_idx,
+                               rvec_i LooseNOTTightTopMer_idx,  rvec_i LooseNOTTightTopMix_idx,  rvec_i LooseNOTTightTopRes_idx)
+{
+  int flavourXT    = select_TopFlavourPattern(XTightTopRes_idx.size(),         XTightTopMix_idx.size(),         XTightTopMer_idx.size());
+  int flavourTight = select_TopFlavourPattern(TightNOTXTightTopRes_idx.size(), TightNOTXTightTopMix_idx.size(), TightNOTXTightTopMer_idx.size());
+  int flavourLoose = select_TopFlavourPattern(LooseNOTTightTopRes_idx.size(),  LooseNOTTightTopMix_idx.size(),  LooseNOTTightTopMer_idx.size());
 
+  //int flavour2XT    = select_2TopFlavourPattern(XTightTopRes_idx.size(),         XTightTopMix_idx.size(),         XTightTopMer_idx.size());
+  int flavour2XT    = select_2TopFlavourPattern(XTightTopRes_idx.size(),         XTightTopMix_idx.size(),         XTightTopMer_idx.size());
+
+
+
+  if (flavourXT > 0)         return flavourXT;          // 1-3
+  else if (flavour2XT > 0)    return flavour2XT;         //10-11-12
+  else if (flavourTight > 0) return 3 + flavourTight;   // 4-6
+  else if (flavourLoose > 0) return 6 + flavourLoose;   // 7-9
+  else                      return 13;
+}
+
+// Flavour of the selected top for the categories with XT: 1 Resolved, 2 Mixed, 3 Merged (categories 1-9),
+// 7 for category 10: 7 is the "else" category of the old numbering, so select_bestTop, select_TopVar and
+// TopIsolation_NJets can be used unchanged with this flavour.
+Int_t TopFlavourOfCategoryWithXT(int EventTopCategory)
+{
+  if (EventTopCategory>=1 && EventTopCategory<=12) return (EventTopCategory-1)%3 + 1;
+  else                                            return 7;
+}
+*/
 Int_t select_TopCategoryWithXT(rvec_i XTightTopMer_idx,         rvec_i XTightTopMix_idx,         rvec_i XTightTopRes_idx,
                                rvec_i TightNOTXTightTopMer_idx, rvec_i TightNOTXTightTopMix_idx, rvec_i TightNOTXTightTopRes_idx,
                                rvec_i LooseNOTTightTopMer_idx,  rvec_i LooseNOTTightTopMix_idx,  rvec_i LooseNOTTightTopRes_idx)
@@ -1734,6 +1763,7 @@ Int_t select_TopCategoryWithXT(rvec_i XTightTopMer_idx,         rvec_i XTightTop
   int flavourLoose = select_TopFlavourPattern(LooseNOTTightTopRes_idx.size(),  LooseNOTTightTopMix_idx.size(),  LooseNOTTightTopMer_idx.size());
 
   int flavour2XT    = select_2TopFlavourPattern(XTightTopRes_idx.size(),         XTightTopMix_idx.size(),         XTightTopMer_idx.size());
+  
 
 
 
@@ -1778,6 +1808,7 @@ RVec<int> select_bestTopInCategoryWithXT(int EventTopCategory,
   else if (EventTopCategory==10) { candidates = XTightTopRes_idx;   scores = TopResolved_TopScore; }
   else if (EventTopCategory==11) { candidates = XTightTopMix_idx;   scores = TopMixed_TopScore; }
   else if (EventTopCategory==12) { candidates = XTightTopMer_idx;   scores = FatJet_particleNet_TvsQCD; }
+
 
   else
   {
