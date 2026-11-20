@@ -319,7 +319,32 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
 # for v in [var for var in vars if var._name == "PuppiMET_T1_pt_nominal"]:
 # for v in [var for var in vars if var._name in ["LeadingFatJetPt_msoftdrop", "FatJet_msoftdrop_nominal"]]:
 # for v in [var for var in vars if var._name in ["MT_T", "PuppiMET_T1_pt_nominal"]]:
-    for r in regions.keys():
+    #for r in regions.keys():
+    for r in [   
+    # Extra-tight
+    "SRTop0fjetsResXT_tight_lepVeto",
+    "SRTop0fjetsMixXT_tight_lepVeto",
+    "SRTop0fjetsMerXT_tight_lepVeto",
+    "SRTopatleast1fjetsResXT_tight_lepVeto",
+    "SRTopatleast1fjetsMixXT_tight_lepVeto",
+    "SRTopatleast1fjetsMerXT_tight_lepVeto",
+
+    # Tight, escludendo extra-tight
+    "SRTopRes0fjets_tight_lepVeto",
+    "SRTopMix0fjets_tight_lepVeto",
+    "SRTopMer0fjets_tight_lepVeto",
+    "SRTopResatleast1fjets_tight_lepVeto",
+    "SRTopMixatleast1fjets_tight_lepVeto",
+    "SRTopMeratleast1fjets_tight_lepVeto",
+
+    # Loose, escludendo tight
+    "SRTop0fjetsResLoose_tight_lepVeto",
+    "SRTop0fjetsMixLoose_tight_lepVeto",
+    "SRTop0fjetsMerLoose_tight_lepVeto",
+    "SRTopatleast1fjetsResLoose_tight_lepVeto",
+    "SRTopatleast1fjetsMixLoose_tight_lepVeto",
+    "SRTopatleast1fjetsMerLoose_tight_lepVeto",
+    ]:
         if skip_missing_regions: #AGGIUNTO
             missing = False #AGGIUNTO
             for f in inFile["signal"] + inFile["bkg"]: #AGGIUNTO
@@ -604,11 +629,13 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
         '''
 
         if logy:
-            yMax            = yMax*100
+            #yMax            = yMax*100
+            yMax            = yMax*1000
             #yMin            = yMin
             #yMin            = yMin
         else:
-            yMax            = yMax*1.6
+            #yMax            = yMax*1.6
+            yMax            = yMax*2.2
             #yMin            = yMin*0.5
             #yMin            = yMin*0.5
         
@@ -639,7 +666,7 @@ for v in [var for var in vars if var._name in ["PuppiMET_pt", "PuppiMET_T1_pt_no
                 continue
 
 
-            repostack_www = f"{folder_www}stacks/{r}/{sig}/"
+            repostack_www = f"{folder_www}stacks_XT/{r}/{sig}/"
             os.makedirs(repostack_www, exist_ok=True)
             
             canv_name       = "canvas_"+sig+"_"+v._name+"_"+r+"_"+"nominal"

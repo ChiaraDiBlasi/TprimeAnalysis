@@ -74,9 +74,12 @@ vars.append(variable(name = "PuppiMET_T1_phi_nominal", title= "Puppi MET #phi no
 # vars.append(variable(name = "LeadingElectronPt_eta", title= "Leading Electron #eta", nbins = 8, xmin = -4, xmax=4))
 # vars.append(variable(name = "LeadingElectronPt_phi", title= "Leading Electron #phi", nbins = 6, xmin = -math.pi, xmax=math.pi))
 
-# vars.append(variable(name = "nTightTopMerged",      title= "# Top Candidate Merged",    nbins = 40, xmin = -0.5, xmax=80.5))
-# vars.append(variable(name = "nTightTopMixed",       title= "# Top Candidate Mixed",     nbins = 40, xmin = -0.5, xmax=80.5))
-# vars.append(variable(name = "nTightTopResolved",    title= "# Top Candidate Resolved",  nbins = 25, xmin = -0.5, xmax=49.5))
+vars.append(variable(name = "nTightTopMerged",      title= "# Top Candidate Merged",    nbins = 40, xmin = -0.5, xmax=80.5))
+vars.append(variable(name = "nTightTopMixed",       title= "# Top Candidate Mixed",     nbins = 40, xmin = -0.5, xmax=80.5))
+vars.append(variable(name = "nTightTopResolved",    title= "# Top Candidate Resolved",  nbins = 25, xmin = -0.5, xmax=49.5))
+vars.append(variable(name="nXTightTopResolved", title="# Top Candidate Resolved XT", nbins=6, xmin=-0.5, xmax=5.5))
+vars.append(variable(name="nXTightTopMixed",    title="# Top Candidate Mixed XT",    nbins=6, xmin=-0.5, xmax=5.5))
+vars.append(variable(name="nXTightTopMerged",   title="# Top Candidate Merged XT",   nbins=6, xmin=-0.5, xmax=5.5))
 #vars.append(variable(name = "nJet",                 title = "# Jet",                    nbins = 10, xmin = -0.5, xmax=9.5))
 #vars.append(variable(name = "nFatJet",              title = "# FatJet",                 nbins = 5,  xmin = -0.5, xmax=4.5))
 #vars.append(variable(name = "nGoodJet",             title = "# Good Jet",               nbins = 10, xmin = -0.5, xmax=9.5))
@@ -99,6 +102,7 @@ vars.append(variable(name = "PuppiMET_T1_phi_nominal", title= "Puppi MET #phi no
 
 
 vars.append(variable(name = "EventTopCategory", title= "Top Category", nbins = 13, xmin = 0.5, xmax = 13.5))
+
 # vars.append(variable(name = "Top_truth", title= "Top Truth", nbins = 4, xmin = -0.5, xmax = 3.5, MConly = True))
 # vars.append(variable(name = "EventTopCategoryWithTruth", title= "Top Category (only true)", nbins = 4, xmin = 0.5, xmax = 4.5, MConly = True))
 #vars.append(variable(name = "Top_mass",         title= "Top mass [GeV]", nbins = 30, xmin = 100, xmax=250, noUnOvFlowbin = True))
@@ -125,9 +129,10 @@ vars.append(variable(name = "EventTopCategory", title= "Top Category", nbins = 1
 
 ######## 1D variables for histos
 vars2D = []
-
-# vars2D.append(variable2D(name = "nTightTopMixedVsnTightTopResolved", xname = "nTightTopMixed", yname = "nTightTopResolved", xtitle = "# of Top Mixed", ytitle = "# of Top Merged", nxbins = 6, xmin = -0.5, xmax = 5.5, nybins = 6, ymin = -0.5, ymax = 5.5))
-
+#vars2D.append(variable2D(name = "nTightTopMixedVsnTightTopResolved", xname = "nTightTopMixed", yname = "nTightTopResolved", xtitle = "# of Top Mixed", ytitle = "# of Top Resolved", nxbins = 6, xmin = -0.5, xmax = 5.5, nybins = 6, ymin = -0.5, ymax = 5.5))
+vars2D.append(variable2D(name = "nTightTopMixedVsnTightTopMerged", xname = "nTightTopMixed", yname = "nTightTopMerged", xtitle = "# of Top Mixed", ytitle = "# of Top Merged", nxbins = 6, xmin = -0.5, xmax = 5.5, nybins = 6, ymin = -0.5, ymax = 5.5))
+#vars2D.append(variable2D(name = "nTightTopResolvedVsnTightTopMerged", xname = "nTightTopResolved", yname = "nTightTopMerged", xtitle = "# of Top Resolved", ytitle = "# of Top Merged", nxbins = 6, xmin = -0.5, xmax = 5.5, nybins = 6, ymin = -0.5, ymax = 5.5))
+vars2D.append(variable2D(name="nXTightTopMixedVsnXTightTopMerged", xname="nXTightTopMixed", yname="nXTightTopMerged", xtitle="# Top Mixed XT", ytitle="# Top Merged XT",nxbins=6, xmin=-0.5, xmax=5.5, nybins=6, ymin=-0.5, ymax=5.5))
 ################## December 2023    
 nocut = ""
 hemveto = "(isMC || (year != 2018) || (HEMVeto || run<319077.))" 
@@ -226,6 +231,29 @@ SRregions = {
 
     "SRatleast1fjets":
         SRBase + " && nForwardJet>0",
+
+
+    "SR0Res":   SRBase + " && nTightTopResolved == 0",
+    "SR1Res":   SRBase + " && nTightTopResolved == 1",
+    "SR2Res":   SRBase + " && nTightTopResolved == 2",
+    "SRge2Res": SRBase + " && nTightTopResolved >= 2",
+    "SRgt2Res": SRBase + " && nTightTopResolved > 2",
+
+
+    "SR0Res0fjets":   SRBase + " && nTightTopResolved == 0" + " && nForwardJet==0",
+    "SR1Res0fjets":   SRBase + " && nTightTopResolved == 1" + " && nForwardJet==0",
+    "SR2Res0fjets":   SRBase + " && nTightTopResolved == 2" + " && nForwardJet==0",
+    "SRge2Res0fjets": SRBase + " && nTightTopResolved >= 2" + " && nForwardJet==0",
+    "SRgt2Res0fjets": SRBase + " && nTightTopResolved > 2" + " && nForwardJet==0",
+
+
+
+    "SR0Resatleast1fjets":   SRBase + " && nTightTopResolved == 0" + "&& nForwardJet>0",
+    "SR1Resatleast1fjets":   SRBase + " && nTightTopResolved == 1" + "&& nForwardJet>0",
+    "SR2Resatleast1fjets":   SRBase + " && nTightTopResolved == 2" + "&& nForwardJet>0",
+    "SRge2Resatleast1fjets": SRBase + " && nTightTopResolved >= 2" + "&& nForwardJet>0",
+    "SRgt2Resatleast1fjets": SRBase + " && nTightTopResolved > 2"  + "&& nForwardJet>0",
+
 
 
     # --------------------------------------------------------
