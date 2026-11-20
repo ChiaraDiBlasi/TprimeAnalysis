@@ -1,7 +1,7 @@
 import ROOT
 from PhysicsTools.NanoAODTools.postprocessing.postselection.utils.merge_UnOvFlow import merge_UnOvFlow2D
 
-def savehisto2d(d, dict_h, regions_def, var2d, outfolder, ntot_events):
+def savehisto2d(d, dict_h, regions_def, var2d, outfile_dict, ntot_events):
     # dict_h[d.label][s.label][reg][v._name]: histograms booked by bookhisto2D
     # writes one file per component: outfolder+<sample>_2D.root
     # under/overflow folded into the edge bins (merge_UnOvFlow2D);
@@ -14,7 +14,7 @@ def savehisto2d(d, dict_h, regions_def, var2d, outfolder, ntot_events):
         s_list = [d]
 
     for s in s_list:
-        outfile = ROOT.TFile.Open(outfolder+s.label+'_2D.root', "RECREATE")
+        outfile = ROOT.TFile.Open(outfile_dict[s.label], "UPDATE")
         for reg in regions_def.keys():
             for v in var2d:
                 h2 = dict_h[d.label][s.label][reg][v._name].GetValue()
