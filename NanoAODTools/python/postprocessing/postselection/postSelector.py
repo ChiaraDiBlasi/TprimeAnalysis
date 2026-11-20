@@ -87,7 +87,7 @@ if hist_folder=="":
     print("Please provide a valid hist_folder name")
     sys.exit(1)
 folder                  = hist_folder
-repohisto               = {label: folder+label+"/plots/" for label, removed in weightsets}     # one output folder per weightset
+repohisto               = {label: folder+ "/" +label+"/plots/" for label, removed in weightsets}     # one output folder per weightset
 
 if not os.path.exists(folder):
     os.makedirs(folder, exist_ok=True)
@@ -800,7 +800,7 @@ if do_histos:
                 else:
                     savehisto(d, h[label], regions_def, var, s_cut, outfile_dict[label], variations, do_variations, ntot_events)
             if len(var2d) != 0 :
-                savehisto2d(d, h_2D[label], regions_def, var2d, repohisto[label], ntot_events)
+                savehisto2d(d, h_2D[label], regions_def, var2d, outfile_dict[label], ntot_events)
             print(d.label + " histos saved, weightset " + label)
 if do_snapshot:
     for snapshot_df in snapshot_dfs:
