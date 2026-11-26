@@ -38,9 +38,9 @@
 # Below: an example for one year, change the variables at the top.
 ####################################################################################################
 
-export OPT=h
-export OUTPATH="/eos/user/f/fscrivan/tDM/postselector_results/2024/postselector_outpath_syst_2top"
-export MERGEPATH="/eos/user/f/fscrivan/tDM/postselector_results/2024/plots_2top"
+export OPT=s
+export OUTPATH="/eos/user/c/cdiblasi/tDM/postselector_results/2024/postselector_outpath_2top"
+export MERGEPATH="/eos/user/c/cdiblasi/tDM/postselector_results/2024/plots_2top"
 #ho cambiato i nomi aggiungendo il suffisso "_syst"
 
 ### TTBar
@@ -79,7 +79,6 @@ python3 postSelector_submitter_large.py -d ZJetsToNuNu_2jets_2024 --suffix TestP
 ###TDM
 #python3 postSelector_submitter_large.py -d TBDM_s_2024,TBDM_ps_2024,TTDM_s_2024,TTDM_ps_2024,TWDM_s_2024,TWDM_ps_2024,TWto2LDM_s_2024,TWto2LDM_ps_2024,TTto2LDM_s_2024,TTto2LDM_ps_2024 --suffix TestParallel --noTrotaSF --syst --partsize 25 -m $OPT --mergepath $MERGEPATH --outpath $OUTPATH --dict_samples_file "/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json"
 
-#python3 postSelector_submitter_large.py -d TTto2LDM_ps_mPhi50_mChi1_2024 --suffix TestBTag --noTrotaSF --partsize 3 -m s --outpath /eos/user/f/fscrivan/tDM/postselector_results/2024/test_btag --dict_samples_file ../samples/dict_samples_2024_syst.json
 
 
 

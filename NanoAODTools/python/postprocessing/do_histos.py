@@ -4,9 +4,9 @@ import ROOT
 # PATH
 # ============================================================
 
-path = "/eos/user/f/fscrivan/tDM/postselector_results/2024/plots"
+path = "/eos/user/c/cdiblasi/tDM/postselector_results/2024/plots"
 
-output_path = "/eos/user/f/fscrivan/tDM/postselector_results/2024/plots/"
+output_path = "/eos/user/c/cdiblasi/tDM/postselector_results/2024/plots/"
 ROOT.gROOT.SetBatch(True)
 ROOT.gStyle.SetOptStat(0)
 

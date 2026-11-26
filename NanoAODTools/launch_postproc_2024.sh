@@ -1,5 +1,5 @@
 #!/bin/bash
-# Produzione DM 2024: eseguire dopo source /afs/cern.ch/user/f/fscrivan/tDM.sh
+# Produzione DM 2024: eseguire dopo source /afs/cern.ch/user/c/cdiblasi/tDM.sh
 # Il submitter scrive su Legnaro in /store/user/fscrivan/Run3Analysis_Tprime/.
 # --syst abilita le correzioni JME e le variazioni nel post-processing.
 set -e

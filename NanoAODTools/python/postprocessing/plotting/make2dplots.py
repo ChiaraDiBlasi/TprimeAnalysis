@@ -10,6 +10,7 @@ ROOT.gStyle.SetOptStat(0)
 ROOT.TH1.AddDirectory(False)
 
 lumi = 109.82 # fb-1
+
 def createcanv(name_canv ):
     ############ CREATE CANVAS AND PADS ############ 
     cmsstyle.SetEnergy(13.6)
@@ -26,11 +27,12 @@ def createcanv(name_canv ):
     # canv.SetTopMargin(0.15)
     return canv
 
-with open("/afs/cern.ch/user/f/fscrivan/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json", "r") as f:
+with open("/afs/cern.ch/user/c/cdiblasi/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json", "r") as f:
+with open("/afs/cern.ch/user/c/cdiblasi/tDM/NanoAODTools/python/postprocessing/samples/dict_samples_2024_syst.json", "r") as f:
     filejson = json.load(f)
 
 
-folder = "/eos/user/f/fscrivan/tDM/postselector_results/2024/plots_2top/noTrotaSF/plots/"
+folder = "/eos/user/c/cdiblasi/tDM/postselector_outpath/noTrotaSF/plots/"
 samples = []
 filelist = []
 
@@ -39,7 +41,9 @@ for filename in sorted(os.listdir(folder)):
         continue
 
     label = filename[:-5]  # rimuove .root
-    if label not in sample_dict:
+    if not label.startswith(("TTDM", "TBDM")):
+        continue
+    if label not in sample_dict:    
         raise KeyError(f"Campione non definito: {label}")
 
     filelist.append(os.path.join(folder, filename))
@@ -50,9 +54,10 @@ for filename in sorted(os.listdir(folder)):
 
 
 for wp in ["nTightTopMixedVsnTightTopMerged", "nXTightTopMixedVsnXTightTopMerged"]:
-    for t in ["SR0Res", "SR1Res", "SR2Res", "SRge2Res", "SRgt2Res"]:
+    for t in ["SR0ResFarFromMix", "SR1ResFarFromMix", "SRge2ResFarFromMix"]: 
         canv = createcanv(f"{wp}_{t}")
 
+        histogram_fin_bkg = ROOT.TH2D("", "", 6, -0.5, 5.5, 6, -0.5, 5.5)
         histogram_fin_bkg = ROOT.TH2D("", "", 6, -0.5, 5.5, 6, -0.5, 5.5)
 
         for filepath, sample in zip(filelist, samples):
@@ -79,8 +84,8 @@ for wp in ["nTightTopMixedVsnTightTopMerged", "nXTightTopMixedVsnXTightTopMerged
         cmsstyle.SetAlternative2DColor(h1, style=ROOT.gStyle)
 
         cmsstyle.cmsObjectDraw(h1,f"COLZ text")
-        #cmsstyle.SaveCanvas(canv, f"/eos/user/f/fscrivan/www/tDM/plots/2024/efficiency/{wp}_{t}_bkg.png",  close=False)
-        #cmsstyle.SaveCanvas(canv, f"/eos/user/f/fscrivan/www/tDM/plots/2024/efficiency/{wp}_{t}_bkg.pdf")
+        #cmsstyle.SaveCanvas(canv, f"/eos/user/c/cdiblasi/www/tDM/plots/2024/efficiency/{wp}_{t}_bkg.png",  close=False)
+        #cmsstyle.SaveCanvas(canv, f"/eos/user/c/cdiblasi/www/tDM/plots/2024/efficiency/{wp}_{t}_bkg.pdf")
 
         histogram_fin ={}
         for filepath, sample in zip(filelist, samples):
@@ -108,11 +113,16 @@ for wp in ["nTightTopMixedVsnTightTopMerged", "nXTightTopMixedVsnXTightTopMerged
 
             cmsstyle.cmsObjectDraw(h1,f"COLZ text")
             
-            #cmsstyle.SaveCanvas(canv, f"/eos/user/f/fscrivan/www/tDM/plots/2024/efficiency/{wp}_{t}_{sample.label}.png",  close=False)
-            #cmsstyle.SaveCanvas(canv, f"/eos/user/f/fscrivan/www/tDM/plots/2024/efficiency/{wp}_{t}_{sample.label}.pdf")
+            #cmsstyle.SaveCanvas(canv, f"/eos/user/c/cdiblasi/www/tDM/plots/2024/efficiency/{wp}_{t}_{sample.label}.png",  close=False)
+            #cmsstyle.SaveCanvas(canv, f"/eos/user/c/cdiblasi/www/tDM/plots/2024/efficiency/{wp}_{t}_{sample.label}.pdf")
             canv.Close()
             file.Close()
-
+'''
+        for i in range(1, histogram_fin_bkg.GetNbinsX()+1):
+            for j in range(1, histogram_fin_bkg.GetNbinsY() + 1):
+                content = histogram_fin_bkg.GetBinContent(i, j)
+                if content > 0:
+                    histogram_fin_bkg.SetBinContent(i, j, content**0.5)
         for i in range(1, histogram_fin_bkg.GetNbinsX()+1):
             for j in range(1, histogram_fin_bkg.GetNbinsY() + 1):
                 content = histogram_fin_bkg.GetBinContent(i, j)
@@ -120,7 +130,7 @@ for wp in ["nTightTopMixedVsnTightTopMerged", "nXTightTopMixedVsnXTightTopMerged
                     histogram_fin_bkg.SetBinContent(i, j, content**0.5)
 
         for k in histogram_fin.keys():
-            outdir = os.path.join("/eos/user/f/fscrivan/www/tDM/plots/2024", k, "significance")
+            outdir = os.path.join("/eos/user/c/cdiblasi/www/tDM/plots/2024", k, "significance")
             os.makedirs(outdir, exist_ok=True)
             canv = createcanv(f"{wp}_{t}_{k}_significance")
             hdf = cmsstyle.GetcmsCanvasHist(canv)
@@ -131,3 +141,5 @@ for wp in ["nTightTopMixedVsnTightTopMerged", "nXTightTopMixedVsnXTightTopMerged
             cmsstyle.cmsObjectDraw(hist_significance, "COLZ text")
             cmsstyle.SaveCanvas(canv, os.path.join(outdir, f"{wp}_{t}_significance.png"), close=False)
             cmsstyle.SaveCanvas(canv, os.path.join(outdir, f"{wp}_{t}_significance.pdf"))
+
+'''

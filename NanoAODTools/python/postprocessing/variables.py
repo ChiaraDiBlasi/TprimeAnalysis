@@ -235,24 +235,28 @@ SRregions = {
 
     "SR0Res":   SRBase + " && nTightTopResolved == 0",
     "SR1Res":   SRBase + " && nTightTopResolved == 1",
-    "SR2Res":   SRBase + " && nTightTopResolved == 2",
+    #"SR2Res":   SRBase + " && nTightTopResolved == 2",
     "SRge2Res": SRBase + " && nTightTopResolved >= 2",
-    "SRgt2Res": SRBase + " && nTightTopResolved > 2",
+    #"SRgt2Res": SRBase + " && nTightTopResolved > 2",
+
+    "SR0ResFarFromMix":   SRBase + " && nTightTopResFarFromMix == 0",
+    "SR1ResFarFromMix":   SRBase + " && nTightTopResFarFromMix == 1",
+    "SRge2ResFarFromMix": SRBase + " && nTightTopResFarFromMix >= 2",
 
 
     "SR0Res0fjets":   SRBase + " && nTightTopResolved == 0" + " && nForwardJet==0",
     "SR1Res0fjets":   SRBase + " && nTightTopResolved == 1" + " && nForwardJet==0",
-    "SR2Res0fjets":   SRBase + " && nTightTopResolved == 2" + " && nForwardJet==0",
+    #"SR2Res0fjets":   SRBase + " && nTightTopResolved == 2" + " && nForwardJet==0",
     "SRge2Res0fjets": SRBase + " && nTightTopResolved >= 2" + " && nForwardJet==0",
-    "SRgt2Res0fjets": SRBase + " && nTightTopResolved > 2" + " && nForwardJet==0",
+    #"SRgt2Res0fjets": SRBase + " && nTightTopResolved > 2" + " && nForwardJet==0",
 
 
 
     "SR0Resatleast1fjets":   SRBase + " && nTightTopResolved == 0" + "&& nForwardJet>0",
     "SR1Resatleast1fjets":   SRBase + " && nTightTopResolved == 1" + "&& nForwardJet>0",
-    "SR2Resatleast1fjets":   SRBase + " && nTightTopResolved == 2" + "&& nForwardJet>0",
+    #"SR2Resatleast1fjets":   SRBase + " && nTightTopResolved == 2" + "&& nForwardJet>0",
     "SRge2Resatleast1fjets": SRBase + " && nTightTopResolved >= 2" + "&& nForwardJet>0",
-    "SRgt2Resatleast1fjets": SRBase + " && nTightTopResolved > 2"  + "&& nForwardJet>0",
+    #"SRgt2Resatleast1fjets": SRBase + " && nTightTopResolved > 2"  + "&& nForwardJet>0",
 
 
 
@@ -616,7 +620,7 @@ SRregions = {
 # to the Signal Regions.
 # ============================================================
 regions = {}
-"""
+
 regions = {
 
     # --------------------------------------------------------
@@ -714,7 +718,7 @@ regions = {
         "nJetBtagLoose==0 && "
         "EventTopCategory>=4 && EventTopCategory<=6",
 }
-"""
+
 
 
 # ============================================================

@@ -7,8 +7,8 @@ from samples.samples import sample_dict
 # PATH
 # ============================================================
 
-path = "/eos/user/f/fscrivan/tDM/postselector_results/2024/plots/plots/"
-output_path = "/eos/user/f/fscrivan/tDM/postselector_results/2024/plots/"
+path = "/eos/user/c/cdiblasi/tDM/postselector_results/2024/plots/plots/"
+output_path = "/eos/user/c/cdiblasi/tDM/postselector_results/2024/plots/"
 output_paths = {
     plot_type: os.path.join(output_path, plot_type)
     for plot_type in ("efficiency", "significance")

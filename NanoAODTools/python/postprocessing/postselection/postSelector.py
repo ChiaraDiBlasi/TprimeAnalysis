@@ -394,14 +394,19 @@ def select_top(df, isMC, year):
     # return indices of the TopResolved over the threshold with any object in common
     df_goodtopRes = df_goodtopMix.Define("LooseTopRes_idx",         f"select_TopRes(TopResolved_TopScore_nominal, TopResolved_idxJet0, TopResolved_idxJet1, TopResolved_idxJet2, GoodJet_idx, {Top_Resolved_wp['10%']})")\
                                  .Define("TightTopRes_idx",         f"select_TopRes(TopResolved_TopScore_nominal, TopResolved_idxJet0, TopResolved_idxJet1, TopResolved_idxJet2, GoodJet_idx, {Top_Resolved_wp['5%']})")\
-                                 .Define("LooseNOTTightTopRes_idx", f"SubtractIntVectors(LooseTopRes_idx, TightTopRes_idx)")
+                                 .Define("LooseNOTTightTopRes_idx", f"SubtractIntVectors(LooseTopRes_idx, TightTopRes_idx)")\
+                                 .Define("TightTopResFarFromMix_idx", "TopCandidates_NonOverlapping_AcrossTopCategories_idx(TightTopMix_idx, TopMixed_eta, TopMixed_phi, TightTopRes_idx, TopResolved_eta, TopResolved_phi, 1.2)")\
+                                 .Define("nTightTopResFarFromMix", "TightTopResFarFromMix_idx.size()")
+
 
     # extra-tight (XT, 1% mistag) tops, only for the eras with the "1%" WP in TopTagging_WorkingPoints.json
     # (for the other eras the XT lists are empty: the XT categories 1-3 are empty and 4-6 are exactly the old Tight 1-3).
     if ("1%" in Top_Merged_wp) and ("1%" in Top_Mixed_wp) and ("1%" in Top_Resolved_wp):
         df_goodtopXT = df_goodtopRes.Define("XTightTopMer_idx",     f"select_TopMer(TopMerged_TopScore_nominal, GoodFatJet_idx, {Top_Merged_wp['1%']})")\
                                     .Define("XTightTopMix_idx",     f"select_TopMix(TopMixed_TopScore_nominal, TopMixed_idxFatJet, TopMixed_idxJet0, TopMixed_idxJet1, TopMixed_idxJet2, GoodJet_idx, GoodFatJet_idx, {Top_Mixed_wp['1%']})")\
-                                    .Define("XTightTopRes_idx",     f"select_TopRes(TopResolved_TopScore_nominal, TopResolved_idxJet0, TopResolved_idxJet1, TopResolved_idxJet2, GoodJet_idx, {Top_Resolved_wp['1%']})")
+                                    .Define("XTightTopRes_idx",     f"select_TopRes(TopResolved_TopScore_nominal, TopResolved_idxJet0, TopResolved_idxJet1, TopResolved_idxJet2, GoodJet_idx, {Top_Resolved_wp['1%']})")\
+                                    .Define("XTightTopResFarFromMix_idx", "TopCandidates_NonOverlapping_AcrossTopCategories_idx(XTightTopMix_idx, TopMixed_eta, TopMixed_phi, XTightTopRes_idx, TopResolved_eta, TopResolved_phi, 1.2)")\
+                                    .Define("nXTightTopResFarFromMix", "XTightTopResFarFromMix_idx.size()")
     else:
         print(f"No XT (1%) top tagging WP for era {year} in TopTagging_WorkingPoints.json: no XT tops, the XT categories 1-3 are empty")
         df_goodtopXT = df_goodtopRes.Define("XTightTopMer_idx",     "ROOT::VecOps::RVec<int>()")\
